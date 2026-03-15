@@ -1,0 +1,175 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Thrift Genius - Curated secondhand fashion drops every Sunday. Affordable, stylish, and sustainable pieces for Lagos and beyond.">
+  <meta name="keywords" content="thrift store, secondhand fashion, sustainable clothing, Lagos fashion, affordable style, thrift drops best sellers, unique thrift finds, vintage fashion, eco-friendly clothing, thrift shopping Nigeria">
+  <meta name="author" content="Thrift Genius">
+
+<title>Thrift Genius</title>
+
+<link rel="stylesheet" href="asset/css/style.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+ <body>
+
+<div class="announcement">New drop every Sunday — Follow us on Instagram for alerts</div>
+
+<nav class="navbar">
+  <!-- ✅ LOGO: Replace "asset/img/logo.png" with your actual logo file path -->
+  <a href="#" class="logo">
+    <img src="asset/images/thriftgenius logo2.jpeg" alt="Thrift Genius" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span style="display:none;font-size:20px;font-weight:700;color:#111;letter-spacing:-0.5px;">Thrift<span style="color:#c0392b">Genius</span></span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li>
+      <a href="#" class="nav-cart" id="open-cart">
+        <i class="bi bi-bag"></i> Cart (<span id="cart-count">0</span>)
+      </a>
+    </li>
+  </ul>
+
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#" onclick="closeMenu()">Home</a>
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#products" onclick="closeMenu()">Shop</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <a href="#" id="mobile-cart-btn">Cart (<span id="mobile-cart-count">0</span>)</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-logo-bg">
+    <!-- Swap the SVG below for your logo image if you want it as watermark:
+         <img src="asset/img/logo.png" style="width:420px;opacity:0.08;object-fit:contain"> 
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg"> -->
+       <img src="asset/images/thriftgenius logo.jpeg" style="width:420px;opacity:0.08;object-fit:contain">
+      <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
+        font-family="Georgia, serif" font-size="220" font-weight="900"
+        fill="white" letter-spacing="-10">TG</text>
+    </svg>
+  </div>
+  <div class="hero-content">
+    <h1>Discover <em>Unique</em><br>Thrift Fashion</h1>
+    <p>Affordable. Stylish. Sustainable.</p>
+    <a href="#products" class="shop-btn">Shop Now</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2>About Us</h2>
+  <p>Welcome to Thrift Genius. We curate high-quality secondhand fashion pieces and drop new collections every Sunday. Our mission is to make unique, sustainable style accessible to everyone in Lagos and beyond.</p>
+  <div class="about-grid">
+    <div class="about-item">
+      <h4>Curated Weekly</h4>
+      <p>Every item is hand-picked and quality-checked before it hits the store.</p>
+    </div>
+    <div class="about-item">
+      <h4>Sunday Drops</h4>
+      <p>Fresh new pieces every Sunday. Follow us to never miss a drop.</p>
+    </div>
+    <div class="about-item">
+      <h4>Based in Lagos</h4>
+      <p>Proudly Nigerian. Shipping nationwide to your doorstep.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section id="products">
+  <div class="shop-top">
+    <div>
+      <h2 class="section-title">Shop Collection</h2>
+      <p class="item-count" id="item-count"></p>
+    </div>
+  </div>
+
+  <div class="categories">
+    <button class="cat-btn active" data-cat="all">All</button>
+    <button class="cat-btn" data-cat="bags">Bags</button>
+    <button class="cat-btn" data-cat="jerseys">Jerseys</button>
+    <button class="cat-btn" data-cat="dresses">Dresses</button>
+    <button class="cat-btn" data-cat="accessories">Accessories</button>
+    <button class="cat-btn" data-cat="shoes">Shoes</button>
+  </div>
+
+  <div class="product-grid" id="product-grid"></div>
+
+  <div class="load-more-wrap">
+    <button class="load-more-btn" id="load-more-btn">Load More</button>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div>
+      <h2 class="section-title">Contact Us</h2>
+      <div class="contact-details">
+        <div class="contact-row"><i class="bi bi-envelope"></i> thriftgenius@gmail.com</div>
+        <div class="contact-row"><i class="bi bi-telephone"></i> +234 000 000 0000</div>
+        <div class="contact-row"><i class="bi bi-geo-alt"></i> Lagos, Nigeria</div>
+      </div>
+      <div class="social-row">
+        <a href="#" class="social-link"><i class="bi bi-instagram"></i> Instagram</a>
+        <a href="#" class="social-link"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+        <a href="#" class="social-link"><i class="bi bi-tiktok"></i> TikTok</a>
+        <a href="#" class="social-link"><i class="bi bi-twitter-x"></i> Twitter</a>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3>Send a Message</h3>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" placeholder="Your name">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea placeholder="Ask about an item or order..."></textarea>
+      </div>
+      <button class="send-btn">Send Message</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Thrift Genius. All rights reserved.</p>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="cart-sidebar" id="cart-sidebar">
+  <div class="cart-head">
+    <h3>Your Cart (<span id="cart-qty">0</span>)</h3>
+    <button class="close-cart" id="close-cart"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="cart-body" id="cart-body"></div>
+  <div class="cart-foot">
+    <div class="cart-total-row"><span>Total</span><span id="cart-total">&#8358;0</span></div>
+    <button class="checkout-btn" onclick="showToast('Checkout coming soon!')">Checkout</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="asset/js/custom.js"></script>
+
+</body>
+</html>

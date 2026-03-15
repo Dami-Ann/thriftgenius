@@ -31,6 +31,10 @@
   { id:30, name:"Vintage Watch",         cat:"accessories", price:25000, sold:false, badge:"new", img:"asset/img/item30.jpg" },
   { id:31, name:"Baguette Bag",          cat:"bags",        price:18500, sold:false, badge:"",    img:"asset/img/item31.jpg" },
   { id:32, name:"Tie-Dye Tee",           cat:"jerseys",     price:6000,  sold:true,  badge:"",    img:"asset/img/item32.jpg" },
+  { id:33, name:"Nike Air Max",       cat:"shoes", price:35000, sold:false, badge:"new", img:"asset/img/item33.jpg" },
+{ id:34, name:"Adidas Vintage",     cat:"shoes", price:28000, sold:false, badge:"",    img:"asset/img/item34.jpg" },
+{ id:35, name:"Timberland Boots",   cat:"shoes", price:42000, sold:true,  badge:"",    img:"asset/img/item35.jpg" },
+{ id:36, name:"Jordan 1 Retro",     cat:"shoes", price:55000, sold:false, badge:"new", img:"asset/img/item36.jpg" },
 ];
 
 const PAGE_SIZE = 8;

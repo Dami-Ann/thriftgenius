@@ -104,6 +104,7 @@
     <button class="cat-btn" data-cat="dresses">Dresses</button>
     <button class="cat-btn" data-cat="accessories">Accessories</button>
     <button class="cat-btn" data-cat="shoes">Shoes</button>
+    <button class="cat-btn" data-cat="shoes">Trousers</button>
   </div>
 
   <div class="product-grid" id="product-grid"></div>
@@ -112,6 +113,7 @@
     <button class="load-more-btn" id="load-more-btn">Load More</button>
   </div>
 </section>
+
 
 <!-- CONTACT -->
 <section id="contact">
@@ -162,11 +164,53 @@
   <div class="cart-body" id="cart-body"></div>
   <div class="cart-foot">
     <div class="cart-total-row"><span>Total</span><span id="cart-total">&#8358;0</span></div>
-    <button class="checkout-btn" onclick="showToast('Checkout coming soon!')">Checkout</button>
-  </div>
+    <button class="checkout-btn" onclick="openCheckout()">Checkout</button>
+    </div>
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- CHECKOUT MODAL -->
+<div class="checkout-overlay" id="checkout-overlay"></div>
+<div class="checkout-modal" id="checkout-modal">
+  <div class="checkout-header">
+    <h3>Checkout</h3>
+    <button class="checkout-close" onclick="closeCheckout()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="checkout-body">
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="co-name" placeholder="e.g. Adaeze Johnson">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="co-email" placeholder="your@email.com">
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="co-phone" placeholder="e.g. 08012345678">
+    </div>
+    <div class="form-group">
+      <label>Delivery Address</label>
+      <textarea id="co-address" placeholder="Full address including area and city"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Delivery Day</label>
+      <select id="co-delivery-day">
+        <option value="">Select delivery day</option>
+        <option value="thursday">Thursday</option>
+        <option value="saturday">Saturday</option>
+      </select>
+    </div>
+    <div class="checkout-summary">
+      <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
+      <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
+    </div>
+    <button class="pay-btn" id="pay-btn" onclick="initiatePayment()">
+      Pay with Paystack
+    </button>
+  </div>
+</div>
 
 <script src="asset/js/custom.js"></script>
 

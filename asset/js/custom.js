@@ -1,47 +1,29 @@
- const products = [
-  { id:1,  name:"Vintage Jacket",        cat:"bags",        price:18000, sold:false, badge:"",    img:"asset/img/item1.jpg" },
-  { id:2,  name:"Street Hoodie",         cat:"jerseys",     price:12000, sold:true,  badge:"",    img:"asset/img/item2.jpg" },
-  { id:3,  name:"Baggy Jeans",           cat:"dresses",     price:15000, sold:false, badge:"",    img:"asset/img/item3.jpg" },
-  { id:4,  name:"Graphic Tee",           cat:"jerseys",     price:8000,  sold:false, badge:"new", img:"asset/img/item4.jpg" },
-  { id:5,  name:"Leather Tote",          cat:"bags",        price:21000, sold:false, badge:"new", img:"asset/img/item5.jpg" },
-  { id:6,  name:"Mini Dress",            cat:"dresses",     price:14000, sold:false, badge:"",    img:"asset/img/item6.jpg" },
-  { id:7,  name:"Gold Necklace",         cat:"accessories", price:6500,  sold:true,  badge:"",    img:"asset/img/item7.jpg" },
-  { id:8,  name:"Retro Sunglasses",      cat:"accessories", price:4500,  sold:false, badge:"new", img:"asset/img/item8.jpg" },
-  { id:9,  name:"Oversized Blazer",      cat:"dresses",     price:19000, sold:false, badge:"new", img:"asset/img/item9.jpg" },
-  { id:10, name:"Bucket Hat",            cat:"accessories", price:3500,  sold:false, badge:"",    img:"asset/img/item10.jpg" },
-  { id:11, name:"Crossbody Bag",         cat:"bags",        price:16000, sold:false, badge:"",    img:"asset/img/item11.jpg" },
-  { id:12, name:"Club Jersey",           cat:"jerseys",     price:11000, sold:true,  badge:"",    img:"asset/img/item12.jpg" },
-  { id:13, name:"Denim Skirt",           cat:"dresses",     price:9000,  sold:false, badge:"new", img:"asset/img/item13.jpg" },
-  { id:14, name:"Chunky Bracelet",       cat:"accessories", price:5000,  sold:false, badge:"",    img:"asset/img/item14.jpg" },
-  { id:15, name:"Shoulder Bag",          cat:"bags",        price:17500, sold:false, badge:"new", img:"asset/img/item15.jpg" },
-  { id:16, name:"Vintage Band Tee",      cat:"jerseys",     price:7500,  sold:false, badge:"",    img:"asset/img/item16.jpg" },
-  { id:17, name:"Wrap Dress",            cat:"dresses",     price:13000, sold:false, badge:"",    img:"asset/img/item17.jpg" },
-  { id:18, name:"Hoop Earrings",         cat:"accessories", price:3000,  sold:false, badge:"new", img:"asset/img/item18.jpg" },
-  { id:19, name:"Mini Backpack",         cat:"bags",        price:14000, sold:true,  badge:"",    img:"asset/img/item19.jpg" },
-  { id:20, name:"Retro Track Jacket",    cat:"jerseys",     price:13500, sold:false, badge:"new", img:"asset/img/item20.jpg" },
-  { id:21, name:"Flared Trousers",       cat:"dresses",     price:11500, sold:false, badge:"",    img:"asset/img/item21.jpg" },
-  { id:22, name:"Beaded Necklace",       cat:"accessories", price:4000,  sold:false, badge:"",    img:"asset/img/item22.jpg" },
-  { id:23, name:"Duffle Bag",            cat:"bags",        price:22000, sold:false, badge:"",    img:"asset/img/item23.jpg" },
-  { id:24, name:"Vintage Polo",          cat:"jerseys",     price:8500,  sold:false, badge:"new", img:"asset/img/item24.jpg" },
-  { id:25, name:"Slip Dress",            cat:"dresses",     price:12500, sold:true,  badge:"",    img:"asset/img/item25.jpg" },
-  { id:26, name:"Chain Belt",            cat:"accessories", price:5500,  sold:false, badge:"",    img:"asset/img/item26.jpg" },
-  { id:27, name:"Woven Tote",            cat:"bags",        price:9500,  sold:false, badge:"new", img:"asset/img/item27.jpg" },
-  { id:28, name:"Football Jersey",       cat:"jerseys",     price:10000, sold:false, badge:"",    img:"asset/img/item28.jpg" },
-  { id:29, name:"Linen Co-ord Set",      cat:"dresses",     price:17000, sold:false, badge:"new", img:"asset/img/item29.jpg" },
-  { id:30, name:"Vintage Watch",         cat:"accessories", price:25000, sold:false, badge:"new", img:"asset/img/item30.jpg" },
-  { id:31, name:"Baguette Bag",          cat:"bags",        price:18500, sold:false, badge:"",    img:"asset/img/item31.jpg" },
-  { id:32, name:"Tie-Dye Tee",           cat:"jerseys",     price:6000,  sold:true,  badge:"",    img:"asset/img/item32.jpg" },
-  { id:33, name:"Nike Air Max",       cat:"shoes", price:35000, sold:false, badge:"new", img:"asset/img/item33.jpg" },
-{ id:34, name:"Adidas Vintage",     cat:"shoes", price:28000, sold:false, badge:"",    img:"asset/img/item34.jpg" },
-{ id:35, name:"Timberland Boots",   cat:"shoes", price:42000, sold:true,  badge:"",    img:"asset/img/item35.jpg" },
-{ id:36, name:"Jordan 1 Retro",     cat:"shoes", price:55000, sold:false, badge:"new", img:"asset/img/item36.jpg" },
-];
+ let products = [];
 
 const PAGE_SIZE = 8;
 let cart = [];
 let liked = new Set();
 let activeCat = "all";
 let visibleCount = PAGE_SIZE;
+
+async function fetchProducts() {
+  try {
+    const res = await fetch('https://thriftgenius-backend.onrender.com/api/products');
+    const data = await res.json();
+    products = data.map(p => ({
+      id: p._id,
+      name: p.name,
+      cat: p.category,
+      price: p.price,
+      sold: p.sold,
+      badge: p.badge,
+      img: p.images[0] || ''
+    }));
+    renderProducts();
+  } catch (err) {
+    console.log('Could not load products:', err);
+  }
+}
 
 function getFiltered() {
   return activeCat === "all" ? products : products.filter(p => p.cat === activeCat);
@@ -60,7 +42,7 @@ function renderProducts() {
       <div class="product-img">
         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x400/eeeeee/999999?text=No+Image'">
         ${p.sold ? '<span class="sold-out-badge">Sold Out</span>' : p.badge === "new" ? '<span class="new-badge">New</span>' : ''}
-        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="toggleLike(${p.id})">
+        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="toggleLike('${p.id}')">
           <i class="bi ${liked.has(p.id) ? 'bi-heart-fill' : 'bi-heart'}"></i>
         </button>
       </div>
@@ -68,14 +50,13 @@ function renderProducts() {
         <div class="cat-label">${p.cat}</div>
         <h3>${p.name}</h3>
         <div class="product-price ${p.sold ? 'sold' : ''}">&#8358;${p.price.toLocaleString()}</div>
-        <button class="add-btn" ${p.sold ? "disabled" : ""} onclick="addToCart(${p.id})">
+        <button class="add-btn" ${p.sold ? "disabled" : ""} onclick="addToCart('${p.id}')">
           ${p.sold ? "Sold Out" : "Add to Cart"}
         </button>
       </div>
     </div>
   `).join("");
 
-  // Update load more button
   const btn = document.getElementById("load-more-btn");
   const remaining = filtered.length - visibleCount;
   if (remaining <= 0) {
@@ -87,7 +68,6 @@ function renderProducts() {
   }
 }
 
-// Category filter — resets visible count each time
 document.querySelectorAll(".cat-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
@@ -98,7 +78,6 @@ document.querySelectorAll(".cat-btn").forEach(btn => {
   });
 });
 
-// Load more
 document.getElementById("load-more-btn").addEventListener("click", () => {
   visibleCount += PAGE_SIZE;
   renderProducts();
@@ -130,7 +109,7 @@ function updateCart() {
   document.getElementById("cart-count").textContent = qty;
   document.getElementById("mobile-cart-count").textContent = qty;
   document.getElementById("cart-qty").textContent = qty;
-  document.getElementById("cart-total").textContent = "&#8358;" + total.toLocaleString();
+  document.getElementById("cart-total").textContent = "₦" + total.toLocaleString();
 
   const body = document.getElementById("cart-body");
   if (!cart.length) {
@@ -145,12 +124,12 @@ function updateCart() {
         <div class="cat">${c.cat} &times; ${c.qty}</div>
         <div class="price">&#8358;${(c.price * c.qty).toLocaleString()}</div>
       </div>
-      <button class="remove-item" onclick="removeFromCart(${c.id})"><i class="bi bi-x"></i></button>
+      <button class="remove-item" onclick="removeFromCart('${c.id}')"><i class="bi bi-x"></i></button>
     </div>
   `).join("");
 }
 
-function openCart()  {
+function openCart() {
   document.getElementById("cart-sidebar").classList.add("open");
   document.getElementById("overlay").classList.add("open");
   document.body.style.overflow = "hidden";
@@ -178,5 +157,77 @@ function showToast(msg) {
   setTimeout(() => el.classList.remove("show"), 2500);
 }
 
-renderProducts();
+fetchProducts();
 updateCart();
+
+// CHECKOUT
+function openCheckout() {
+  if (!cart.length) {
+    showToast('Your cart is empty');
+    return;
+  }
+  closeCartFn();
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const qty = cart.reduce((s, c) => s + c.qty, 0);
+  document.getElementById('co-items-count').textContent = qty + ' item' + (qty !== 1 ? 's' : '');
+  document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
+  document.getElementById('checkout-overlay').classList.add('open');
+  document.getElementById('checkout-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCheckout() {
+  document.getElementById('checkout-overlay').classList.remove('open');
+  document.getElementById('checkout-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
+
+async function initiatePayment() {
+  const name = document.getElementById('co-name').value.trim();
+  const email = document.getElementById('co-email').value.trim();
+  const phone = document.getElementById('co-phone').value.trim();
+  const address = document.getElementById('co-address').value.trim();
+  const deliveryDay = document.getElementById('co-delivery-day').value;
+
+  if (!name || !email || !phone || !address || !deliveryDay) {
+    showToast('Please fill in all fields');
+    return;
+  }
+
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const items = cart.map(c => ({
+    product: c.id,
+    name: c.name,
+    price: c.price,
+    size: c.size || ''
+  }));
+
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    const res = await fetch('https://thriftgenius-backend.onrender.com/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer: { name, email, phone, address, deliveryDay },
+        items,
+        totalAmount: total
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+
+    // Redirect to Paystack
+    window.location.href = data.authorizationUrl;
+
+  } catch (err) {
+    showToast('Error: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Pay with Paystack';
+  }
+}

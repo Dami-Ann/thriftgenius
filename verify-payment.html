@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Verification - Thrift Genius</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f9f9f9;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  border: 1px solid #eee;
+}
+.icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 28px;
+}
+.icon.success { background: #e8f5ed; color: #1a6b35; }
+.icon.error { background: #fef0f0; color: #c0392b; }
+.icon.loading { background: #f0f0f0; color: #888; }
+
+h2 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+p { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 24px; }
+
+.order-details {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: #555;
+}
+.order-row:last-child { margin-bottom: 0; }
+.order-row strong { color: #111; }
+
+.btn {
+  display: inline-block;
+  padding: 12px 32px;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+.btn-green { background: #1a6b35; color: white; }
+.btn-green:hover { background: #0f4220; }
+.btn-outline { background: white; color: #111; border: 1.5px solid #ddd; margin-left: 8px; }
+.btn-outline:hover { border-color: #111; }
+
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid #eee;
+  border-top-color: #1a6b35;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <div class="spinner"></div>
+  <h2>Verifying payment...</h2>
+  <p>Please wait while we confirm your payment.</p>
+</div>
+
+<script>
+ const API = 'https://thriftgenius-backend.onrender.com/api';
+
+async function verifyPayment() {
+  const params = new URLSearchParams(window.location.search);
+  const reference = params.get('reference') || params.get('trxref');
+
+  if (!reference) {
+    showError('No payment reference found. Please contact us.');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/orders/verify/${reference}`);
+    const data = await res.json();
+
+    if (data.success) {
+      showSuccess(data.order, reference);
+    } else {
+      showError('Payment could not be verified. Please contact us with your reference: ' + reference);
+    }
+  } catch (err) {
+    showError('Could not connect to server. Please contact us.');
+  }
+}
+
+function showSuccess(order, reference) {
+  const total = order?.totalAmount?.toLocaleString() || '';
+  const name = order?.customer?.name || '';
+  const delivery = order?.customer?.deliveryDay || '';
+
+  document.getElementById('card').innerHTML = `
+    <div class="icon success">✓</div>
+    <h2>Payment Successful!</h2>
+    <p>Thank you ${name}! Your order has been confirmed. We will contact you with delivery details.</p>
+    <div class="order-details">
+      <div class="order-row"><span>Reference</span><strong>${reference}</strong></div>
+      ${total ? `<div class="order-row"><span>Amount Paid</span><strong>₦${total}</strong></div>` : ''}
+      ${delivery ? `<div class="order-row"><span>Delivery Day</span><strong style="text-transform:capitalize">${delivery}</strong></div>` : ''}
+    </div>
+    <a href="index.html" class="btn btn-green">Continue Shopping</a>
+  `;
+}
+
+function showError(message) {
+  document.getElementById('card').innerHTML = `
+    <div class="icon error">✕</div>
+    <h2>Payment Failed</h2>
+    <p>${message}</p>
+    <a href="index.html" class="btn btn-green">Go Back</a>
+    <a href="index.html#contact" class="btn btn-outline">Contact Us</a>
+  `;
+}
+
+verifyPayment();
+</script>
+</body>
+</html>

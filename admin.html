@@ -1,0 +1,541 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrift Genius Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #111; font-size: 14px; }
+
+/* LOGIN */
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f4220;
+}
+.login-box {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 380px;
+}
+.login-box h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.login-box p { color: #888; font-size: 13px; margin-bottom: 28px; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.form-group input {
+  width: 100%; padding: 10px 14px;
+  border: 1px solid #ddd; border-radius: 4px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  outline: none; transition: border-color 0.15s;
+}
+.form-group input:focus { border-color: #1a6b35; }
+.login-btn {
+  width: 100%; padding: 12px;
+  background: #1a6b35; color: white;
+  border: none; border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+}
+.login-btn:hover { background: #0f4220; }
+.error-msg { color: #c0392b; font-size: 12px; margin-top: 10px; text-align: center; display: none; }
+
+/* DASHBOARD */
+.dashboard { display: none; }
+.topbar {
+  background: white;
+  border-bottom: 1px solid #eee;
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.topbar h1 { font-size: 16px; font-weight: 700; }
+.logout-btn {
+  background: none; border: 1.5px solid #ddd;
+  padding: 6px 16px; border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.logout-btn:hover { border-color: #c0392b; color: #c0392b; }
+
+.main { padding: 32px; max-width: 1100px; margin: 0 auto; }
+
+/* STATS */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.stat-card { background: white; padding: 20px 24px; border-radius: 8px; border: 1px solid #eee; }
+.stat-card .num { font-size: 28px; font-weight: 700; color: #1a6b35; }
+.stat-card .label { font-size: 12px; color: #888; margin-top: 4px; }
+
+/* ADD PRODUCT FORM */
+.section-card { background: white; border-radius: 8px; border: 1px solid #eee; padding: 24px; margin-bottom: 24px; }
+.section-card h2 { font-size: 15px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid .full { grid-column: span 2; }
+
+.admin-input, .admin-select, .admin-textarea {
+  width: 100%; padding: 9px 12px;
+  border: 1px solid #ddd; border-radius: 4px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  outline: none; transition: border-color 0.15s;
+  background: white;
+}
+.admin-input:focus, .admin-select:focus, .admin-textarea:focus { border-color: #1a6b35; }
+.admin-textarea { resize: vertical; min-height: 80px; }
+.admin-label { display: block; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+
+/* SIZES */
+.sizes-wrap { display: flex; gap: 8px; flex-wrap: wrap; }
+.size-chip {
+  padding: 6px 14px; border: 1.5px solid #ddd;
+  border-radius: 4px; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; background: white;
+  font-family: 'Inter', sans-serif;
+}
+.size-chip.selected { background: #1a6b35; color: white; border-color: #1a6b35; }
+
+.submit-btn {
+  background: #1a6b35; color: white;
+  border: none; padding: 11px 28px;
+  border-radius: 4px; font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+  margin-top: 8px;
+}
+.submit-btn:hover { background: #0f4220; }
+.submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+/* PRODUCTS TABLE */
+.products-table { width: 100%; border-collapse: collapse; }
+.products-table th {
+  text-align: left; font-size: 11px; font-weight: 600;
+  color: #888; text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 10px 12px; border-bottom: 1px solid #eee;
+}
+.products-table td { padding: 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; vertical-align: middle; }
+.products-table tr:last-child td { border-bottom: none; }
+.products-table img { width: 44px; height: 54px; object-fit: cover; border-radius: 4px; background: #f5f5f5; }
+
+.badge { padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+.badge.available { background: #e8f5ed; color: #1a6b35; }
+.badge.sold { background: #f5f5f5; color: #888; }
+
+.action-btn {
+  background: none; border: 1px solid #ddd;
+  padding: 5px 12px; border-radius: 4px;
+  font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: 'Inter', sans-serif;
+  transition: all 0.15s; margin-right: 4px;
+}
+.action-btn.toggle { color: #1a6b35; border-color: #1a6b35; }
+.action-btn.toggle:hover { background: #1a6b35; color: white; }
+.action-btn.delete { color: #c0392b; border-color: #c0392b; }
+.action-btn.delete:hover { background: #c0392b; color: white; }
+
+.toast {
+  position: fixed; bottom: 20px; left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: #111; color: white;
+  padding: 10px 22px; border-radius: 4px;
+  font-size: 13px; font-weight: 500;
+  z-index: 999; transition: transform 0.25s ease;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 680px) {
+  .stats { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid .full { grid-column: span 1; }
+  .main { padding: 16px; }
+  .topbar { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-box">
+    <h2>Thrift Genius</h2>
+    <p>Admin dashboard — sign in to continue</p>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="admin@thriftgenius.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••">
+    </div>
+    <button class="login-btn" id="login-btn">Sign In</button>
+    <p class="error-msg" id="error-msg">Invalid email or password</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="topbar">
+    <h1>Thrift Genius Admin</h1>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="main">
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num" id="stat-total">0</div>
+        <div class="label">Total Products</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-available">0</div>
+        <div class="label">Available</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-sold">0</div>
+        <div class="label">Sold Out</div>
+      </div>
+    </div>
+
+    <!-- Add Product -->
+    <div class="section-card">
+      <h2>Add New Product</h2>
+      <div class="form-grid">
+        <div>
+          <label class="admin-label">Product Name</label>
+          <input type="text" class="admin-input" id="p-name" placeholder="e.g. Vintage Jacket">
+        </div>
+        <div>
+          <label class="admin-label">Price (₦)</label>
+          <input type="number" class="admin-input" id="p-price" placeholder="e.g. 15000">
+        </div>
+        <div>
+          <label class="admin-label">Category</label>
+          <select class="admin-select" id="p-category">
+            <option value="">Select category</option>
+            <option value="bags">Bags</option>
+            <option value="jerseys">Jerseys</option>
+            <option value="dresses">Dresses</option>
+            <option value="accessories">Accessories</option>
+            <option value="shoes">Shoes</option>
+          </select>
+        </div>
+        <div>
+          <label class="admin-label">Badge</label>
+          <select class="admin-select" id="p-badge">
+            <option value="new">New</option>
+            <option value="">None</option>
+          </select>
+        </div>
+        <div class="full">
+          <label class="admin-label">Description</label>
+          <textarea class="admin-textarea" id="p-description" placeholder="Describe the item — condition, material, style..."></textarea>
+        </div>
+        <div class="full">
+          <label class="admin-label">Sizes (click to select)</label>
+          <div class="sizes-wrap" id="sizes-wrap">
+            <button class="size-chip" data-size="XS">XS</button>
+            <button class="size-chip" data-size="S">S</button>
+            <button class="size-chip" data-size="M">M</button>
+            <button class="size-chip" data-size="L">L</button>
+            <button class="size-chip" data-size="XL">XL</button>
+            <button class="size-chip" data-size="XXL">XXL</button>
+            <button class="size-chip" data-size="36">36</button>
+            <button class="size-chip" data-size="37">37</button>
+            <button class="size-chip" data-size="38">38</button>
+            <button class="size-chip" data-size="39">39</button>
+            <button class="size-chip" data-size="40">40</button>
+            <button class="size-chip" data-size="41">41</button>
+            <button class="size-chip" data-size="42">42</button>
+            <button class="size-chip" data-size="43">43</button>
+            <button class="size-chip" data-size="44">44</button>
+            <button class="size-chip" data-size="45">45</button>
+          </div>
+        </div>
+        <div class="full">
+          <label class="admin-label">Images (max 4)</label>
+          <input type="file" class="admin-input" id="p-images" accept="image/*" multiple>
+        </div>
+        <div class="full">
+          <label class="admin-label">Video (optional)</label>
+          <input type="file" class="admin-input" id="p-video" accept="video/*">
+        </div>
+      </div>
+      <button class="submit-btn" id="submit-btn" onclick="addProduct()">Add Product</button>
+    </div>
+
+<!-- Orders -->
+<div class="section-card">
+  <h2>Recent Orders</h2>
+  <table class="products-table">
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Phone</th>
+        <th>Items</th>
+        <th>Total</th>
+        <th>Delivery Day</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="orders-tbody"></tbody>
+  </table>
+</div>
+    <!-- Products List -->
+    <div class="section-card">
+      <h2>All Products</h2>
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="products-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+ const API = 'https://thriftgenius-backend.onrender.com/api';
+let token = localStorage.getItem('tg_admin_token');
+
+// Check if already logged in
+if (token) showDashboard();
+
+// Login
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  try {
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      document.getElementById('error-msg').style.display = 'block';
+      return;
+    }
+    token = data.token;
+    localStorage.setItem('tg_admin_token', token);
+    showDashboard();
+  } catch (err) {
+    document.getElementById('error-msg').style.display = 'block';
+  }
+});
+
+ function showDashboard() {
+  document.getElementById('login-wrap').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadProducts();
+  loadOrders();
+}
+
+function logout() {
+  localStorage.removeItem('tg_admin_token');
+  token = null;
+  document.getElementById('login-wrap').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+}
+
+// Size chips
+document.querySelectorAll('.size-chip').forEach(chip => {
+  chip.addEventListener('click', () => chip.classList.toggle('selected'));
+});
+
+function getSelectedSizes() {
+  return [...document.querySelectorAll('.size-chip.selected')].map(c => c.dataset.size);
+}
+
+// Add product
+async function addProduct() {
+  const name = document.getElementById('p-name').value.trim();
+  const price = document.getElementById('p-price').value;
+  const category = document.getElementById('p-category').value;
+  const description = document.getElementById('p-description').value.trim();
+  const badge = document.getElementById('p-badge').value;
+  const images = document.getElementById('p-images').files;
+  const video = document.getElementById('p-video').files[0];
+  const sizes = getSelectedSizes();
+
+  if (!name || !price || !category) {
+    showToast('Please fill in name, price and category');
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Uploading...';
+
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('price', price);
+  formData.append('category', category);
+  formData.append('description', description);
+  formData.append('badge', badge);
+  formData.append('sizes', JSON.stringify(sizes));
+  for (const img of images) formData.append('images', img);
+  if (video) formData.append('video', video);
+
+  try {
+    const res = await fetch(`${API}/products`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+
+    showToast('Product added successfully!');
+    resetForm();
+    loadProducts();
+  } catch (err) {
+    showToast('Error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Add Product';
+  }
+}
+
+function resetForm() {
+  document.getElementById('p-name').value = '';
+  document.getElementById('p-price').value = '';
+  document.getElementById('p-category').value = '';
+  document.getElementById('p-description').value = '';
+  document.getElementById('p-images').value = '';
+  document.getElementById('p-video').value = '';
+  document.querySelectorAll('.size-chip').forEach(c => c.classList.remove('selected'));
+}
+
+// Load products
+async function loadProducts() {
+  try {
+    const res = await fetch(`${API}/products`);
+    const products = await res.json();
+
+    const total = products.length;
+    const sold = products.filter(p => p.sold).length;
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-available').textContent = total - sold;
+    document.getElementById('stat-sold').textContent = sold;
+
+    const tbody = document.getElementById('products-tbody');
+    if (!products.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:40px">No products yet</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = products.map(p => `
+      <tr>
+        <td><img src="${p.images[0] || 'https://placehold.co/44x54/eee/999?text=TG'}" alt="${p.name}"></td>
+        <td><strong>${p.name}</strong><br><span style="color:#aaa;font-size:11px">${p.description?.slice(0,40) || ''}</span></td>
+        <td style="text-transform:capitalize">${p.category}</td>
+        <td>₦${Number(p.price).toLocaleString()}</td>
+        <td><span class="badge ${p.sold ? 'sold' : 'available'}">${p.sold ? 'Sold Out' : 'Available'}</span></td>
+        <td>
+          <button class="action-btn toggle" onclick="toggleSold('${p._id}', ${p.sold})">
+            ${p.sold ? 'Mark Available' : 'Mark Sold'}
+          </button>
+          <button class="action-btn delete" onclick="deleteProduct('${p._id}')">Delete</button>
+        </td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    showToast('Could not load products');
+  }
+}
+// orders details
+async function loadOrders() {
+  try {
+    const res = await fetch(`${API}/orders`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const orders = await res.json();
+    const tbody = document.getElementById('orders-tbody');
+    if (!orders.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:30px">No orders yet</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = orders.map(o => `
+      <tr>
+        <td>
+          <strong>${o.customer.name}</strong><br>
+          <span style="color:#aaa;font-size:11px">${o.customer.email}</span><br>
+          <span style="color:#aaa;font-size:11px">${o.customer.address}</span>
+        </td>
+        <td>${o.customer.phone}</td>
+        <td>${o.items.map(i => i.name).join(', ')}</td>
+        <td>₦${o.totalAmount.toLocaleString()}</td>
+        <td style="text-transform:capitalize">${o.customer.deliveryDay || '-'}</td>
+        <td><span class="badge ${o.paymentStatus === 'paid' ? 'available' : 'sold'}">${o.paymentStatus}</span></td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    console.log('Could not load orders:', err);
+  }
+}
+// Toggle sold status
+async function toggleSold(id, currentStatus) {
+  try {
+    await fetch(`${API}/products/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ sold: !currentStatus })
+    });
+    showToast('Product updated!');
+    loadProducts();
+  } catch (err) {
+    showToast('Error updating product');
+  }
+}
+
+// Delete product
+async function deleteProduct(id) {
+  if (!confirm('Are you sure you want to delete this product?')) return;
+  try {
+    await fetch(`${API}/products/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    showToast('Product deleted');
+    loadProducts();
+  } catch (err) {
+    showToast('Error deleting product');
+  }
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

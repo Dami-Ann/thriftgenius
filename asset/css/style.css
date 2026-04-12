@@ -452,3 +452,116 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   .hero-content h1 { font-size: 24px; }
   .cat-btn { font-size: 11px; padding: 5px 12px; }
 }
+
+/* CHECKOUT MODAL */
+.checkout-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 300;
+}
+.checkout-overlay.open { display: block; }
+
+.checkout-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -60%);
+  width: 90%;
+  max-width: 480px;
+  background: white;
+  border-radius: 8px;
+  z-index: 301;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.checkout-modal.open {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  pointer-events: all;
+}
+.checkout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  background: white;
+}
+.checkout-header h3 { font-size: 15px; font-weight: 700; }
+.checkout-close {
+  background: none; border: none;
+  font-size: 18px; cursor: pointer; color: #888;
+}
+.checkout-body { padding: 24px; }
+.checkout-body .form-group { margin-bottom: 14px; }
+.checkout-body .form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.checkout-body .form-group input,
+.checkout-body .form-group textarea,
+.checkout-body .form-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+  background: white;
+}
+.checkout-body .form-group input:focus,
+.checkout-body .form-group textarea:focus,
+.checkout-body .form-group select:focus { border-color: #1a6b35; }
+.checkout-body .form-group textarea { resize: vertical; min-height: 70px; }
+
+.checkout-summary {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin: 20px 0;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 8px;
+}
+.summary-row:last-child { margin-bottom: 0; }
+.summary-row.total {
+  font-weight: 700;
+  font-size: 15px;
+  color: #111;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  margin-top: 8px;
+}
+
+.pay-btn {
+  width: 100%;
+  padding: 13px;
+  background: #1a6b35;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pay-btn:hover { background: #0f4220; }
+.pay-btn:disabled { background: #ccc; cursor: not-allowed; }

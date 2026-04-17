@@ -565,3 +565,11 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 }
 .pay-btn:hover { background: #0f4220; }
 .pay-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+.announcement { overflow: hidden; white-space: nowrap; padding: 9px 0; }
+.marquee { display: inline-block; animation: marquee 20s linear infinite; }
+.marquee span { display: inline-block; }
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

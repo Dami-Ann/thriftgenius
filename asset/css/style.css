@@ -565,11 +565,27 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 }
 .pay-btn:hover { background: #0f4220; }
 .pay-btn:disabled { background: #ccc; cursor: not-allowed; }
-
+/* not needed */
 .announcement { overflow: hidden; white-space: nowrap; padding: 9px 0; }
 .marquee { display: inline-block; animation: marquee 20s linear infinite; }
 .marquee span { display: inline-block; }
-@keyframes marquee {
+@keyframes marquee 
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+/* stop here */
+/* new one */
+.announcement { overflow: hidden; white-space: nowrap; padding: 9px 0; background: #1a6b35; }
+.marquee-wrapper { display: flex; width: 100%; overflow: hidden; }
+.marquee { 
+  display: inline-block; 
+  white-space: nowrap;
+  animation: marquee 20s linear infinite;
+  color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  padding-left: 100%;
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }

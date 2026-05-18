@@ -79,9 +79,100 @@ document.querySelectorAll(".cat-btn").forEach(btn => {
   });
 });
 
-document.getElementById("load-more-btn").addEventListener("click", () => {
-  visibleCount += PAGE_SIZE;
-  renderProducts();
+ // Main category buttons
+document.querySelectorAll(".main-cat-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    // Hide all subcategories
+    document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
+
+    const cat = btn.dataset.cat;
+
+    // Show subcategory if it has one
+    if (["clothing", "footwear", "accessories"].includes(cat)) {
+      const sub = document.getElementById("sub-" + cat);
+      if (sub) {
+        sub.style.display = "flex";
+        // Reset sub selection to "all"
+        sub.querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
+        sub.querySelectorAll(".sub-cat-btn")[0].classList.add("active-sub");
+      }
+    }
+
+    activeCat = cat;
+    visibleCount = PAGE_SIZE;
+    renderProducts();
+  });
+});
+
+ // Main category buttons
+document.querySelectorAll(".main-cat-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    // Hide all subcategories
+    document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
+
+    const cat = btn.dataset.cat;
+
+    // Show subcategory if it has one
+    if (["clothing", "footwear", "accessories"].includes(cat)) {
+      const sub = document.getElementById("sub-" + cat);
+      if (sub) {
+        sub.style.display = "flex";
+        // Reset sub selection to "all"
+        sub.querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
+        sub.querySelectorAll(".sub-cat-btn")[0].classList.add("active-sub");
+      }
+    }
+
+    activeCat = cat;
+    visibleCount = PAGE_SIZE;
+    renderProducts();
+  });
+});
+
+// Main category buttons
+document.querySelectorAll(".main-cat-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    // Hide all subcategories
+    document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
+
+    const cat = btn.dataset.cat;
+
+    // Show subcategory if it has one
+    if (["clothing", "footwear", "accessories"].includes(cat)) {
+      const sub = document.getElementById("sub-" + cat);
+      if (sub) {
+        sub.style.display = "flex";
+        // Reset sub selection to "all"
+        sub.querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
+        sub.querySelectorAll(".sub-cat-btn")[0].classList.add("active-sub");
+      }
+    }
+
+    activeCat = cat;
+    visibleCount = PAGE_SIZE;
+    renderProducts();
+  });
+});
+
+// Sub category buttons
+document.querySelectorAll(".sub-cat-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    // Only remove active-sub from siblings in same sub-cats div
+    btn.closest(".sub-cats").querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
+    btn.classList.add("active-sub");
+    activeCat = btn.dataset.cat;
+    visibleCount = PAGE_SIZE;
+    renderProducts();
+  });
 });
 
 function toggleLike(id) {

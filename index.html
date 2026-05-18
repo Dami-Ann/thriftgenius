@@ -118,13 +118,40 @@
     </div>
   </div>
 
-   <div class="categories">
-    <button class="cat-btn active" data-cat="all">All</button>
-    <button class="cat-btn" data-cat="clothing">Clothing</button>
-    <button class="cat-btn" data-cat="footwear">Footwear</button>
-    <button class="cat-btn" data-cat="bags">Bags</button>
-    <button class="cat-btn" data-cat="accessories">Accessories</button>
-    <button class="cat-btn" data-cat="thrift-finds">Thrift Finds</button>
+    <div class="categories-wrap">
+  <div class="main-cats">
+    <button class="main-cat-btn active" data-cat="all">All</button>
+    <button class="main-cat-btn" data-cat="clothing">Clothing</button>
+    <button class="main-cat-btn" data-cat="footwear">Footwear</button>
+    <button class="main-cat-btn" data-cat="bags">Bags</button>
+    <button class="main-cat-btn" data-cat="accessories">Accessories</button>
+    <button class="main-cat-btn" data-cat="thrift-finds">Thrift Finds</button>
+  </div>
+
+  <!-- Subcategories -->
+  <div class="sub-cats" id="sub-clothing" style="display:none">
+    <button class="sub-cat-btn active-sub" data-cat="clothing">All Clothing</button>
+    <button class="sub-cat-btn" data-cat="clothing-dress">Dresses</button>
+    <button class="sub-cat-btn" data-cat="clothing-top">Tops</button>
+    <button class="sub-cat-btn" data-cat="clothing-bottom">Bottoms</button>
+  </div>
+
+  <div class="sub-cats" id="sub-footwear" style="display:none">
+    <button class="sub-cat-btn active-sub" data-cat="footwear">All Footwear</button>
+    <button class="sub-cat-btn" data-cat="footwear-sneakers">Sneakers</button>
+    <button class="sub-cat-btn" data-cat="footwear-boots">Boots</button>
+    <button class="sub-cat-btn" data-cat="footwear-flats">Flats</button>
+    <button class="sub-cat-btn" data-cat="footwear-heels">Heels</button>
+  </div>
+
+  <div class="sub-cats" id="sub-accessories" style="display:none">
+    <button class="sub-cat-btn active-sub" data-cat="accessories">All Accessories</button>
+    <button class="sub-cat-btn" data-cat="accessories-belts">Belts</button>
+    <button class="sub-cat-btn" data-cat="accessories-jewelry">Jewelry</button>
+    <button class="sub-cat-btn" data-cat="accessories-caps">Caps</button>
+    <button class="sub-cat-btn" data-cat="accessories-sunglasses">Sunglasses</button>
+    <button class="sub-cat-btn" data-cat="accessories-scarves">Scarfes</button>
+  </div>
 </div>
 
   <div class="product-grid" id="product-grid"></div>

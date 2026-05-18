@@ -25,8 +25,9 @@ async function fetchProducts() {
   }
 }
 
-function getFiltered() {
-  return activeCat === "all" ? products : products.filter(p => p.cat === activeCat);
+ function getFiltered() {
+  if (activeCat === "all") return products;
+  return products.filter(p => p.cat === activeCat || p.cat.startsWith(activeCat + '-'));
 }
 
 function renderProducts() {

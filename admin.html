@@ -224,13 +224,32 @@ body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #111; font-
         <div>
           <label class="admin-label">Category</label>
           <select class="admin-select" id="p-category">
-            <option value="">Select category</option>
-            <option value="bags">Bags</option>
-            <option value="jerseys">Jerseys</option>
-            <option value="dresses">Dresses</option>
-            <option value="accessories">Accessories</option>
-            <option value="shoes">Shoes</option>
-          </select>
+    <option value="">Select category</option>
+    <optgroup label="Clothing">
+      <option value="clothing-dress">Dress</option>
+      <option value="clothing-top">Top</option>
+      <option value="clothing-bottom">Bottom</option>
+    </optgroup>
+    <optgroup label="Footwear">
+      <option value="footwear-sneakers">Sneakers</option>
+      <option value="footwear-boots">Boots</option>
+      <option value="footwear-flats">Flats</option>
+      <option value="footwear-heels">Heels</option>
+    </optgroup>
+    <optgroup label="Bags">
+      <option value="bags">Bags</option>
+    </optgroup>
+    <optgroup label="Accessories">
+      <option value="accessories-belts">Belts</option>
+      <option value="accessories-jewelry">Jewelry</option>
+      <option value="accessories-caps">Caps</option>
+      <option value="accessories-sunglasses">Sunglasses</option>
+      <option value="accessories-scarves">Scarves</option>
+    </optgroup>
+    <optgroup label="Thrift Finds">
+      <option value="thrift-finds">Thrift Finds / One of One</option>
+    </optgroup>
+</select>
         </div>
         <div>
           <label class="admin-label">Badge</label>

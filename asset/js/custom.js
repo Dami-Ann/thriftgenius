@@ -25,7 +25,7 @@ async function fetchProducts() {
   }
 }
 
- function getFiltered() {
+function getFiltered() {
   if (activeCat === "all") return products;
   return products.filter(p => p.cat === activeCat || p.cat.startsWith(activeCat + '-'));
 }
@@ -69,72 +69,6 @@ function renderProducts() {
   }
 }
 
-document.querySelectorAll(".cat-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    activeCat = btn.dataset.cat;
-    visibleCount = PAGE_SIZE;
-    renderProducts();
-  });
-});
-
- // Main category buttons
-document.querySelectorAll(".main-cat-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    // Hide all subcategories
-    document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
-
-    const cat = btn.dataset.cat;
-
-    // Show subcategory if it has one
-    if (["clothing", "footwear", "accessories"].includes(cat)) {
-      const sub = document.getElementById("sub-" + cat);
-      if (sub) {
-        sub.style.display = "flex";
-        // Reset sub selection to "all"
-        sub.querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
-        sub.querySelectorAll(".sub-cat-btn")[0].classList.add("active-sub");
-      }
-    }
-
-    activeCat = cat;
-    visibleCount = PAGE_SIZE;
-    renderProducts();
-  });
-});
-
- // Main category buttons
-document.querySelectorAll(".main-cat-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    // Hide all subcategories
-    document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
-
-    const cat = btn.dataset.cat;
-
-    // Show subcategory if it has one
-    if (["clothing", "footwear", "accessories"].includes(cat)) {
-      const sub = document.getElementById("sub-" + cat);
-      if (sub) {
-        sub.style.display = "flex";
-        // Reset sub selection to "all"
-        sub.querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
-        sub.querySelectorAll(".sub-cat-btn")[0].classList.add("active-sub");
-      }
-    }
-
-    activeCat = cat;
-    visibleCount = PAGE_SIZE;
-    renderProducts();
-  });
-});
-
 // Main category buttons
 document.querySelectorAll(".main-cat-btn").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -147,11 +81,10 @@ document.querySelectorAll(".main-cat-btn").forEach(btn => {
     const cat = btn.dataset.cat;
 
     // Show subcategory if it has one
-    if (["clothing", "footwear", "accessories"].includes(cat)) {
+    if (["clothing", "footwear", "accessories", "bottoms"].includes(cat)) {
       const sub = document.getElementById("sub-" + cat);
       if (sub) {
         sub.style.display = "flex";
-        // Reset sub selection to "all"
         sub.querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
         sub.querySelectorAll(".sub-cat-btn")[0].classList.add("active-sub");
       }
@@ -166,13 +99,18 @@ document.querySelectorAll(".main-cat-btn").forEach(btn => {
 // Sub category buttons
 document.querySelectorAll(".sub-cat-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    // Only remove active-sub from siblings in same sub-cats div
     btn.closest(".sub-cats").querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
     btn.classList.add("active-sub");
     activeCat = btn.dataset.cat;
     visibleCount = PAGE_SIZE;
     renderProducts();
   });
+});
+
+// Load more
+document.getElementById("load-more-btn").addEventListener("click", () => {
+  visibleCount += PAGE_SIZE;
+  renderProducts();
 });
 
 function toggleLike(id) {
@@ -314,7 +252,6 @@ async function initiatePayment() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
 
-    // Redirect to Paystack
     window.location.href = data.authorizationUrl;
 
   } catch (err) {

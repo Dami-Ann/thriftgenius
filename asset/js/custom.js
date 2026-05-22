@@ -260,3 +260,28 @@ async function initiatePayment() {
     btn.textContent = 'Pay with Paystack';
   }
 }
+function scrollToCategory(cat) {
+  // Set active category
+  activeCat = cat;
+  visibleCount = PAGE_SIZE;
+
+  // Update main cat buttons
+  document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".main-cat-btn").forEach(b => {
+    if (b.dataset.cat === cat) b.classList.add("active");
+  });
+
+  // Hide all subcats then show relevant one
+  document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
+  const sub = document.getElementById("sub-" + cat);
+  if (sub) {
+    sub.style.display = "flex";
+    sub.querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
+    sub.querySelectorAll(".sub-cat-btn")[0].classList.add("active-sub");
+  }
+
+  renderProducts();
+
+  // Scroll to products section
+  document.getElementById("products").scrollIntoView({ behavior: "smooth" });
+}

@@ -618,3 +618,52 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 }
 .sub-cat-btn:hover { border-color: #1a6b35; color: #1a6b35; }
 .sub-cat-btn.active-sub { background: #1a6b35; color: #fff; border-color: #1a6b35; }
+
+/* SHOP BY CATEGORY */
+#shop-by-category {
+  padding: 56px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+#shop-by-category .section-title { margin-bottom: 28px; }
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.cat-cover {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #f5f5f5;
+}
+.cat-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.cat-cover:hover img { transform: scale(1.05); }
+
+.cat-cover-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  color: white;
+  padding: 24px 16px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 680px) {
+  .cat-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  #shop-by-category { padding: 40px 16px; }
+}

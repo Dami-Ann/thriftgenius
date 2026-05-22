@@ -620,26 +620,28 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 .sub-cat-btn.active-sub { background: #1a6b35; color: #fff; border-color: #1a6b35; }
 
 /* SHOP BY CATEGORY */
-#shop-by-category {
-  padding: 56px 40px;
+ #shop-by-category {
+  padding: 40px 40px;
   max-width: 1200px;
   margin: 0 auto;
 }
 #shop-by-category .section-title { margin-bottom: 28px; }
 
-.cat-grid {
+ .cat-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 12px;
 }
 
 .cat-cover {
   position: relative;
-  aspect-ratio: 3/4;
+  aspect-ratio: 4/5;
   overflow: hidden;
   border-radius: 6px;
   cursor: pointer;
   background: #f5f5f5;
+  display: block;
+  text-decoration: none;
 }
 .cat-cover img {
   width: 100%;

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://thriftgenius.online/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://thriftgenius.online/clothing.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thriftgenius.online/bottoms.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thriftgenius.online/footwear.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thriftgenius.online/bags.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thriftgenius.online/accessories.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thriftgenius.online/thrift-finds.html</loc>
+    <priority>0.8</priority>
+  </url>
+</urlset>

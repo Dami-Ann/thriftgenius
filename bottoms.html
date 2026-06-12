@@ -287,9 +287,11 @@ let activeCat = CATEGORY;
 
 async function fetchProducts() {
   try {
-    const res = await fetch(`${API}/products?category=${CATEGORY}`);
+    const res = await fetch(`${API}/products`);
     const data = await res.json();
-    products = data.map(p => ({
+    products = data
+      .filter(p => p.category === CATEGORY || p.category.startsWith(CATEGORY + '-'))
+      .map(p => ({
       id: p._id, name: p.name, cat: p.category,
       price: p.price, sold: p.sold, badge: p.badge,
       img: p.images[0] || ''

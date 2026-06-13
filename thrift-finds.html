@@ -263,10 +263,73 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
         <option value="saturday">Saturday</option>
       </select>
     </div>
-    <div class="checkout-summary">
-      <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
-      <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
-    </div>
+    <div class="form-group">
+  <label>Delivery Area</label>
+  <select id="co-delivery-area" onchange="updateDeliveryFee()">
+    <option value="0">Select your area</option>
+    <option value="4000">Ikeja - ₦4,000</option>
+    <option value="3500">Egbeda - ₦3,500</option>
+    <option value="4000">Ikotun - ₦4,000</option>
+    <option value="5000">Igando - ₦5,000</option>
+    <option value="3500">Abule Egba - ₦3,500</option>
+    <option value="3500">Agege - ₦3,500</option>
+    <option value="3500">Fagba - ₦3,500</option>
+    <option value="4000">Ojodu - ₦4,000</option>
+    <option value="4000">Omole 1/2 - ₦4,000</option>
+    <option value="4000">Ogba - ₦4,000</option>
+    <option value="4000">Magodo 1/2 - ₦4,000</option>
+    <option value="4000">Maryland - ₦4,000</option>
+    <option value="4000">Mile 12 - ₦4,000</option>
+    <option value="4000">Ketu - ₦4,000</option>
+    <option value="4000">Ojota - ₦4,000</option>
+    <option value="4000">Ogudu - ₦4,000</option>
+    <option value="4500">Oworo - ₦4,500</option>
+    <option value="4500">Surulere - ₦4,500</option>
+    <option value="4500">Mushin - ₦4,500</option>
+    <option value="4000">Isolo - ₦4,000</option>
+    <option value="4000">Ajao Estate - ₦4,000</option>
+    <option value="4000">Oshodi - ₦4,000</option>
+    <option value="4500">Ijegun - ₦4,500</option>
+    <option value="4500">Ago Palace - ₦4,500</option>
+    <option value="4500">Amuwo - ₦4,500</option>
+    <option value="5500">Festac - ₦5,500</option>
+    <option value="6000">Satellite - ₦6,000</option>
+    <option value="5000">Apapa - ₦5,000</option>
+    <option value="4500">Onipanu - ₦4,500</option>
+    <option value="4500">Shomolu - ₦4,500</option>
+    <option value="4500">Bariga - ₦4,500</option>
+    <option value="4500">Yaba - ₦4,500</option>
+    <option value="4500">Akoka - ₦4,500</option>
+    <option value="4500">Ebute Meta - ₦4,500</option>
+    <option value="4500">Gbagada - ₦4,500</option>
+    <option value="4500">Orile Iganmu - ₦4,500</option>
+    <option value="4000">Ejigbo - ₦4,000</option>
+    <option value="3000">Ipaja - ₦3,000</option>
+    <option value="3000">Ayobo - ₦3,000</option>
+    <option value="4500">Ikoyi - ₦4,500</option>
+    <option value="4500">VI - ₦4,500</option>
+    <option value="4500">Lagos Island - ₦4,500</option>
+    <option value="4500">Oniru - ₦4,500</option>
+    <option value="5000">Lekki Phase 1 - ₦5,000</option>
+    <option value="6000">Ikate - ₦6,000</option>
+    <option value="6000">Ilasan - ₦6,000</option>
+    <option value="5000">Jakande - ₦5,000</option>
+    <option value="6000">Osapa - ₦6,000</option>
+    <option value="6000">Orchid - ₦6,000</option>
+    <option value="6000">Ikota - ₦6,000</option>
+    <option value="6000">Agungi - ₦6,000</option>
+    <option value="6000">Idado Lekki - ₦6,000</option>
+    <option value="6000">VGC - ₦6,000</option>
+    <option value="6000">Ajah - ₦6,000</option>
+    <option value="6500">Shongotedo - ₦6,500</option>
+    <option value="6000">Abraham Adesanya - ₦6,000</option>
+  </select>
+</div>
+     <div class="checkout-summary">
+  <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
+  <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
+  <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
+</div>
     <button class="pay-btn" id="pay-btn" onclick="initiatePayment()">Pay with Paystack</button>
   </div>
 </div>
@@ -284,6 +347,7 @@ let cart = JSON.parse(localStorage.getItem('tg_cart') || '[]');
 let liked = new Set();
 let visibleCount = PAGE_SIZE;
 let activeCat = CATEGORY;
+let deliveryFee = 0;
 
  async function fetchProducts() {
   try {
@@ -395,43 +459,79 @@ function closeMenu() { ham.classList.remove("open"); mob.classList.remove("open"
 
 function showToast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 2500); }
 
-function openCheckout() {
-  if (!cart.length) { showToast('Your cart is empty'); return; }
+ function openCheckout() {
+  if (!cart.length) {
+    showToast('Your cart is empty');
+    return;
+  }
   closeCartFn();
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const qty = cart.reduce((s, c) => s + c.qty, 0);
+  deliveryFee = 0;
   document.getElementById('co-items-count').textContent = qty + ' item' + (qty !== 1 ? 's' : '');
+  document.getElementById('co-delivery-fee').textContent = '₦0';
   document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
   document.getElementById('checkout-overlay').classList.add('open');
   document.getElementById('checkout-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
+function updateDeliveryFee() {
+  const select = document.getElementById('co-delivery-area');
+  deliveryFee = Number(select.value) || 0;
+  document.getElementById('co-delivery-fee').textContent = '₦' + deliveryFee.toLocaleString();
+  const itemsTotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  document.getElementById('co-total').textContent = '₦' + (itemsTotal + deliveryFee).toLocaleString();
+}
 function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); document.getElementById('checkout-modal').classList.remove('open'); document.body.style.overflow = ''; }
 document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
 
-async function initiatePayment() {
+ async function initiatePayment() {
   const name = document.getElementById('co-name').value.trim();
   const email = document.getElementById('co-email').value.trim();
   const phone = document.getElementById('co-phone').value.trim();
   const address = document.getElementById('co-address').value.trim();
   const deliveryDay = document.getElementById('co-delivery-day').value;
-  if (!name || !email || !phone || !address || !deliveryDay) { showToast('Please fill in all fields'); return; }
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const items = cart.map(c => ({ product: c.id, name: c.name, price: c.price, size: c.size || '' }));
+  const areaSelect = document.getElementById('co-delivery-area');
+  const deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
+
+  if (!name || !email || !phone || !address || !deliveryDay || deliveryFee === 0) {
+    showToast('Please fill in all fields including delivery area');
+    return;
+  }
+
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
+  const items = cart.map(c => ({
+    product: c.id,
+    name: c.name,
+    price: c.price,
+    size: c.size || ''
+  }));
+
   const btn = document.getElementById('pay-btn');
-  btn.disabled = true; btn.textContent = 'Processing...';
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
   try {
-    const res = await fetch(`${API}/orders`, {
+    const res = await fetch('https://thriftgenius-backend.onrender.com/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ customer: { name, email, phone, address, deliveryDay }, items, totalAmount: total })
+      body: JSON.stringify({
+        customer: { name, email, phone, address, deliveryDay, deliveryArea, deliveryFee },
+        items,
+        totalAmount: total
+      })
     });
+
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
+
     window.location.href = data.authorizationUrl;
+
   } catch (err) {
     showToast('Error: ' + err.message);
-    btn.disabled = false; btn.textContent = 'Pay with Paystack';
+    btn.disabled = false;
+    btn.textContent = 'Pay with Paystack';
   }
 }
 

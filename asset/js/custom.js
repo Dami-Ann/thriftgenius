@@ -4,6 +4,7 @@ const PAGE_SIZE = 8;
 let cart = [];
 let liked = new Set();
 let activeCat = "all";
+let deliveryFee = 0;
 let visibleCount = PAGE_SIZE;
 
 async function fetchProducts() {
@@ -191,7 +192,7 @@ fetchProducts();
 updateCart();
 
 // CHECKOUT
-function openCheckout() {
+ function openCheckout() {
   if (!cart.length) {
     showToast('Your cart is empty');
     return;
@@ -199,13 +200,22 @@ function openCheckout() {
   closeCartFn();
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const qty = cart.reduce((s, c) => s + c.qty, 0);
+  deliveryFee = 0;
   document.getElementById('co-items-count').textContent = qty + ' item' + (qty !== 1 ? 's' : '');
+  document.getElementById('co-delivery-fee').textContent = '₦0';
   document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
   document.getElementById('checkout-overlay').classList.add('open');
   document.getElementById('checkout-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
+function updateDeliveryFee() {
+  const select = document.getElementById('co-delivery-area');
+  deliveryFee = Number(select.value) || 0;
+  document.getElementById('co-delivery-fee').textContent = '₦' + deliveryFee.toLocaleString();
+  const itemsTotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  document.getElementById('co-total').textContent = '₦' + (itemsTotal + deliveryFee).toLocaleString();
+}
 function closeCheckout() {
   document.getElementById('checkout-overlay').classList.remove('open');
   document.getElementById('checkout-modal').classList.remove('open');
@@ -214,19 +224,21 @@ function closeCheckout() {
 
 document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
 
-async function initiatePayment() {
+ async function initiatePayment() {
   const name = document.getElementById('co-name').value.trim();
   const email = document.getElementById('co-email').value.trim();
   const phone = document.getElementById('co-phone').value.trim();
   const address = document.getElementById('co-address').value.trim();
   const deliveryDay = document.getElementById('co-delivery-day').value;
+  const areaSelect = document.getElementById('co-delivery-area');
+  const deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
 
-  if (!name || !email || !phone || !address || !deliveryDay) {
-    showToast('Please fill in all fields');
+  if (!name || !email || !phone || !address || !deliveryDay || deliveryFee === 0) {
+    showToast('Please fill in all fields including delivery area');
     return;
   }
 
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
   const items = cart.map(c => ({
     product: c.id,
     name: c.name,
@@ -243,7 +255,7 @@ async function initiatePayment() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        customer: { name, email, phone, address, deliveryDay },
+        customer: { name, email, phone, address, deliveryDay, deliveryArea, deliveryFee },
         items,
         totalAmount: total
       })

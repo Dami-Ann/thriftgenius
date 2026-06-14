@@ -717,3 +717,23 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   cursor: pointer; transition: all 0.15s;
 }
 .pm-size-btn.selected { background: #1a6b35; color: #fff; border-color: #1a6b35; }
+/* floating whatsapp button */
+.whatsapp-float {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  background: #25d366;
+  color: white;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  z-index: 999;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+  text-decoration: none;
+}
+.whatsapp-float:hover { transform: scale(1.1); }

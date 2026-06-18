@@ -737,3 +737,4 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   text-decoration: none;
 }
 .whatsapp-float:hover { transform: scale(1.1); }
+@keyframes spin { to { transform: rotate(360deg); } }

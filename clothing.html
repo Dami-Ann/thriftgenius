@@ -381,21 +381,23 @@ let deliveryFee = 0;
   </div>`;
 
   try {
-    const res = await fetch('https://thriftgenius-backend.onrender.com/api/products');
+    const res = await fetch(`${API}/products`);
     const data = await res.json();
-    products = data.map(p => ({
-      id: p._id,
-      name: p.name,
-      cat: p.category,
-      price: p.price,
-      sold: p.sold,
-      badge: p.badge,
-      img: p.images[0] || '',
-      images: p.images || [],
-      video: p.video || '',
-      description: p.description || '',
-      sizes: p.sizes || []
-    }));
+    products = data
+      .filter(p => p.category === CATEGORY || p.category.startsWith(CATEGORY + '-'))
+      .map(p => ({
+        id: p._id,
+        name: p.name,
+        cat: p.category,
+        price: p.price,
+        sold: p.sold,
+        badge: p.badge,
+        img: p.images[0] || '',
+        images: p.images || [],
+        video: p.video || '',
+        description: p.description || '',
+        sizes: p.sizes || []
+      }));
     renderProducts();
   } catch (err) {
     grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">
@@ -405,7 +407,6 @@ let deliveryFee = 0;
     console.log('Could not load products:', err);
   }
 }
-
 function renderProducts() {
   const toShow = products.slice(0, visibleCount);
   const grid = document.getElementById("product-grid");

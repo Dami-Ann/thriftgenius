@@ -374,7 +374,27 @@
     </button>
   </div>
 </div>
-
+<div class="product-modal-overlay" id="product-modal-overlay" onclick="closeProductModal()"></div>
+<div class="product-modal" id="product-modal">
+  <div class="product-modal-media">
+    <button class="product-modal-close" onclick="closeProductModal()"><i class="bi bi-x-lg"></i></button>
+    <div class="product-modal-slider" id="product-modal-slider"></div>
+    <div class="product-modal-dots" id="product-modal-dots"></div>
+    <button class="slider-nav prev" onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
+    <button class="slider-nav next" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
+  </div>
+  <div class="product-modal-info">
+    <div class="cat-label" id="pm-cat"></div>
+    <h2 id="pm-name"></h2>
+    <div class="product-price" id="pm-price"></div>
+    <p class="pm-description" id="pm-description"></p>
+    <div class="pm-sizes-wrap" id="pm-sizes-wrap" style="display:none">
+      <label>Select Size</label>
+      <div class="pm-sizes" id="pm-sizes"></div>
+    </div>
+    <button class="add-btn" id="pm-add-btn" onclick="addToCartFromModal()">Add to Cart</button>
+  </div>
+</div>
 <script src="asset/js/custom.js"></script>
 
 </body>

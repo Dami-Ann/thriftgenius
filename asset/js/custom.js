@@ -53,12 +53,12 @@ function renderProducts() {
   document.getElementById("item-count").textContent =
     filtered.length + " item" + (filtered.length !== 1 ? "s" : "");
 
-  grid.innerHTML = toShow.map(p => `
+   grid.innerHTML = toShow.map(p => `
     <div class="product-card">
-      <div class="product-img">
+      <div class="product-img" onclick="openProductModal('${p.id}')">
         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x400/eeeeee/999999?text=No+Image'">
         ${p.sold ? '<span class="sold-out-badge">Sold Out</span>' : p.badge === "new" ? '<span class="new-badge">New</span>' : ''}
-        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="toggleLike('${p.id}')">
+        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${p.id}')">
           <i class="bi ${liked.has(p.id) ? 'bi-heart-fill' : 'bi-heart'}"></i>
         </button>
       </div>
@@ -310,4 +310,91 @@ function scrollToCategory(cat) {
 
   // Scroll to products section
   document.getElementById("products").scrollIntoView({ behavior: "smooth" });
+}
+let modalProduct = null;
+let modalSlides = [];
+let modalSlideIndex = 0;
+let modalSelectedSize = null;
+
+function openProductModal(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  modalProduct = p;
+  modalSlideIndex = 0;
+  modalSelectedSize = null;
+
+  modalSlides = [];
+  (p.images || []).forEach(src => modalSlides.push({ type: 'image', src }));
+  if (p.video) modalSlides.push({ type: 'video', src: p.video });
+  if (!modalSlides.length) modalSlides.push({ type: 'image', src: p.img });
+
+  document.getElementById('pm-cat').textContent = p.cat;
+  document.getElementById('pm-name').textContent = p.name;
+  document.getElementById('pm-price').textContent = '₦' + p.price.toLocaleString();
+  document.getElementById('pm-description').textContent = p.description || '';
+
+  const sizesWrap = document.getElementById('pm-sizes-wrap');
+  if (p.sizes && p.sizes.length) {
+    sizesWrap.style.display = 'block';
+    document.getElementById('pm-sizes').innerHTML = p.sizes.map(s =>
+      `<button class="pm-size-btn" onclick="selectModalSize('${s}', this)">${s}</button>`
+    ).join('');
+  } else {
+    sizesWrap.style.display = 'none';
+  }
+
+  const addBtn = document.getElementById('pm-add-btn');
+  if (p.sold) { addBtn.textContent = 'Sold Out'; addBtn.disabled = true; }
+  else { addBtn.textContent = 'Add to Cart'; addBtn.disabled = false; }
+
+  renderModalSlider();
+  document.getElementById('product-modal-overlay').classList.add('open');
+  document.getElementById('product-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderModalSlider() {
+  const slider = document.getElementById('product-modal-slider');
+  slider.style.transform = `translateX(-${modalSlideIndex * 100}%)`;
+  slider.innerHTML = modalSlides.map(s =>
+    s.type === 'video'
+      ? `<div><video src="${s.src}" controls muted></video></div>`
+      : `<div><img src="${s.src}" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=No+Image'"></div>`
+  ).join('');
+
+  document.getElementById('product-modal-dots').innerHTML = modalSlides.map((_, i) =>
+    `<div class="pm-dot ${i === modalSlideIndex ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
+  ).join('');
+}
+
+function goToSlide(i) { modalSlideIndex = i; renderModalSlider(); }
+function nextSlide() { modalSlideIndex = (modalSlideIndex + 1) % modalSlides.length; renderModalSlider(); }
+function prevSlide() { modalSlideIndex = (modalSlideIndex - 1 + modalSlides.length) % modalSlides.length; renderModalSlider(); }
+
+function selectModalSize(size, btn) {
+  modalSelectedSize = size;
+  document.querySelectorAll('.pm-size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function closeProductModal() {
+  document.getElementById('product-modal-overlay').classList.remove('open');
+  document.getElementById('product-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function addToCartFromModal() {
+  if (!modalProduct || modalProduct.sold) return;
+  if (modalProduct.sizes && modalProduct.sizes.length && !modalSelectedSize) {
+    showToast('Please select a size');
+    return;
+  }
+  const size = modalSelectedSize || '';
+  const ex = cart.find(x => x.id === modalProduct.id && x.size === size);
+  if (ex) ex.qty++;
+  else cart.push({ ...modalProduct, qty: 1, size });
+  localStorage.setItem('tg_cart', JSON.stringify(cart));
+  updateCart();
+  showToast(modalProduct.name + (size ? ` (${size})` : '') + ' added to cart');
+  closeProductModal();
 }

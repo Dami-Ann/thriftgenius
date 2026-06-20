@@ -598,7 +598,7 @@ function updateDeliveryFee() {
 function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); document.getElementById('checkout-modal').classList.remove('open'); document.body.style.overflow = ''; }
 document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
 
-async function initiatePayment() {
+ async function initiatePayment() {
   const name = document.getElementById('co-name').value.trim();
   const email = document.getElementById('co-email').value.trim();
   const phone = document.getElementById('co-phone').value.trim();
@@ -638,7 +638,16 @@ async function initiatePayment() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
 
-    window.location.href = data.authorizationUrl;
+    // FIX: This safely checks every way your backend might send the Paystack link back
+    if (data.authorization_url) {
+      window.location.href = data.authorization_url;
+    } else if (data.data && data.data.authorization_url) {
+      window.location.href = data.data.authorization_url;
+    } else if (data.authorizationUrl) {
+      window.location.href = data.authorizationUrl;
+    } else {
+      throw new Error('Payment link not found in server response');
+    }
 
   } catch (err) {
     showToast('Error: ' + err.message);

@@ -122,10 +122,9 @@ body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-siz
 .empty-state i { font-size: 40px; display: block; margin-bottom: 12px; opacity: 0.3; }
 
 /* CART */
- .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; }
 .overlay.open { display: block; }
 
-/* THE UPDATED PIECE START */
 .cart-sidebar { 
   position: fixed; 
   top: 0; 
@@ -145,7 +144,6 @@ body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-siz
   right: 0; 
   visibility: visible; 
 }
-/* THE UPDATED PIECE END */
 
 .cart-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid #eee; }
 .cart-head h3 { font-size: 15px; font-weight: 700; }
@@ -165,6 +163,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-siz
 .cart-total-row { display: flex; justify-content: space-between; font-weight: 700; font-size: 15px; margin-bottom: 14px; }
 .checkout-btn { width: 100%; padding: 13px; background: #1a6b35; color: #fff; border: none; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
 .checkout-btn:hover { background: #0f4220; }
+
 /* CHECKOUT MODAL */
 .checkout-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; }
 .checkout-overlay.open { display: block; }
@@ -467,7 +466,7 @@ document.getElementById("load-more-btn").addEventListener("click", () => { visib
 
 function toggleLike(id) { liked.has(id) ? liked.delete(id) : liked.add(id); renderProducts(); }
 
- function addToCart(id) {
+function addToCart(id) {
   const p = products.find(x => x.id === id);
   if (!p || p.sold) return;
   const ex = cart.find(x => x.id === id);
@@ -475,8 +474,6 @@ function toggleLike(id) { liked.has(id) ? liked.delete(id) : liked.add(id); rend
   localStorage.setItem('tg_cart', JSON.stringify(cart));
   updateCart();
   showToast(p.name + " added to cart");
-  
-  // This forces the sidebar to slide open right away
   openCart(); 
 }
 

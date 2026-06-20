@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -205,10 +205,10 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 </style>
 </head>
 <body>
-  <a href="https://wa.me/2349025584325" target="_blank" class="whatsapp-float">
+
+<a href="https://wa.me/2349025584325" target="_blank" class="whatsapp-float">
   <i class="bi bi-whatsapp"></i>
 </a>
- <body>
 
 <div class="announcement">New drop every Sunday — Follow us on Instagram for alerts</div>
 
@@ -234,7 +234,6 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   <a href="#" id="mobile-cart-btn">Cart (<span id="mobile-cart-count">0</span>)</a>
 </div>
 
-<!-- CATEGORY HERO -->
 <div class="cat-hero">
   <img src="asset/images/" alt="Footwear" onerror="this.src='https://placehold.co/1200x380/111111/ffffff?text=Footwear'">
   <div class="cat-hero-content">
@@ -244,7 +243,6 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   </div>
 </div>
 
-<!-- PRODUCTS -->
 <div class="products-section">
   <p class="item-count" id="item-count"></p>
   <div class="product-grid" id="product-grid"></div>
@@ -288,72 +286,72 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
       </select>
     </div>
     <div class="form-group">
-  <label>Delivery Area</label>
-  <select id="co-delivery-area" onchange="updateDeliveryFee()">
-    <option value="0">Select your area</option>
-    <option value="4000">Ikeja - ₦4,000</option>
-    <option value="3500">Egbeda - ₦3,500</option>
-    <option value="4000">Ikotun - ₦4,000</option>
-    <option value="5000">Igando - ₦5,000</option>
-    <option value="3500">Abule Egba - ₦3,500</option>
-    <option value="3500">Agege - ₦3,500</option>
-    <option value="3500">Fagba - ₦3,500</option>
-    <option value="4000">Ojodu - ₦4,000</option>
-    <option value="4000">Omole 1/2 - ₦4,000</option>
-    <option value="4000">Ogba - ₦4,000</option>
-    <option value="4000">Magodo 1/2 - ₦4,000</option>
-    <option value="4000">Maryland - ₦4,000</option>
-    <option value="4000">Mile 12 - ₦4,000</option>
-    <option value="4000">Ketu - ₦4,000</option>
-    <option value="4000">Ojota - ₦4,000</option>
-    <option value="4000">Ogudu - ₦4,000</option>
-    <option value="4500">Oworo - ₦4,500</option>
-    <option value="4500">Surulere - ₦4,500</option>
-    <option value="4500">Mushin - ₦4,500</option>
-    <option value="4000">Isolo - ₦4,000</option>
-    <option value="4000">Ajao Estate - ₦4,000</option>
-    <option value="4000">Oshodi - ₦4,000</option>
-    <option value="4500">Ijegun - ₦4,500</option>
-    <option value="4500">Ago Palace - ₦4,500</option>
-    <option value="4500">Amuwo - ₦4,500</option>
-    <option value="5500">Festac - ₦5,500</option>
-    <option value="6000">Satellite - ₦6,000</option>
-    <option value="5000">Apapa - ₦5,000</option>
-    <option value="4500">Onipanu - ₦4,500</option>
-    <option value="4500">Shomolu - ₦4,500</option>
-    <option value="4500">Bariga - ₦4,500</option>
-    <option value="4500">Yaba - ₦4,500</option>
-    <option value="4500">Akoka - ₦4,500</option>
-    <option value="4500">Ebute Meta - ₦4,500</option>
-    <option value="4500">Gbagada - ₦4,500</option>
-    <option value="4500">Orile Iganmu - ₦4,500</option>
-    <option value="4000">Ejigbo - ₦4,000</option>
-    <option value="3000">Ipaja - ₦3,000</option>
-    <option value="3000">Ayobo - ₦3,000</option>
-    <option value="4500">Ikoyi - ₦4,500</option>
-    <option value="4500">VI - ₦4,500</option>
-    <option value="4500">Lagos Island - ₦4,500</option>
-    <option value="4500">Oniru - ₦4,500</option>
-    <option value="5000">Lekki Phase 1 - ₦5,000</option>
-    <option value="6000">Ikate - ₦6,000</option>
-    <option value="6000">Ilasan - ₦6,000</option>
-    <option value="5000">Jakande - ₦5,000</option>
-    <option value="6000">Osapa - ₦6,000</option>
-    <option value="6000">Orchid - ₦6,000</option>
-    <option value="6000">Ikota - ₦6,000</option>
-    <option value="6000">Agungi - ₦6,000</option>
-    <option value="6000">Idado Lekki - ₦6,000</option>
-    <option value="6000">VGC - ₦6,000</option>
-    <option value="6000">Ajah - ₦6,000</option>
-    <option value="6500">Shongotedo - ₦6,500</option>
-    <option value="6000">Abraham Adesanya - ₦6,000</option>
-  </select>
-</div>
-     <div class="checkout-summary">
-  <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
-  <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
-  <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
-</div>
+      <label>Delivery Area</label>
+      <select id="co-delivery-area" onchange="updateDeliveryFee()">
+        <option value="0">Select your area</option>
+        <option value="4000">Ikeja - ₦4,000</option>
+        <option value="3500">Egbeda - ₦3,500</option>
+        <option value="4000">Ikotun - ₦4,000</option>
+        <option value="5000">Igando - ₦5,000</option>
+        <option value="3500">Abule Egba - ₦3,500</option>
+        <option value="3500">Agege - ₦3,500</option>
+        <option value="3500">Fagba - ₦3,500</option>
+        <option value="4000">Ojodu - ₦4,000</option>
+        <option value="4000">Omole 1/2 - ₦4,000</option>
+        <option value="4000">Ogba - ₦4,000</option>
+        <option value="4000">Magodo 1/2 - ₦4,000</option>
+        <option value="4000">Maryland - ₦4,000</option>
+        <option value="4000">Mile 12 - ₦4,000</option>
+        <option value="4000">Ketu - ₦4,000</option>
+        <option value="4000">Ojota - ₦4,000</option>
+        <option value="4000">Ogudu - ₦4,000</option>
+        <option value="4500">Oworo - ₦4,500</option>
+        <option value="4500">Surulere - ₦4,500</option>
+        <option value="4500">Mushin - ₦4,500</option>
+        <option value="4000">Isolo - ₦4,000</option>
+        <option value="4000">Ajao Estate - ₦4,000</option>
+        <option value="4000">Oshodi - ₦4,000</option>
+        <option value="4500">Ijegun - ₦4,500</option>
+        <option value="4500">Ago Palace - ₦4,500</option>
+        <option value="4500">Amuwo - ₦4,500</option>
+        <option value="5500">Festac - ₦5,500</option>
+        <option value="6000">Satellite - ₦6,000</option>
+        <option value="5000">Apapa - ₦5,000</option>
+        <option value="4500">Onipanu - ₦4,500</option>
+        <option value="4500">Shomolu - ₦4,500</option>
+        <option value="4500">Bariga - ₦4,500</option>
+        <option value="4500">Yaba - ₦4,500</option>
+        <option value="4500">Akoka - ₦4,500</option>
+        <option value="4500">Ebute Meta - ₦4,500</option>
+        <option value="4500">Gbagada - ₦4,500</option>
+        <option value="4500">Orile Iganmu - ₦4,500</option>
+        <option value="4000">Ejigbo - ₦4,000</option>
+        <option value="3000">Ipaja - ₦3,000</option>
+        <option value="3000">Ayobo - ₦3,000</option>
+        <option value="4500">Ikoyi - ₦4,500</option>
+        <option value="4500">VI - ₦4,500</option>
+        <option value="4500">Lagos Island - ₦4,500</option>
+        <option value="4500">Oniru - ₦4,500</option>
+        <option value="5000">Lekki Phase 1 - ₦5,000</option>
+        <option value="6000">Ikate - ₦6,000</option>
+        <option value="6000">Ilasan - ₦6,000</option>
+        <option value="5000">Jakande - ₦5,000</option>
+        <option value="6000">Osapa - ₦6,000</option>
+        <option value="6000">Orchid - ₦6,000</option>
+        <option value="6000">Ikota - ₦6,000</option>
+        <option value="6000">Agungi - ₦6,000</option>
+        <option value="6000">Idado Lekki - ₦6,000</option>
+        <option value="6000">VGC - ₦6,000</option>
+        <option value="6000">Ajah - ₦6,000</option>
+        <option value="6500">Shongotedo - ₦6,500</option>
+        <option value="6000">Abraham Adesanya - ₦6,000</option>
+      </select>
+    </div>
+    <div class="checkout-summary">
+      <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
+      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
+      <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
+    </div>
     <button class="pay-btn" id="pay-btn" onclick="initiatePayment()">Pay with Paystack</button>
   </div>
 </div>
@@ -363,8 +361,8 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 <script>
 const API = 'https://thriftgenius-backend.onrender.com/api';
 const PAGE_SIZE = 8;
-const CATEGORY = 'footwear'; // ← THIS IS THE ONLY THING THAT CHANGES PER PAGE
-const SUB_CATS = []; // ← no subcategories for bags
+const CATEGORY = 'footwear'; 
+const SUB_CATS = []; 
 
 let products = [];
 let cart = JSON.parse(localStorage.getItem('tg_cart') || '[]');
@@ -372,7 +370,8 @@ let liked = new Set();
 let visibleCount = PAGE_SIZE;
 let activeCat = CATEGORY;
 let deliveryFee = 0;
-  async function fetchProducts() {
+
+async function fetchProducts() {
   const grid = document.getElementById("product-grid");
   grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">
     <div style="width:32px;height:32px;border:3px solid #eee;border-top-color:#1a6b35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
@@ -406,6 +405,7 @@ let deliveryFee = 0;
     console.log('Could not load products:', err);
   }
 }
+
 function renderProducts() {
   const toShow = products.slice(0, visibleCount);
   const grid = document.getElementById("product-grid");
@@ -477,7 +477,7 @@ function updateCart() {
       <img src="${c.img}" alt="${c.name}" onerror="this.src='https://placehold.co/60x75/eeeeee/999?text=TG'">
       <div class="cart-item-details">
         <h4>${c.name}</h4>
-        <div class="cat">${c.cat} × ${c.qty}</div>
+        <div class="cat">${c.cat}</div>
         <div class="price">₦${(c.price * c.qty).toLocaleString()}</div>
       </div>
       <button class="remove-item" onclick="removeFromCart('${c.id}')"><i class="bi bi-x"></i></button>
@@ -485,8 +485,17 @@ function updateCart() {
   `).join("");
 }
 
-function openCart() { document.getElementById("cart-sidebar").classList.add("open"); document.getElementById("overlay").classList.add("open"); document.body.style.overflow = "hidden"; }
-function closeCartFn() { document.getElementById("cart-sidebar").classList.remove("open"); document.getElementById("overlay").classList.remove("open"); document.body.style.overflow = ""; }
+function openCart() { 
+  document.getElementById("cart-sidebar").classList.add("open"); 
+  document.getElementById("overlay").classList.add("open"); 
+  document.body.style.overflow = "hidden"; 
+}
+function closeCartFn() { 
+  document.getElementById("cart-sidebar").classList.remove("open"); 
+  document.getElementById("overlay").classList.remove("open"); 
+  document.body.style.overflow = ""; 
+}
+
 document.getElementById("open-cart").addEventListener("click", e => { e.preventDefault(); openCart(); });
 document.getElementById("mobile-cart-btn").addEventListener("click", e => { e.preventDefault(); openCart(); closeMenu(); });
 document.getElementById("close-cart").addEventListener("click", closeCartFn);
@@ -498,7 +507,8 @@ ham.addEventListener("click", () => { ham.classList.toggle("open"); mob.classLis
 function closeMenu() { ham.classList.remove("open"); mob.classList.remove("open"); }
 
 function showToast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 2500); }
- function openCheckout() {
+
+function openCheckout() {
   if (!cart.length) {
     showToast('Your cart is empty');
     return;
@@ -525,7 +535,7 @@ function updateDeliveryFee() {
 function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); document.getElementById('checkout-modal').classList.remove('open'); document.body.style.overflow = ''; }
 document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
 
- async function initiatePayment() {
+async function initiatePayment() {
   const name = document.getElementById('co-name').value.trim();
   const email = document.getElementById('co-email').value.trim();
   const phone = document.getElementById('co-phone').value.trim();

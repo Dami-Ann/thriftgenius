@@ -467,7 +467,7 @@ document.getElementById("load-more-btn").addEventListener("click", () => { visib
 
 function toggleLike(id) { liked.has(id) ? liked.delete(id) : liked.add(id); renderProducts(); }
 
-function addToCart(id) {
+ function addToCart(id) {
   const p = products.find(x => x.id === id);
   if (!p || p.sold) return;
   const ex = cart.find(x => x.id === id);
@@ -475,6 +475,9 @@ function addToCart(id) {
   localStorage.setItem('tg_cart', JSON.stringify(cart));
   updateCart();
   showToast(p.name + " added to cart");
+  
+  // This forces the sidebar to slide open right away
+  openCart(); 
 }
 
 function removeFromCart(id) {

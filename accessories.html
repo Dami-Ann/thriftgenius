@@ -148,6 +148,36 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 }
 .whatsapp-float:hover { transform: scale(1.1); }
 @keyframes spin { to { transform: rotate(360deg); } }
+/* PRODUCT PREVIEW MODAL STYLING */
+.product-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; }
+.product-modal-overlay.open { display: block; }
+.product-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -60%); width: 90%; max-width: 800px; height: 500px; background: #fff; z-index: 301; border-radius: 8px; display: flex; overflow: hidden; opacity: 0; pointer-events: none; transition: all 0.28s ease; }
+.product-modal.open { opacity: 1; pointer-events: all; transform: translate(-50%, -50%); }
+.product-modal-media { width: 50%; height: 100%; position: relative; background: #f9f9f9; overflow: hidden; }
+.product-modal-close { position: absolute; top: 16px; left: 16px; width: 36px; height: 36px; border-radius: 50%; background: #fff; border: 1px solid #ddd; z-index: 10; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.product-modal-slider { display: flex; width: 100%; height: 100%; transition: transform 0.3s ease; }
+.product-modal-slider div { min-width: 100%; height: 100%; }
+.product-modal-slider img { width: 100%; height: 100%; object-fit: cover; }
+.slider-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; z-index: 5; }
+.slider-nav.prev { left: 12px; }
+.slider-nav.next { right: 12px; }
+.product-modal-dots { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
+.pm-dot { width: 6px; height: 6px; background: rgba(0,0,0,0.2); border-radius: 50%; cursor: pointer; }
+.pm-dot.active { background: #1a6b35; width: 14px; border-radius: 3px; }
+.product-modal-info { width: 50%; padding: 40px; display: flex; flex-direction: column; overflow-y: auto; }
+.product-modal-info h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.pm-description { margin: 20px 0; color: #555; line-height: 1.6; font-size: 13px; }
+.pm-sizes-wrap { margin-bottom: 24px; }
+.pm-sizes-wrap label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #888; display: block; margin-bottom: 8px; }
+.pm-sizes { display: flex; gap: 8px; flex-wrap: wrap; }
+.pm-size-btn { padding: 6px 14px; border: 1px solid #ddd; background: #fff; font-size: 12px; border-radius: 4px; cursor: pointer; }
+.pm-size-btn.selected { border-color: #1a6b35; background: #1a6b35; color: #fff; }
+
+@media (max-width: 680px) {
+  .product-modal { flex-direction: column; height: 85vh; width: 92%; }
+  .product-modal-media { width: 100%; height: 45%; }
+  .product-modal-info { width: 100%; height: 55%; padding: 20px; }
+}
 </style>
 </head>
 <body>
@@ -305,6 +335,27 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="product-modal-overlay" id="product-modal-overlay" onclick="closeProductModal()"></div>
+<div class="product-modal" id="product-modal">
+  <div class="product-modal-media">
+    <button class="product-modal-close" onclick="closeProductModal()"><i class="bi bi-x-lg"></i></button>
+    <div class="product-modal-slider" id="product-modal-slider"></div>
+    <div class="product-modal-dots" id="product-modal-dots"></div>
+    <button class="slider-nav prev" onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
+    <button class="slider-nav next" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
+  </div>
+  <div class="product-modal-info">
+    <div class="cat-label" id="pm-cat"></div>
+    <h2 id="pm-name"></h2>
+    <div class="product-price" id="pm-price"></div>
+    <p class="pm-description" id="pm-description"></p>
+    <div class="pm-sizes-wrap" id="pm-sizes-wrap" style="display:none">
+      <label>Select Size</label>
+      <div class="pm-sizes" id="pm-sizes"></div>
+    </div>
+    <button class="add-btn" id="pm-add-btn">Add to Cart</button>
+  </div>
+</div>
 
 <script>
 const API = 'https://thriftgenius-backend.onrender.com/api';
@@ -364,7 +415,7 @@ async function fetchProducts() {
   }
 }
 
-function renderProducts() {
+ function renderProducts() {
   const toShow = products.slice(0, visibleCount);
   const grid = document.getElementById("product-grid");
   document.getElementById("item-count").textContent = products.length + " item" + (products.length !== 1 ? "s" : "");
@@ -377,10 +428,10 @@ function renderProducts() {
 
   grid.innerHTML = toShow.map(p => `
     <div class="product-card">
-      <div class="product-img">
+      <div class="product-img" onclick="openProductModal('${p.id}')">
         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x400/eeeeee/999999?text=No+Image'">
         ${p.sold ? '<span class="sold-out-badge">Sold Out</span>' : p.badge === "new" ? '<span class="new-badge">New</span>' : ''}
-        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="toggleLike(event, '${p.id}')">
+        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike(event, '${p.id}')">
           <i class="bi ${liked.has(p.id) ? 'bi-heart-fill' : 'bi-heart'}"></i>
         </button>
       </div>
@@ -388,7 +439,7 @@ function renderProducts() {
         <div class="cat-label">${p.cat}</div>
         <h3>${p.name}</h3>
         <div class="product-price ${p.sold ? 'sold' : ''}">₦${p.price.toLocaleString()}</div>
-        <button class="add-btn" ${p.sold ? "disabled" : ""} onclick="addToCart('${p.id}')">
+        <button class="add-btn" ${p.sold ? "disabled" : ""} onclick="event.stopPropagation(); addToCart('${p.id}')">
           ${p.sold ? "Sold Out" : "Add to Cart"}
         </button>
       </div>
@@ -399,6 +450,81 @@ function renderProducts() {
   const remaining = products.length - visibleCount;
   if (remaining <= 0) { btn.textContent = "All items loaded"; btn.disabled = true; }
   else { btn.textContent = "Load More (" + remaining + " remaining)"; btn.disabled = false; }
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  if (!p || p.sold) return;
+  
+  // FIXED: Strictly caps checkout quantities to 1 since thrift items are one-of-one pieces
+  const ex = cart.find(x => x.id === id);
+  if (ex) {
+    showToast("This unique item is already in your cart!");
+  } else {
+    cart.push({ ...p, qty: 1 });
+    showToast(p.name + " added to cart");
+  }
+  
+  localStorage.setItem('tg_cart', JSON.stringify(cart));
+  updateCart();
+  openCart(); 
+}
+
+// PRODUCT PREVIEW MODAL SLIDER ENGINE
+let currentSlideIndex = 0;
+let modalImages = [];
+
+function openProductModal(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+
+  modalImages = p.images && p.images.length ? p.images : [p.img];
+  currentSlideIndex = 0;
+
+  document.getElementById("pm-cat").textContent = p.cat;
+  document.getElementById("pm-name").textContent = p.name;
+  document.getElementById("pm-price").textContent = "₦" + p.price.toLocaleString();
+  document.getElementById("pm-description").textContent = p.description;
+
+  const slider = document.getElementById("product-modal-slider");
+  slider.innerHTML = modalImages.map(img => `<div><img src="${img}" onerror="this.src='https://placehold.co/300x400?text=No+Image'"></div>`).join("");
+
+  const sizesWrap = document.getElementById("pm-sizes-wrap");
+  if(p.sizes && p.sizes.length) {
+    sizesWrap.style.display = "block";
+    document.getElementById("pm-sizes").innerHTML = p.sizes.map(s => `<button class="pm-size-btn" onclick="selectModalSize(this)">${s}</button>`).join("");
+  } else {
+    sizesWrap.style.display = "none";
+  }
+
+  document.getElementById("pm-add-btn").setAttribute("onclick", `addToCart('${p.id}')`);
+
+  updateSlider();
+  document.getElementById("product-modal-overlay").classList.add("open");
+  document.getElementById("product-modal").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeProductModal() {
+  document.getElementById("product-modal-overlay").classList.remove("open");
+  document.getElementById("product-modal").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function updateSlider() {
+  const slider = document.getElementById("product-modal-slider");
+  if(slider) slider.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+  
+  const dots = document.getElementById("product-modal-dots");
+  if(dots) dots.innerHTML = modalImages.map((_, i) => `<span class="pm-dot ${i === currentSlideIndex ? 'active' : ''}" onclick="goToSlide(${i})"></span>`).join("");
+}
+
+function nextSlide() { currentSlideIndex = (currentSlideIndex + 1) % modalImages.length; updateSlider(); }
+function prevSlide() { currentSlideIndex = (currentSlideIndex - 1 + modalImages.length) % modalImages.length; updateSlider(); }
+function goToSlide(index) { currentSlideIndex = index; updateSlider(); }
+function selectModalSize(btn) {
+  document.querySelectorAll('.pm-size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
 }
 
 document.getElementById("load-more-btn").addEventListener("click", () => { visibleCount += PAGE_SIZE; renderProducts(); });

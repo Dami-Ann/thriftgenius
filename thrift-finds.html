@@ -139,6 +139,8 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .products-section { padding: 32px 16px; }
   .empty-state { grid-column: span 2; }
+  #preview-grid-layout { grid-template-columns: 1fr !important; gap: 12px !important; }
+.checkout-modal { max-height: 95vh !important; }
 }
 .whatsapp-float {
   position: fixed; bottom: 28px; right: 24px; background: #25d366; color: white;
@@ -305,6 +307,40 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="checkout-overlay" id="preview-overlay"></div>
+<div class="checkout-modal" id="preview-modal" style="max-width: 650px;">
+  <div class="checkout-header">
+    <h3 id="pv-title">Product Details</h3>
+    <button class="checkout-close" onclick="closePreview()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="checkout-body" style="padding: 20px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" id="preview-grid-layout">
+      <div>
+        <img id="pv-main-img" src="" alt="" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; background: #f5f5f5;">
+      </div>
+      <div style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <span id="pv-cat" style="font-size: 11px; color: #aaa; text-transform: capitalize; display: block; margin-bottom: 4px;"></span>
+          <h2 id="pv-name" style="font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #111;"></h2>
+          <div id="pv-price" style="font-size: 16px; font-weight: 700; color: #111; margin-bottom: 16px;"></div>
+          
+          <div style="margin-bottom: 16px;">
+            <label style="display: block; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; margin-bottom: 6px;">Description</label>
+            <p id="pv-desc" style="font-size: 13px; color: #555; line-height: 1.5;"></p>
+          </div>
+
+          <div id="pv-sizes-container" style="margin-bottom: 16px; display: none;">
+            <label style="display: block; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; margin-bottom: 6px;">Size</label>
+            <span id="pv-sizes" style="display: inline-block; padding: 4px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; font-weight: 500; background: #f9f9f9;"></span>
+          </div>
+        </div>
+
+        <div id="pv-action-box">
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 const API = 'https://thriftgenius-backend.onrender.com/api';
@@ -352,7 +388,7 @@ async function fetchProducts() {
   }
 }
 
-function renderProducts() {
+ function renderProducts() {
   const toShow = products.slice(0, visibleCount);
   const grid = document.getElementById("product-grid");
   document.getElementById("item-count").textContent = products.length + " item" + (products.length !== 1 ? "s" : "");
@@ -364,11 +400,11 @@ function renderProducts() {
   }
 
   grid.innerHTML = toShow.map(p => `
-    <div class="product-card">
+    <div class="product-card" onclick="openPreview('${p.id}')">
       <div class="product-img">
         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x400/eeeeee/999999?text=No+Image'">
         ${p.sold ? '<span class="sold-out-badge">Sold Out</span>' : p.badge === "new" ? '<span class="new-badge">New</span>' : ''}
-        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="toggleLike('${p.id}')">
+        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${p.id}')">
           <i class="bi ${liked.has(p.id) ? 'bi-heart-fill' : 'bi-heart'}"></i>
         </button>
       </div>
@@ -376,7 +412,7 @@ function renderProducts() {
         <div class="cat-label">${p.cat}</div>
         <h3>${p.name}</h3>
         <div class="product-price ${p.sold ? 'sold' : ''}">₦${p.price.toLocaleString()}</div>
-        <button class="add-btn" ${p.sold ? "disabled" : ""} onclick="addToCart('${p.id}')">
+        <button class="add-btn" ${p.sold ? "disabled" : ""} onclick="event.stopPropagation(); addToCart('${p.id}')">
           ${p.sold ? "Sold Out" : "Add to Cart"}
         </button>
       </div>
@@ -388,7 +424,6 @@ function renderProducts() {
   if (remaining <= 0) { btn.textContent = "All items loaded"; btn.disabled = true; }
   else { btn.textContent = "Load More (" + remaining + " remaining)"; btn.disabled = false; }
 }
-
 document.getElementById("load-more-btn").addEventListener("click", () => { visibleCount += PAGE_SIZE; renderProducts(); });
 
 function toggleLike(id) { liked.has(id) ? liked.delete(id) : liked.add(id); renderProducts(); }
@@ -396,8 +431,15 @@ function toggleLike(id) { liked.has(id) ? liked.delete(id) : liked.add(id); rend
 function addToCart(id) {
   const p = products.find(x => x.id === id);
   if (!p || p.sold) return;
+  
+  // Thrift Check: If item is already in cart, don't let them add it twice
   const ex = cart.find(x => x.id === id);
-  if (ex) ex.qty++; else cart.push({ ...p, qty: 1 });
+  if (ex) {
+    showToast(p.name + " is already in your cart!");
+    return;
+  }
+  
+  cart.push({ ...p, qty: 1 });
   localStorage.setItem('tg_cart', JSON.stringify(cart));
   updateCart();
   showToast(p.name + " added to cart");
@@ -410,21 +452,25 @@ function removeFromCart(id) {
 }
 
 function updateCart() {
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const qty = cart.reduce((s, c) => s + c.qty, 0);
+  // Thrift Rule: assumptions changed from math calculation to exact layout totals
+  const total = cart.reduce((s, c) => s + c.price, 0);
+  const qty = cart.length;
+  
   document.getElementById("cart-count").textContent = qty;
   document.getElementById("mobile-cart-count").textContent = qty;
   document.getElementById("cart-qty").textContent = qty;
   document.getElementById("cart-total").textContent = "₦" + total.toLocaleString();
+  
   const body = document.getElementById("cart-body");
   if (!cart.length) { body.innerHTML = `<div class="empty-cart"><i class="bi bi-bag"></i><p>Your cart is empty.</p></div>`; return; }
+  
   body.innerHTML = cart.map(c => `
     <div class="cart-item">
       <img src="${c.img}" alt="${c.name}" onerror="this.src='https://placehold.co/60x75/eeeeee/999?text=TG'">
       <div class="cart-item-details">
         <h4>${c.name}</h4>
-        <div class="cat">${c.cat} × ${c.qty}</div>
-        <div class="price">₦${(c.price * c.qty).toLocaleString()}</div>
+        <div class="cat">${c.cat}</div>
+        <div class="price">₦${c.price.toLocaleString()}</div>
       </div>
       <button class="remove-item" onclick="removeFromCart('${c.id}')"><i class="bi bi-x"></i></button>
     </div>
@@ -448,8 +494,8 @@ function showToast(msg) { const el = document.getElementById("toast"); el.textCo
 function openCheckout() {
   if (!cart.length) { showToast('Your cart is empty'); return; }
   closeCartFn();
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const qty = cart.reduce((s, c) => s + c.qty, 0);
+  const total = cart.reduce((s, c) => s + c.price, 0);
+  const qty = cart.length;
   deliveryFee = 0;
   document.getElementById('co-items-count').textContent = qty + ' item' + (qty !== 1 ? 's' : '');
   document.getElementById('co-delivery-fee').textContent = '₦0';
@@ -463,7 +509,7 @@ function updateDeliveryFee() {
   const select = document.getElementById('co-delivery-area');
   deliveryFee = Number(select.value) || 0;
   document.getElementById('co-delivery-fee').textContent = '₦' + deliveryFee.toLocaleString();
-  const itemsTotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const itemsTotal = cart.reduce((s, c) => s + c.price, 0);
   document.getElementById('co-total').textContent = '₦' + (itemsTotal + deliveryFee).toLocaleString();
 }
 function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); document.getElementById('checkout-modal').classList.remove('open'); document.body.style.overflow = ''; }
@@ -483,7 +529,7 @@ async function initiatePayment() {
     return;
   }
 
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
+  const total = cart.reduce((s, c) => s + c.price, 0) + deliveryFee;
   const items = cart.map(c => ({
     product: c.id,
     name: c.name,
@@ -517,7 +563,51 @@ async function initiatePayment() {
     btn.textContent = 'Pay with Paystack';
   }
 }
+function openPreview(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
 
+  // Map text components
+  document.getElementById('pv-main-img').src = p.img;
+  document.getElementById('pv-main-img').alt = p.name;
+  document.getElementById('pv-cat').textContent = p.cat;
+  document.getElementById('pv-name').textContent = p.name;
+  document.getElementById('pv-price').textContent = "₦" + p.price.toLocaleString();
+  document.getElementById('pv-desc').textContent = p.description || "No description provided for this vintage piece.";
+
+  // Handle optional sizing structures safely
+  const sizesContainer = document.getElementById('pv-sizes-container');
+  if (p.sizes && p.sizes.length > 0) {
+    document.getElementById('pv-sizes').textContent = p.sizes.join(', ').toUpperCase();
+    sizesContainer.style.display = 'block';
+  } else {
+    sizesContainer.style.display = 'none';
+  }
+
+  // Setup Dynamic Add To Cart/Sold action template context inside preview window
+  const actionBox = document.getElementById('pv-action-box');
+  if (p.sold) {
+    actionBox.innerHTML = `<button class="add-btn" disabled style="width:100%; padding:12px;">Sold Out</button>`;
+  } else {
+    actionBox.innerHTML = `<button class="add-btn" style="width:100%; padding:12px;" onclick="addToCart('${p.id}'); closePreview();">Add to Cart</button>`;
+  }
+
+  // Active styles display alignment toggle mapping
+  document.getElementById('preview-overlay').classList.add('open');
+  document.getElementById('preview-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePreview() {
+  document.getElementById('preview-overlay').classList.remove('open');
+  document.getElementById('preview-modal').classList.remove('open');
+  if(!document.getElementById('cart-sidebar').classList.contains('open') && !document.getElementById('checkout-modal').classList.contains('open')) {
+    document.body.style.overflow = '';
+  }
+}
+
+// Bind overlay backdrop click
+document.getElementById('preview-overlay').addEventListener('click', closePreview);
 fetchProducts();
 updateCart();
 </script>

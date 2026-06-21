@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -43,59 +43,17 @@ body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-siz
 .mobile-menu a { display: block; padding: 13px 24px; text-decoration: none; color: #111; font-size: 14px; font-weight: 500; border-bottom: 1px solid #f5f5f5; }
 
 /* CATEGORY HERO */
-.cat-hero {
-  position: relative;
-  height: 380px;
-  overflow: hidden;
-  background: #111;
-}
-.cat-hero img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  opacity: 0.6;
-}
-.cat-hero-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  text-align: center;
-}
-.cat-hero-content .back-link {
-  position: absolute;
-  top: 24px; left: 24px;
-  color: white;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  opacity: 0.8;
-  transition: opacity 0.15s;
-}
+.cat-hero { position: relative; height: 380px; overflow: hidden; background: #111; }
+.cat-hero img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+.cat-hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
+.cat-hero-content .back-link { position: absolute; top: 24px; left: 24px; color: white; text-decoration: none; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; opacity: 0.8; transition: opacity 0.15s; }
 .cat-hero-content .back-link:hover { opacity: 1; }
 .cat-hero-content h1 { font-size: 48px; font-weight: 700; letter-spacing: -1px; margin-bottom: 8px; }
 .cat-hero-content p { font-size: 14px; opacity: 0.75; }
 
 /* PRODUCTS */
 .products-section { padding: 48px 40px; max-width: 1200px; margin: 0 auto; }
-
-.sub-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; border-bottom: 1px solid #eee; padding-bottom: 16px; }
-.sub-filter-btn {
-  padding: 6px 18px; border: 1px solid #ddd;
-  background: #fff; border-radius: 3px;
-  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
-  cursor: pointer; color: #444; transition: all 0.15s;
-}
-.sub-filter-btn:hover { border-color: #111; color: #111; }
-.sub-filter-btn.active { background: #111; color: #fff; border-color: #111; }
-
 .item-count { font-size: 12px; color: #888; margin-bottom: 20px; }
-
 .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .product-card { position: relative; cursor: pointer; }
 .product-card:hover .product-img img { transform: scale(1.03); }
@@ -183,32 +141,21 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   .empty-state { grid-column: span 2; }
 }
 .whatsapp-float {
-  position: fixed;
-  bottom: 28px;
-  right: 24px;
-  background: #25d366;
-  color: white;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  z-index: 999;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  transition: transform 0.2s;
-  text-decoration: none;
+  position: fixed; bottom: 28px; right: 24px; background: #25d366; color: white;
+  width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 26px; z-index: 999; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  transition: transform 0.2s; text-decoration: none;
 }
 .whatsapp-float:hover { transform: scale(1.1); }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
+
 <a href="https://wa.me/2349025584325" target="_blank" class="whatsapp-float">
   <i class="bi bi-whatsapp"></i>
 </a>
- <body>
+
 <div class="announcement">New drop every Sunday — Follow us on Instagram for alerts</div>
 
 <nav class="navbar">
@@ -233,7 +180,6 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   <a href="#" id="mobile-cart-btn">Cart (<span id="mobile-cart-count">0</span>)</a>
 </div>
 
-<!-- CATEGORY HERO -->
 <div class="cat-hero">
   <img src="asset/images/cover-thrift-finds.jpg" alt="Thrift Finds" onerror="this.src='https://placehold.co/1200x380/111111/ffffff?text=Thrift+Finds'">
   <div class="cat-hero-content">
@@ -243,7 +189,6 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   </div>
 </div>
 
-<!-- PRODUCTS -->
 <div class="products-section">
   <p class="item-count" id="item-count"></p>
   <div class="product-grid" id="product-grid"></div>
@@ -287,72 +232,74 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
       </select>
     </div>
     <div class="form-group">
-  <label>Delivery Area</label>
-  <select id="co-delivery-area" onchange="updateDeliveryFee()">
-    <option value="0">Select your area</option>
-    <option value="4000">Ikeja - ₦4,000</option>
-    <option value="3500">Egbeda - ₦3,500</option>
-    <option value="4000">Ikotun - ₦4,000</option>
-    <option value="5000">Igando - ₦5,000</option>
-    <option value="3500">Abule Egba - ₦3,500</option>
-    <option value="3500">Agege - ₦3,500</option>
-    <option value="3500">Fagba - ₦3,500</option>
-    <option value="4000">Ojodu - ₦4,000</option>
-    <option value="4000">Omole 1/2 - ₦4,000</option>
-    <option value="4000">Ogba - ₦4,000</option>
-    <option value="4000">Magodo 1/2 - ₦4,000</option>
-    <option value="4000">Maryland - ₦4,000</option>
-    <option value="4000">Mile 12 - ₦4,000</option>
-    <option value="4000">Ketu - ₦4,000</option>
-    <option value="4000">Ojota - ₦4,000</option>
-    <option value="4000">Ogudu - ₦4,000</option>
-    <option value="4500">Oworo - ₦4,500</option>
-    <option value="4500">Surulere - ₦4,500</option>
-    <option value="4500">Mushin - ₦4,500</option>
-    <option value="4000">Isolo - ₦4,000</option>
-    <option value="4000">Ajao Estate - ₦4,000</option>
-    <option value="4000">Oshodi - ₦4,000</option>
-    <option value="4500">Ijegun - ₦4,500</option>
-    <option value="4500">Ago Palace - ₦4,500</option>
-    <option value="4500">Amuwo - ₦4,500</option>
-    <option value="5500">Festac - ₦5,500</option>
-    <option value="6000">Satellite - ₦6,000</option>
-    <option value="5000">Apapa - ₦5,000</option>
-    <option value="4500">Onipanu - ₦4,500</option>
-    <option value="4500">Shomolu - ₦4,500</option>
-    <option value="4500">Bariga - ₦4,500</option>
-    <option value="4500">Yaba - ₦4,500</option>
-    <option value="4500">Akoka - ₦4,500</option>
-    <option value="4500">Ebute Meta - ₦4,500</option>
-    <option value="4500">Gbagada - ₦4,500</option>
-    <option value="4500">Orile Iganmu - ₦4,500</option>
-    <option value="4000">Ejigbo - ₦4,000</option>
-    <option value="3000">Ipaja - ₦3,000</option>
-    <option value="3000">Ayobo - ₦3,000</option>
-    <option value="4500">Ikoyi - ₦4,500</option>
-    <option value="4500">VI - ₦4,500</option>
-    <option value="4500">Lagos Island - ₦4,500</option>
-    <option value="4500">Oniru - ₦4,500</option>
-    <option value="5000">Lekki Phase 1 - ₦5,000</option>
-    <option value="6000">Ikate - ₦6,000</option>
-    <option value="6000">Ilasan - ₦6,000</option>
-    <option value="5000">Jakande - ₦5,000</option>
-    <option value="6000">Osapa - ₦6,000</option>
-    <option value="6000">Orchid - ₦6,000</option>
-    <option value="6000">Ikota - ₦6,000</option>
-    <option value="6000">Agungi - ₦6,000</option>
-    <option value="6000">Idado Lekki - ₦6,000</option>
-    <option value="6000">VGC - ₦6,000</option>
-    <option value="6000">Ajah - ₦6,000</option>
-    <option value="6500">Shongotedo - ₦6,500</option>
-    <option value="6000">Abraham Adesanya - ₦6,000</option>
-  </select>
-</div>
-     <div class="checkout-summary">
-  <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
-  <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
-  <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
-</div>
+      <label>Delivery Area</label>
+      <select id="co-delivery-area" onchange="updateDeliveryFee()">
+        <option value="0">Select your area</option>
+        <option value="4000">Ikeja - ₦4,000</option>
+        <option value="3500">Egbeda - ₦3,500</option>
+        <option value="4000">Ikotun - ₦4,000</option>
+        <option value="5000">Igando - ₦5,000</option>
+        <option value="3500">Abule Egba - ₦3,500</option>
+        <option value="3500">Agege - ₦3,500</option>
+        <option value="3500">Fagba - ₦3,500</option>
+        <option value="4000">Ojodu - ₦4,000</option>
+        <option value="4000">Omole 1/2 - ₦4,000</option>
+        <option value="4000">Ogba - ₦4,000</option>
+        <option value="4000">Magodo 1/2 - ₦4,000</option>
+        <option value="4000">Maryland - ₦4,000</option>
+        <option value="4000">Mile 12 - ₦4,000</option>
+        <option value="4000">Ketu - ₦4,000</option>
+        <option value="4000">Ojota - ₦4,000</option>
+        <option value="4000">Ogudu - ₦4,000</option>
+        <option value="4500">Oworo - ₦4,500</option>
+        <option value="4500">Surulere - ₦4,500</option>
+        <option value="4500">Mushin - ₦4,500</option>
+        <option value="4000">Isolo - ₦4,000</option>
+        <option value="4000">Ajao Estate - ₦4,000</option>
+        <option value="4000">Oshodi - ₦4,000</option>
+        <option value="4500">Ijegun - ₦4,500</option>
+        <option value="4500">Ago Palace - ₦4,500</option>
+        <option value="4500">Amuwo - ₦4,500</option>
+        <option value="5500">Festac - ₦5,500</option>
+        <option value="6000">Satellite - ₦6,000</option>
+        <option value="5000">Apapa - ₦5,000</option>
+        <option value="4500">Onipanu - ₦4,500</option>
+        <option value="4500">Shomolu - ₦4,500</option>
+        <option value="4500">Bariga - ₦4,500</option>
+        <option value="4500">Yaba - ₦4,500</option>
+        <option value="4500">Akoka - ₦4,500</option>
+        <option value="4500">Ebute Meta - ₦4,500</option>
+        <option value="4500">Gbagada - ₦4,500</option>
+        <option value="4500">Orile Iganmu - ₦4,500</option>
+        <option value="4000">Ejigbo - ₦4,000</option>
+        <option value="3000">Ipaja - ₦3,000</option>
+        <option value="3000">Ayobo - ₦3,000</option>
+        <option value="4500">Ikoyi - ₦4,500</option>
+        <option value="4500">VI - ₦4,500</option>
+        <option value="4500">Lagos Island - ₦4,500</option>
+        <option value="4500">Oniru - ₦4,500</option>
+        <option value="5000">Lekki Phase 1 - ₦5,000</option>
+        <option value="6000">Ikate - ₦6,000</option>
+        <option value="6000">Ilasan - ₦6,000</option>
+        <option value="5000">Jakande - ₦5,000</option>
+        <option value="6000">Osapa - ₦6,000</option>
+        <option value="6000">Orchid - ₦6,000</option>
+        <option value="6000">Ikota - ₦6,000</option>
+        <option value="6000">Agungi - ₦6,000</option>
+        <option value="6000">Idado Lekki - ₦6,000</option>
+        <option value="6000">VGC - ₦6,000</option>
+        <option value="6000">Ajah - ₦6,000</option>
+        <option value="6500">Shongotedo - ₦6,500</option>
+        <option value="6000">Abraham Adesanya - ₦6,000</option>
+        <option value="6000">Interstate park delivery 0-2kg - ₦7,000</option>
+        <option value="6000">Interstate home delivery 0-2kg - ₦9,500</option>
+      </select>
+    </div>
+    <div class="checkout-summary">
+      <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
+      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
+      <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
+    </div>
     <button class="pay-btn" id="pay-btn" onclick="initiatePayment()">Pay with Paystack</button>
   </div>
 </div>
@@ -362,17 +309,15 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 <script>
 const API = 'https://thriftgenius-backend.onrender.com/api';
 const PAGE_SIZE = 8;
-const CATEGORY = 'thrift-finds'; // ← THIS IS THE ONLY THING THAT CHANGES PER PAGE
-const SUB_CATS = []; // ← no subcategories for bags
+const CATEGORY = 'thrift-finds'; 
 
 let products = [];
 let cart = JSON.parse(localStorage.getItem('tg_cart') || '[]');
 let liked = new Set();
 let visibleCount = PAGE_SIZE;
-let activeCat = CATEGORY;
 let deliveryFee = 0;
 
-   async function fetchProducts() {
+async function fetchProducts() {
   const grid = document.getElementById("product-grid");
   grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">
     <div style="width:32px;height:32px;border:3px solid #eee;border-top-color:#1a6b35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
@@ -406,6 +351,7 @@ let deliveryFee = 0;
     console.log('Could not load products:', err);
   }
 }
+
 function renderProducts() {
   const toShow = products.slice(0, visibleCount);
   const grid = document.getElementById("product-grid");
@@ -499,11 +445,8 @@ function closeMenu() { ham.classList.remove("open"); mob.classList.remove("open"
 
 function showToast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 2500); }
 
- function openCheckout() {
-  if (!cart.length) {
-    showToast('Your cart is empty');
-    return;
-  }
+function openCheckout() {
+  if (!cart.length) { showToast('Your cart is empty'); return; }
   closeCartFn();
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const qty = cart.reduce((s, c) => s + c.qty, 0);
@@ -526,7 +469,7 @@ function updateDeliveryFee() {
 function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); document.getElementById('checkout-modal').classList.remove('open'); document.body.style.overflow = ''; }
 document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
 
- async function initiatePayment() {
+async function initiatePayment() {
   const name = document.getElementById('co-name').value.trim();
   const email = document.getElementById('co-email').value.trim();
   const phone = document.getElementById('co-phone').value.trim();

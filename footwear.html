@@ -155,7 +155,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-siz
 .cart-item img { width: 60px; height: 75px; object-fit: cover; border-radius: 4px; background: #f5f5f5; flex-shrink: 0; }
 .cart-item-details { flex: 1; }
 .cart-item-details h4 { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
-.cart-item-details .cat { font-size: 11px; color: #aaa; margin-bottom: 6px; }
+.cart-item-details .cat { font-size: 11px; color: #aaa; margin-bottom: 6px; text-transform: capitalize; }
 .cart-item-details .price { font-size: 13px; font-weight: 700; }
 .remove-item { background: none; border: none; cursor: pointer; color: #ccc; font-size: 16px; transition: color 0.15s; }
 .remove-item:hover { color: #c0392b; }
@@ -364,6 +364,8 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
         <option value="6000">Ajah - ₦6,000</option>
         <option value="6500">Shongotedo - ₦6,500</option>
         <option value="6000">Abraham Adesanya - ₦6,000</option>
+        <option value="6000">Interstate park delivery 0-2kg - ₦7,000</option>
+        <option value="6000">Interstate home delivery 0-2kg - ₦9,500</option>
       </select>
     </div>
     <div class="checkout-summary">
@@ -441,7 +443,7 @@ function renderProducts() {
       <div class="product-img">
         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x400/eeeeee/999999?text=No+Image'">
         ${p.sold ? '<span class="sold-out-badge">Sold Out</span>' : p.badge === "new" ? '<span class="new-badge">New</span>' : ''}
-        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="toggleLike('${p.id}')">
+        <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${p.id}')">
           <i class="bi ${liked.has(p.id) ? 'bi-heart-fill' : 'bi-heart'}"></i>
         </button>
       </div>
@@ -449,7 +451,7 @@ function renderProducts() {
         <div class="cat-label">${p.cat}</div>
         <h3>${p.name}</h3>
         <div class="product-price ${p.sold ? 'sold' : ''}">₦${p.price.toLocaleString()}</div>
-        <button class="add-btn" ${p.sold ? "disabled" : ""} onclick="addToCart('${p.id}')">
+        <button class="add-btn" ${p.sold ? "disabled" : ""} onclick="event.stopPropagation(); addToCart('${p.id}')">
           ${p.sold ? "Sold Out" : "Add to Cart"}
         </button>
       </div>
@@ -466,7 +468,7 @@ document.getElementById("load-more-btn").addEventListener("click", () => { visib
 
 function toggleLike(id) { liked.has(id) ? liked.delete(id) : liked.add(id); renderProducts(); }
 
-function addToCart(id) {
+ function addToCart(id) {
   const p = products.find(x => x.id === id);
   if (!p || p.sold) return;
   const ex = cart.find(x => x.id === id);
@@ -474,9 +476,10 @@ function addToCart(id) {
   localStorage.setItem('tg_cart', JSON.stringify(cart));
   updateCart();
   showToast(p.name + " added to cart");
+  
+  // THIS IS THE TRIGGER FOR THE SLIDE
   openCart(); 
 }
-
 function removeFromCart(id) {
   cart = cart.filter(x => x.id !== id);
   localStorage.setItem('tg_cart', JSON.stringify(cart));
@@ -592,7 +595,7 @@ async function initiatePayment() {
       })
     });
 
-    const data = await res.json();
+  const data = await res.json();
     if (!res.ok) throw new Error(data.message);
 
     window.location.href = data.authorizationUrl;

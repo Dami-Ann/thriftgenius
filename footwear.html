@@ -245,39 +245,119 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   </div>
 </div>
 
-<div class="checkout-overlay" id="checkout-overlay"></div>
+ <div class="checkout-overlay" id="checkout-overlay"></div>
 <div class="checkout-modal" id="checkout-modal">
   <div class="checkout-header">
     <h3>Checkout</h3>
     <button class="checkout-close" onclick="closeCheckout()"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="checkout-body">
-    <div class="form-group"><label>Full Name</label><input type="text" id="co-name" placeholder="e.g. Adaeze Johnson"></div>
-    <div class="form-group"><label>Email</label><input type="email" id="co-email" placeholder="your@email.com"></div>
-    <div class="form-group"><label>Phone Number</label><input type="tel" id="co-phone" placeholder="e.g. 08012345678"></div>
-    <div class="form-group"><label>Delivery Address</label><textarea id="co-address" placeholder="Full address including area and city"></textarea></div>
     <div class="form-group">
-      <label>Delivery Day</label>
-      <select id="co-delivery-day">
-        <option value="">Select delivery day</option>
-        <option value="thursday">Thursday</option>
-        <option value="saturday">Saturday</option>
-      </select>
+      <label>Full Name</label>
+      <input type="text" id="co-name" placeholder="e.g. Adaeze Johnson">
     </div>
     <div class="form-group">
-      <label>Delivery Area</label>
-      <select id="co-delivery-area" onchange="updateDeliveryFee()">
-        <option value="0">Select your area</option>
-        <option value="4000">Ikeja - ₦4,000</option>
-        <option value="3500">Egbeda - ₦3,500</option>
-        <option value="4500">Yaba - ₦4,500</option>
+      <label>Email</label>
+      <input type="email" id="co-email" placeholder="your@email.com">
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="co-phone" placeholder="e.g. 08012345678">
+    </div>
+
+    <div class="form-group">
+      <label style="color: #2c3e50; font-weight: 700;">Delivery Options</label>
+      <select id="co-fulfillment-method" onchange="toggleDeliveryFields()" style="border: 2px solid #000; font-weight: 600;">
+        <option value="delivery">Home & Office Dispatch Delivery</option>
+        <option value="pickup">Pay for Item Only (Pay Delivery Fee Later)</option>
       </select>
     </div>
+
+    <div id="delivery-fields-wrapper">
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea id="co-address" placeholder="Full address including area and city"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Delivery Day</label>
+        <select id="co-delivery-day">
+          <option value="">Select delivery day</option>
+          <option value="thursday">Thursday</option>
+          <option value="saturday">Saturday</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Delivery Area</label>
+        <select id="co-delivery-area" onchange="updateDeliveryFee()">
+          <option value="0">Select your area</option>
+          <option value="4000">Ikeja - ₦4,000</option>
+          <option value="3500">Egbeda - ₦3,500</option>
+          <option value="4000">Ikotun - ₦4,000</option>
+          <option value="5000">Igando - ₦5,000</option>
+          <option value="3500">Abule Egba - ₦3,500</option>
+          <option value="3500">Agege - ₦3,500</option>
+          <option value="3500">Fagba - ₦3,500</option>
+          <option value="4000">Ojodu - ₦4,000</option>
+          <option value="4000">Omole 1/2 - ₦4,000</option>
+          <option value="4000">Ogba - ₦4,000</option>
+          <option value="4000">Magodo 1/2 - ₦4,000</option>
+          <option value="4000">Maryland - ₦4,000</option>
+          <option value="4000">Mile 12 - ₦4,000</option>
+          <option value="4000">Ketu - ₦4,000</option>
+          <option value="4000">Ojota - ₦4,000</option>
+          <option value="4000">Ogudu - ₦4,000</option>
+          <option value="4500">Oworo - ₦4,500</option>
+          <option value="4500">Surulere - ₦4,500</option>
+          <option value="4500">Mushin - ₦4,500</option>
+          <option value="4000">Isolo - ₦4,000</option>
+          <option value="4000">Ajao Estate - ₦4,000</option>
+          <option value="4000">Oshodi - ₦4,000</option>
+          <option value="4500">Ijegun - ₦4,500</option>
+          <option value="4500">Ago Palace - ₦4,500</option>
+          <option value="4500">Amuwo - ₦4,500</option>
+          <option value="5500">Festac - ₦5,500</option>
+          <option value="6000">Satellite - ₦6,000</option>
+          <option value="5000">Apapa - ₦5,000</option>
+          <option value="4500">Onipanu - ₦4,500</option>
+          <option value="4500">Shomolu - ₦4,500</option>
+          <option value="4500">Bariga - ₦4,500</option>
+          <option value="4500">Yaba - ₦4,500</option>
+          <option value="4500">Akoka - ₦4,500</option>
+          <option value="4500">Ebute Meta - ₦4,500</option>
+          <option value="4500">Gbagada - ₦4,500</option>
+          <option value="4500">Orile Iganmu - ₦4,500</option>
+          <option value="4000">Ejigbo - ₦4,000</option>
+          <option value="3000">Ipaja - ₦3,000</option>
+          <option value="3000">Ayobo - ₦3,000</option>
+          <option value="4500">Ikoyi - ₦4,500</option>
+          <option value="4500">VI - ₦4,500</option>
+          <option value="4500">Lagos Island - ₦4,500</option>
+          <option value="4500">Oniru - ₦4,500</option>
+          <option value="5000">Lekki Phase 1 - ₦5,000</option>
+          <option value="6000">Ikate - ₦6,000</option>
+          <option value="6000">Ilasan - ₦6,000</option>
+          <option value="5000">Jakande - ₦5,000</option>
+          <option value="6000">Osapa - ₦6,000</option>
+          <option value="6000">Orchid - ₦6,000</option>
+          <option value="6000">Ikota - ₦6,000</option>
+          <option value="6000">Agungi - ₦6,000</option>
+          <option value="6000">Idado Lekki - ₦6,000</option>
+          <option value="6000">VGC - ₦6,000</option>
+          <option value="6000">Ajah - ₦6,000</option>
+          <option value="6500">Shongotedo - ₦6,500</option>
+          <option value="6000">Abraham Adesanya - ₦6,000</option>
+          <option value="7000">Interstate park delivery 0-2kg - ₦7,000</option>
+          <option value="9500">Interstate home delivery 0-2kg - ₦9,500</option>
+        </select>
+      </div>
+    </div>
+
     <div class="checkout-summary">
       <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
       <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
       <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
     </div>
+    
     <button class="pay-btn" id="pay-btn" onclick="initiatePayment()">Pay with Paystack</button>
   </div>
 </div>
@@ -527,9 +607,189 @@ function showToast(msg) {
 function toggleLike(id) { liked.has(id) ? liked.delete(id) : liked.add(id); renderProducts(); }
 document.getElementById('preview-overlay').addEventListener('click', closeProductModal);
 document.getElementById("load-more-btn").addEventListener("click", () => { visibleCount += PAGE_SIZE; renderProducts(); });
+  function updateCart() {
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const qty   = cart.reduce((s, c) => s + c.qty, 0);
+  
+  // Dynamic layout target updates with safe fallback verification checks
+  const countEl = document.getElementById("cart-count");
+  const mobCountEl = document.getElementById("mobile-cart-count");
+  const qtyEl = document.getElementById("cart-qty");
+  const totalEl = document.getElementById("cart-total");
 
-// Initial Load
+  if (countEl) countEl.textContent = qty;
+  if (mobCountEl) mobCountEl.textContent = qty;
+  if (qtyEl) qtyEl.textContent = qty;
+  if (totalEl) totalEl.textContent = "₦" + total.toLocaleString();
+
+  const body = document.getElementById("cart-body");
+  if (!body) return;
+  
+  if (!cart.length) {
+    body.innerHTML = `<div class="empty-cart"><i class="bi bi-bag"></i><p>Your cart is empty.</p></div>`;
+    return;
+  }
+  
+  body.innerHTML = cart.map(c => `
+    <div class="cart-item">
+      <img src="${c.img}" alt="${c.name}" onerror="this.src='https://placehold.co/60x75/eeeeee/999?text=TG'">
+      <div class="cart-item-details">
+        <h4>${c.name}</h4>
+        <div class="cat">${c.cat} &times; ${c.qty}</div>
+        <div class="price">&#8358;${(c.price * c.qty).toLocaleString()}</div>
+      </div>
+      <button class="remove-item" onclick="removeFromCart('${c.id}')"><i class="bi bi-x"></i></button>
+    </div>
+  `).join("");
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  localStorage.setItem('tg_cart', JSON.stringify(cart));
+  updateCart();
+}
+
+function openCheckout() {
+  if (!cart.length) {
+    showToast('Your cart is empty');
+    return;
+  }
+  // Try calling closeCartFn if declared, otherwise fall back to class list resets manually
+  if (typeof closeCartFn === "function") {
+    closeCartFn();
+  } else {
+    const sidebar = document.getElementById("cart-sidebar");
+    const overlay = document.getElementById("overlay");
+    if (sidebar) sidebar.classList.remove("open");
+    if (overlay) overlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+  
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const qty = cart.reduce((s, c) => s + c.qty, 0);
+  deliveryFee = 0;
+  
+  // 🔒 Reset fulfillment selector defaults back to standard delivery on open
+  const fulfillmentSelect = document.getElementById('co-fulfillment-method');
+  if(fulfillmentSelect) fulfillmentSelect.value = 'delivery';
+  const wrapper = document.getElementById('delivery-fields-wrapper');
+  if(wrapper) wrapper.style.display = 'block';
+
+  document.getElementById('co-items-count').textContent = qty + ' item' + (qty !== 1 ? 's' : '');
+  document.getElementById('co-delivery-fee').textContent = '₦0';
+  document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
+  document.getElementById('checkout-overlay').classList.add('open');
+  document.getElementById('checkout-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function updateDeliveryFee() {
+  const method = document.getElementById('co-fulfillment-method').value;
+  
+  if (method === 'pickup') {
+    deliveryFee = 0;
+  } else {
+    const areaSelect = document.getElementById('co-delivery-area');
+    deliveryFee = parseInt(areaSelect.value) || 0;
+  }
+
+  let itemsSubtotal = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0); 
+  let finalTotal = itemsSubtotal + deliveryFee;
+
+  document.getElementById('co-delivery-fee').textContent = "₦" + deliveryFee.toLocaleString();
+  document.getElementById('co-total').textContent = "₦" + finalTotal.toLocaleString();
+}
+
+function toggleDeliveryFields() {
+  const method = document.getElementById('co-fulfillment-method').value;
+  const deliveryWrapper = document.getElementById('delivery-fields-wrapper');
+  
+  if (method === 'pickup') {
+    deliveryWrapper.style.display = 'none';
+    document.getElementById('co-delivery-area').value = "0"; 
+    updateDeliveryFee(); 
+  } else {
+    deliveryWrapper.style.display = 'block'; 
+    updateDeliveryFee(); 
+  }
+}
+
+function closeCheckout() { 
+  document.getElementById('checkout-overlay').classList.remove('open'); 
+  document.getElementById('checkout-modal').classList.remove('open'); 
+  document.body.style.overflow = ''; 
+}
+
+// Check element validation bindings safely
+const coOverlay = document.getElementById('checkout-overlay');
+if (coOverlay) coOverlay.addEventListener('click', closeCheckout);
+
+async function initiatePayment() {
+  const name = document.getElementById('co-name').value.trim();
+  const email = document.getElementById('co-email').value.trim();
+  const phone = document.getElementById('co-phone').value.trim();
+  const fulfillmentMethod = document.getElementById('co-fulfillment-method').value;
+
+  if (!name || !email || !phone) {
+    showToast('Please fill in your contact details (Name, Email, Phone).');
+    return;
+  }
+
+  let address = "Pay Later / Pickup";
+  let deliveryDay = "N/A";
+  let deliveryArea = "Pay Later";
+
+  if (fulfillmentMethod === 'delivery') {
+    address = document.getElementById('co-address').value.trim();
+    const daySelect = document.getElementById('co-delivery-day').value;
+    const areaSelect = document.getElementById('co-delivery-area');
+    
+    if (!address || !daySelect || areaSelect.value === "0" || deliveryFee === 0) {
+      showToast('Please fill in all delivery details including area.');
+      return;
+    }
+    
+    deliveryDay = daySelect;
+    deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
+  }
+
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
+  const items = cart.map(c => ({
+    product: c.id,
+    name: c.name,
+    price: c.price,
+    size: c.size || '' // 🔒 Fixed to run calculations accurately off item content context
+  }));
+
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    const res = await fetch(`${API}/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer: { name, email, phone, address, deliveryDay, deliveryArea, deliveryFee },
+        items,
+        totalAmount: total
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+
+    window.location.href = data.authorizationUrl;
+  } catch (err) {
+    showToast(err.message || 'Error processing transaction flow details');
+    btn.disabled = false;
+    btn.textContent = 'Pay with Paystack';
+  }
+}
+
+// Run engine load sync operations
 fetchProducts();
+updateCart();
 </script>
 </body>
 </html>

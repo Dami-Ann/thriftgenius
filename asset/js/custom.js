@@ -1,7 +1,7 @@
  let products = [];
 
 const PAGE_SIZE = 8;
-let cart = [];
+ let cart = JSON.parse(localStorage.getItem('tg_cart')) || [];
 let liked = new Set();
 let activeCat = "all";
 let deliveryFee = 0;
@@ -133,18 +133,26 @@ function toggleLike(id) {
   renderProducts();
 }
 
-function addToCart(id) {
+ function addToCart(id) {
   const p = products.find(x => x.id === id);
   if (!p || p.sold) return;
   const ex = cart.find(x => x.id === id);
   if (ex) ex.qty++;
   else cart.push({ ...p, qty: 1 });
+  
+  // 🔒 Save to memory here!
+  localStorage.setItem('tg_cart', JSON.stringify(cart));
+  
   updateCart();
   showToast(p.name + " added to cart");
 }
 
-function removeFromCart(id) {
+ function removeFromCart(id) {
   cart = cart.filter(x => x.id !== id);
+  
+  // 🔒 Update memory after removing an item!
+  localStorage.setItem('tg_cart', JSON.stringify(cart));
+  
   updateCart();
 }
 

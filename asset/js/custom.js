@@ -1,13 +1,13 @@
  let products = [];
 
 const PAGE_SIZE = 8;
- let cart = JSON.parse(localStorage.getItem('tg_cart')) || [];
+let cart = JSON.parse(localStorage.getItem('tg_cart')) || [];
 let liked = new Set();
 let activeCat = "all";
 let deliveryFee = 0;
 let visibleCount = PAGE_SIZE;
 
- async function fetchProducts() {
+async function fetchProducts() {
   const grid = document.getElementById("product-grid");
   grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">
     <div style="width:32px;height:32px;border:3px solid #eee;border-top-color:#1a6b35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
@@ -53,7 +53,7 @@ function renderProducts() {
   document.getElementById("item-count").textContent =
     filtered.length + " item" + (filtered.length !== 1 ? "s" : "");
 
-   grid.innerHTML = toShow.map(p => `
+  grid.innerHTML = toShow.map(p => `
     <div class="product-card">
       <div class="product-img" onclick="openProductModal('${p.id}')">
         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x400/eeeeee/999999?text=No+Image'">
@@ -90,12 +90,10 @@ document.querySelectorAll(".main-cat-btn").forEach(btn => {
     document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
-    // Hide all subcategories
     document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
 
     const cat = btn.dataset.cat;
 
-    // Show subcategory if it has one
     if (["clothing", "footwear", "accessories", "bottoms"].includes(cat)) {
       const sub = document.getElementById("sub-" + cat);
       if (sub) {
@@ -133,26 +131,21 @@ function toggleLike(id) {
   renderProducts();
 }
 
- function addToCart(id) {
+function addToCart(id) {
   const p = products.find(x => x.id === id);
   if (!p || p.sold) return;
   const ex = cart.find(x => x.id === id);
   if (ex) ex.qty++;
   else cart.push({ ...p, qty: 1 });
   
-  // 🔒 Save to memory here!
   localStorage.setItem('tg_cart', JSON.stringify(cart));
-  
   updateCart();
   showToast(p.name + " added to cart");
 }
 
- function removeFromCart(id) {
+function removeFromCart(id) {
   cart = cart.filter(x => x.id !== id);
-  
-  // 🔒 Update memory after removing an item!
   localStorage.setItem('tg_cart', JSON.stringify(cart));
-  
   updateCart();
 }
 
@@ -210,33 +203,76 @@ function showToast(msg) {
   setTimeout(() => el.classList.remove("show"), 2500);
 }
 
-fetchProducts();
-updateCart();
+// ==========================================
+// 🛠️ FIXED CHECKOUT MECHANICS
+// ==========================================
 
-// CHECKOUT
  function openCheckout() {
   if (!cart.length) {
     showToast('Your cart is empty');
     return;
   }
-  closeCartFn();
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  if (typeof closeCartFn === "function") {
+    closeCartFn();
+  } else {
+    const sidebar = document.getElementById("cart-sidebar");
+    const overlay = document.getElementById("overlay");
+    if (sidebar) sidebar.classList.remove("open");
+    if (overlay) overlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
   const qty = cart.reduce((s, c) => s + c.qty, 0);
-  deliveryFee = 0;
-  document.getElementById('co-items-count').textContent = qty + ' item' + (qty !== 1 ? 's' : '');
-  document.getElementById('co-delivery-fee').textContent = '₦0';
-  document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
-  document.getElementById('checkout-overlay').classList.add('open');
-  document.getElementById('checkout-modal').classList.add('open');
+
+  // Safely check elements before updating text to prevent JS freezing on mobile
+  const itemsCountEl = document.getElementById('co-items-count');
+  if (itemsCountEl) {
+    itemsCountEl.textContent = qty + ' item' + (qty !== 1 ? 's' : '');
+  }
+
+  // 🔄 Instantly balance field visibility based on whatever option is currently selected
+  toggleDeliveryFields();
+
+  const overlayEl = document.getElementById('checkout-overlay');
+  const modalEl = document.getElementById('checkout-modal');
+  if (overlayEl) overlayEl.classList.add('open');
+  if (modalEl) modalEl.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function updateDeliveryFee() {
-  const select = document.getElementById('co-delivery-area');
-  deliveryFee = Number(select.value) || 0;
-  document.getElementById('co-delivery-fee').textContent = '₦' + deliveryFee.toLocaleString();
-  const itemsTotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  document.getElementById('co-total').textContent = '₦' + (itemsTotal + deliveryFee).toLocaleString();
+  const method = document.getElementById('co-fulfillment-method').value;
+  const feeElement = document.getElementById('co-delivery-fee');
+  
+  if (method === 'pickup') {
+    deliveryFee = 0;
+    if (feeElement) feeElement.textContent = "₦0 (Pay Later)";
+  } else {
+    const areaSelect = document.getElementById('co-delivery-area');
+    deliveryFee = parseInt(areaSelect.value) || 0;
+    if (feeElement) feeElement.textContent = "₦" + deliveryFee.toLocaleString();
+  }
+
+  let itemsSubtotal = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0); 
+  let finalTotal = itemsSubtotal + deliveryFee;
+
+  document.getElementById('co-total').textContent = "₦" + finalTotal.toLocaleString();
+}
+
+  function toggleDeliveryFields() {
+  const method = document.getElementById('co-fulfillment-method').value;
+  const deliveryWrapper = document.getElementById('delivery-fields-wrapper');
+  
+  if (!deliveryWrapper) return;
+
+  if (method === 'pickup') {
+    // This tells the browser to hide the fields immediately, ignoring any CSS files
+    deliveryWrapper.style.setProperty('display', 'none', 'important');
+    const areaSelect = document.getElementById('co-delivery-area');
+    if (areaSelect) areaSelect.value = "0"; 
+  } else {
+    deliveryWrapper.style.setProperty('display', 'block', 'important'); 
+  }
+  updateDeliveryFee(); 
 }
 function closeCheckout() {
   document.getElementById('checkout-overlay').classList.remove('open');
@@ -246,18 +282,33 @@ function closeCheckout() {
 
 document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
 
- async function initiatePayment() {
+async function initiatePayment() {
   const name = document.getElementById('co-name').value.trim();
   const email = document.getElementById('co-email').value.trim();
   const phone = document.getElementById('co-phone').value.trim();
-  const address = document.getElementById('co-address').value.trim();
-  const deliveryDay = document.getElementById('co-delivery-day').value;
-  const areaSelect = document.getElementById('co-delivery-area');
-  const deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
+  const fulfillmentMethod = document.getElementById('co-fulfillment-method').value;
 
-  if (!name || !email || !phone || !address || !deliveryDay || deliveryFee === 0) {
-    showToast('Please fill in all fields including delivery area');
+  if (!name || !email || !phone || !address || !deliveryDay) {
+    showToast('Please fill in all fields');
     return;
+  }
+
+  let address = "Pay Later / Pickup Option Chosen";
+  let deliveryDay = "N/A";
+  let deliveryArea = "Pay Later";
+
+  if (fulfillmentMethod === 'delivery') {
+    address = document.getElementById('co-address').value.trim();
+    const daySelect = document.getElementById('co-delivery-day').value;
+    const areaSelect = document.getElementById('co-delivery-area');
+    
+    if (!address || !daySelect || areaSelect.value === "0" || deliveryFee === 0) {
+      showToast('Please fill in all delivery details including area.');
+      return;
+    }
+    
+    deliveryDay = daySelect;
+    deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
   }
 
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
@@ -294,18 +345,16 @@ document.getElementById('checkout-overlay').addEventListener('click', closeCheck
     btn.textContent = 'Pay with Paystack';
   }
 }
+
 function scrollToCategory(cat) {
-  // Set active category
   activeCat = cat;
   visibleCount = PAGE_SIZE;
 
-  // Update main cat buttons
   document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".main-cat-btn").forEach(b => {
     if (b.dataset.cat === cat) b.classList.add("active");
   });
 
-  // Hide all subcats then show relevant one
   document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
   const sub = document.getElementById("sub-" + cat);
   if (sub) {
@@ -315,10 +364,9 @@ function scrollToCategory(cat) {
   }
 
   renderProducts();
-
-  // Scroll to products section
   document.getElementById("products").scrollIntoView({ behavior: "smooth" });
 }
+
 let modalProduct = null;
 let modalSlides = [];
 let modalSlideIndex = 0;
@@ -363,16 +411,21 @@ function openProductModal(id) {
 
 function renderModalSlider() {
   const slider = document.getElementById('product-modal-slider');
-  slider.style.transform = `translateX(-${modalSlideIndex * 100}%)`;
-  slider.innerHTML = modalSlides.map(s =>
-    s.type === 'video'
-      ? `<div><video src="${s.src}" controls muted></video></div>`
-      : `<div><img src="${s.src}" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=No+Image'"></div>`
-  ).join('');
+  if (slider) {
+    slider.style.transform = `translateX(-${modalSlideIndex * 100}%)`;
+    slider.innerHTML = modalSlides.map(s =>
+      s.type === 'video'
+        ? `<div><video src="${s.src}" controls muted></video></div>`
+        : `<div><img src="${s.src}" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=No+Image'"></div>`
+    ).join('');
+  }
 
-  document.getElementById('product-modal-dots').innerHTML = modalSlides.map((_, i) =>
-    `<div class="pm-dot ${i === modalSlideIndex ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
-  ).join('');
+  const dots = document.getElementById('product-modal-dots');
+  if (dots) {
+    dots.innerHTML = modalSlides.map((_, i) =>
+      `<div class="pm-dot ${i === modalSlideIndex ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
+    ).join('');
+  }
 }
 
 function goToSlide(i) { modalSlideIndex = i; renderModalSlider(); }
@@ -399,10 +452,54 @@ function addToCartFromModal() {
   }
   const size = modalSelectedSize || '';
   const ex = cart.find(x => x.id === modalProduct.id && x.size === size);
-  if (ex) ex.qty++;
-  else cart.push({ ...modalProduct, qty: 1, size });
+  if (ex) {
+    showToast('This item variation is already in your cart!');
+  } else {
+    cart.push({ ...modalProduct, qty: 1, size });
+    showToast(modalProduct.name + (size ? ` (${size})` : '') + ' added to cart');
+  }
   localStorage.setItem('tg_cart', JSON.stringify(cart));
   updateCart();
-  showToast(modalProduct.name + (size ? ` (${size})` : '') + ' added to cart');
   closeProductModal();
 }
+
+// 📱 Active Mobile & Desktop Selection Observers
+const fulfillmentElement = document.getElementById('co-fulfillment-method');
+if (fulfillmentElement) {
+  ['change', 'input'].forEach(eventType => {
+    fulfillmentElement.addEventListener(eventType, toggleDeliveryFields);
+  });
+}
+
+// Initial Data Fetching Triggers
+fetchProducts();
+updateCart();
+// This tells the browser to actively watch your dropdown fields for changes
+
+
+const areaSelectElement = document.getElementById('co-delivery-area');
+if (areaSelectElement) {
+  ['change', 'input'].forEach(eventType => {
+    areaSelectElement.addEventListener(eventType, updateDeliveryFee);
+  });
+}
+// Ensure fields toggle correctly immediately when the DOM loads
+document.addEventListener("DOMContentLoaded", () => {
+  const fulfillmentElement = document.getElementById('co-fulfillment-method');
+  if (fulfillmentElement) {
+    // Watch for user choice selections
+    ['change', 'input'].forEach(eventType => {
+      fulfillmentElement.addEventListener(eventType, toggleDeliveryFields);
+    });
+    
+    // Run an initial check to sync the wrapper layout state immediately
+    toggleDeliveryFields();
+  }
+
+  const areaSelectElement = document.getElementById('co-delivery-area');
+  if (areaSelectElement) {
+    ['change', 'input'].forEach(eventType => {
+      areaSelectElement.addEventListener(eventType, updateDeliveryFee);
+    });
+  }
+});

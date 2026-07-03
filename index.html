@@ -270,7 +270,7 @@
 
 <!-- CHECKOUT MODAL -->
  <div class="checkout-overlay" id="checkout-overlay"></div>
-<div class="checkout-modal" id="checkout-modal">
+ <div class="checkout-modal" id="checkout-modal">
   <div class="checkout-header">
     <h3>Checkout</h3>
     <button class="checkout-close" onclick="closeCheckout()"><i class="bi bi-x-lg"></i></button>
@@ -290,13 +290,12 @@
     </div>
 
     <div class="form-group">
-      <label style="color: #2c3e50; font-weight: 700;">Delivery Options</label>
-      <select id="co-fulfillment-method" onchange="toggleDeliveryFields()" style="border: 2px solid #000; font-weight: 600;">
-        <option value="delivery">Home & Office Dispatch Delivery</option>
-        <option value="pickup">Pay for Item Only (Pay Delivery Fee Later)</option>
-      </select>
-    </div>
-
+  <label style="color: #2c3e50; font-weight: 700;">Delivery Options</label>
+  <select id="co-fulfillment-method" onchange="toggleDeliveryFields()" style="border: 2px solid #000; font-weight: 600; width:100%; height:44px; display:block;">
+    <option value="delivery">Home & Office Dispatch Delivery</option>
+    <option value="pickup">Pay for Item Only (Pay Delivery Fee Later)</option>
+  </select>
+</div>
     <div id="delivery-fields-wrapper">
       <div class="form-group">
         <label>Delivery Address</label>
@@ -312,8 +311,8 @@
       </div>
       <div class="form-group">
         <label>Delivery Area</label>
-        <select id="co-delivery-area" onchange="updateDeliveryFee()">
-          <option value="0">Select your area</option>
+        <select id="co-delivery-area">
+           <option value="0">No delivery (pickup) / Select area</option>
           <option value="4000">Ikeja - ₦4,000</option>
           <option value="3500">Egbeda - ₦3,500</option>
           <option value="4000">Ikotun - ₦4,000</option>
@@ -377,11 +376,10 @@
     </div>
 
     <div class="checkout-summary">
-      <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
-      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
+      <div class="summary-row"><span>Items</span><span id="co-items-count">0 items</span></div>
+      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0 (Pay Later)</span></div>
       <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
     </div>
-    
     <button class="pay-btn" id="pay-btn" onclick="initiatePayment()">Pay with Paystack</button>
   </div>
 </div>

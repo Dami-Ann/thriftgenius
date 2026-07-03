@@ -146,22 +146,87 @@ body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-siz
 .checkout-btn:hover { background: #0f4220; }
 
 /* CHECKOUT MODAL */
+ /* CHECKOUT MODAL */
 .checkout-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; }
 .checkout-overlay.open { display: block; }
-.checkout-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -60%); width: 90%; max-width: 480px; background: white; border-radius: 8px; z-index: 301; opacity: 0; pointer-events: none; transition: all 0.25s ease; max-height: 90vh; overflow-y: auto; }
+
+.checkout-modal { 
+  position: fixed; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -60%); 
+  width: 90%; 
+  max-width: 480px; 
+  background: white; 
+  border-radius: 8px; 
+  z-index: 301; 
+  opacity: 0; 
+  pointer-events: none; 
+  transition: all 0.25s ease; 
+  max-height: 90vh; 
+  
+  /* 🔒 MOBILE FIX: Prevent the parent container from cutting off your dropdown options */
+  overflow-y: visible !important; 
+}
+
 .checkout-modal.open { transform: translate(-50%, -50%); opacity: 1; pointer-events: all; }
-.checkout-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: white; }
+
+.checkout-header { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  padding: 18px 24px; 
+  border-bottom: 1px solid #eee; 
+  position: sticky; 
+  top: 0; 
+  background: white; 
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 2;
+}
 .checkout-header h3 { font-size: 15px; font-weight: 700; }
 .checkout-close { background: none; border: none; font-size: 18px; cursor: pointer; color: #888; }
-.checkout-body { padding: 24px; }
-.checkout-body .form-group { margin-bottom: 14px; }
+
+/* 📱 MOBILE SCROLLING ENGINE: Scroll the body context safely without UI clipping */
+.checkout-body { 
+  padding: 24px; 
+  max-height: calc(90vh - 60px); 
+  overflow-y: auto !important; 
+  -webkit-overflow-scrolling: touch; 
+}
+
+.checkout-body .form-group { margin-bottom: 14px; display: block; clear: both; }
 .checkout-body .form-group label { display: block; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-.checkout-body .form-group input, .checkout-body .form-group textarea, .checkout-body .form-group select { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 13px; outline: none; transition: border-color 0.15s; background: white; }
-.checkout-body .form-group input:focus, .checkout-body .form-group textarea:focus, .checkout-body .form-group select:focus { border-color: #1a6b35; }
-.checkout-body .form-group textarea { resize: vertical; min-height: 70px; }
+
+/* Ensure form selectors render uniformly and won't drop outside layout borders */
+.checkout-body .form-group input, 
+.checkout-body .form-group textarea, 
+.checkout-body .form-group select { 
+  width: 100%; 
+  height: 44px; /* Explicit execution sizing */
+  padding: 0 14px; 
+  border: 1px solid #ddd; 
+  border-radius: 4px; 
+  font-family: 'Inter', sans-serif; 
+  font-size: 13px; 
+  outline: none; 
+  transition: border-color 0.15s; 
+  background: white; 
+  box-sizing: border-box;
+  display: block;
+}
+
+/* Textareas keep their dynamic height behavior */
+.checkout-body .form-group textarea { height: auto !important; min-height: 70px; padding: 10px 14px; }
+
+.checkout-body .form-group input:focus, 
+.checkout-body .form-group textarea:focus, 
+.checkout-body .form-group select:focus { border-color: #1a6b35; }
+
 .checkout-summary { background: #f9f9f9; border-radius: 6px; padding: 14px 16px; margin: 20px 0; }
 .summary-row { display: flex; justify-content: space-between; font-size: 13px; color: #555; margin-bottom: 8px; }
 .summary-row.total { font-weight: 700; font-size: 15px; color: #111; padding-top: 10px; border-top: 1px solid #eee; margin-top: 8px; }
+
 .pay-btn { width: 100%; padding: 13px; background: #1a6b35; color: white; border: none; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
 .pay-btn:hover { background: #0f4220; }
 .pay-btn:disabled { background: #ccc; cursor: not-allowed; }
@@ -316,7 +381,7 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 </div>
 
  <div class="checkout-overlay" id="checkout-overlay"></div>
-<div class="checkout-modal" id="checkout-modal">
+ <div class="checkout-modal" id="checkout-modal">
   <div class="checkout-header">
     <h3>Checkout</h3>
     <button class="checkout-close" onclick="closeCheckout()"><i class="bi bi-x-lg"></i></button>
@@ -337,13 +402,13 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 
     <div class="form-group">
       <label style="color: #2c3e50; font-weight: 700;">Delivery Options</label>
-      <select id="co-fulfillment-method" onchange="toggleDeliveryFields()" style="border: 2px solid #000; font-weight: 600;">
+      <select id="co-fulfillment-method" style="border: 2px solid #000; font-weight: 600; width:100%; height:44px; display:block;">
         <option value="delivery">Home & Office Dispatch Delivery</option>
         <option value="pickup">Pay for Item Only (Pay Delivery Fee Later)</option>
       </select>
     </div>
 
-    <div id="delivery-fields-wrapper">
+    <div id="delivery-fields-wrapper" style="display: block;">
       <div class="form-group">
         <label>Delivery Address</label>
         <textarea id="co-address" placeholder="Full address including area and city"></textarea>
@@ -358,7 +423,7 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
       </div>
       <div class="form-group">
         <label>Delivery Area</label>
-        <select id="co-delivery-area" onchange="updateDeliveryFee()">
+        <select id="co-delivery-area">
           <option value="0">Select your area</option>
           <option value="4000">Ikeja - ₦4,000</option>
           <option value="3500">Egbeda - ₦3,500</option>
@@ -423,15 +488,13 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
     </div>
 
     <div class="checkout-summary">
-      <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
-      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
+      <div class="summary-row"><span>Items</span><span id="co-items-count">0 items</span></div>
+      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0 (Pay Later)</span></div>
       <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
     </div>
-    
     <button class="pay-btn" id="pay-btn" onclick="initiatePayment()">Pay with Paystack</button>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <div class="product-modal-overlay" id="product-modal-overlay" onclick="closeProductModal()"></div>
@@ -596,25 +659,32 @@ function closeMenu() { ham.classList.remove("open"); mob.classList.remove("open"
 
 function showToast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 2500); }
 
- function openCheckout() {
+  function openCheckout() {
   if (!cart.length) {
     showToast('Your cart is empty');
     return;
   }
   closeCartFn();
+  
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const qty = cart.reduce((s, c) => s + c.qty, 0);
   deliveryFee = 0;
   
-  // 🔒 Reset fulfillment selector defaults back to standard delivery on open
+  // 🔒 Reset fulfillment selectors back to default standard delivery views on open
   const fulfillmentSelect = document.getElementById('co-fulfillment-method');
-  if(fulfillmentSelect) fulfillmentSelect.value = 'delivery';
+  if (fulfillmentSelect) fulfillmentSelect.value = 'delivery';
+  
   const wrapper = document.getElementById('delivery-fields-wrapper');
-  if(wrapper) wrapper.style.display = 'block';
+  if (wrapper) wrapper.style.display = 'block';
 
   document.getElementById('co-items-count').textContent = qty + ' item' + (qty !== 1 ? 's' : '');
   document.getElementById('co-delivery-fee').textContent = '₦0';
   document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
+  
+  // Reset select input pointers explicitly to prevent sticky DOM states
+  const areaSelect = document.getElementById('co-delivery-area');
+  if (areaSelect) areaSelect.value = "0";
+  
   document.getElementById('checkout-overlay').classList.add('open');
   document.getElementById('checkout-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -637,17 +707,47 @@ function updateDeliveryFee() {
   document.getElementById('co-total').textContent = "₦" + finalTotal.toLocaleString();
 }
 
-function toggleDeliveryFields() {
+ function toggleDeliveryFields() {
   const method = document.getElementById('co-fulfillment-method').value;
   const deliveryWrapper = document.getElementById('delivery-fields-wrapper');
   
   if (method === 'pickup') {
-    deliveryWrapper.style.display = 'none';
-    document.getElementById('co-delivery-area').value = "0"; // Reset the area selector
-    updateDeliveryFee(); // Instantly make delivery fee ₦0
+    if (deliveryWrapper) deliveryWrapper.style.display = 'none';
+    const areaSelect = document.getElementById('co-delivery-area');
+    if (areaSelect) areaSelect.value = "0"; 
+    deliveryFee = 0;
   } else {
-    deliveryWrapper.style.display = 'block'; // Bring back the address inputs
-    updateDeliveryFee(); // Recalculate based on chosen area
+    if (deliveryWrapper) deliveryWrapper.style.display = 'block';
+    const areaSelect = document.getElementById('co-delivery-area');
+    deliveryFee = parseInt(areaSelect?.value) || 0;
+  }
+  updateDeliveryFee(); 
+}
+
+function updateDeliveryFee() {
+  const method = document.getElementById('co-fulfillment-method').value;
+  if (method === 'pickup') {
+    deliveryFee = 0;
+  } else {
+    const areaSelect = document.getElementById('co-delivery-area');
+    deliveryFee = parseInt(areaSelect?.value) || 0;
+  }
+  
+  const itemsTotal = cart.reduce((s, c) => s + c.price * (c.qty || 1), 0);
+  
+  // 📱 Fix font crunching "NO" bug on mobile viewports
+  const feeElement = document.getElementById('co-delivery-fee');
+  if (feeElement) {
+    if (deliveryFee === 0) {
+      feeElement.textContent = "₦0 (Pay Later)";
+    } else {
+      feeElement.textContent = "₦" + deliveryFee.toLocaleString();
+    }
+  }
+  
+  const totalElement = document.getElementById('co-total');
+  if (totalElement) {
+    totalElement.textContent = "₦" + (itemsTotal + deliveryFee).toLocaleString();
   }
 }
 
@@ -657,13 +757,13 @@ function closeCheckout() {
   document.body.style.overflow = ''; 
 }
 
-document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
+// Attach overlay click background close handler safely
+document.getElementById('checkout-overlay')?.addEventListener('click', closeCheckout);
 
 async function initiatePayment() {
   const name = document.getElementById('co-name').value.trim();
   const email = document.getElementById('co-email').value.trim();
   const phone = document.getElementById('co-phone').value.trim();
-  
   const fulfillmentMethod = document.getElementById('co-fulfillment-method').value;
 
   if (!name || !email || !phone) {
@@ -671,7 +771,7 @@ async function initiatePayment() {
     return;
   }
 
-  let address = "Pay Later / Pickup";
+  let address = "Pay Later / Pickup Option Chosen";
   let deliveryDay = "N/A";
   let deliveryArea = "Pay Later";
 
@@ -689,12 +789,12 @@ async function initiatePayment() {
     deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
   }
 
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
+  const total = cart.reduce((s, c) => s + c.price * (c.qty || 1), 0) + deliveryFee;
   const items = cart.map(c => ({
-    product: c.id,
+    product: c.id || c._id,
     name: c.name,
     price: c.price,
-    size: c.size || '' // 🔒 Fixed: Tracks variant payload details cleanly from checkout item context
+    size: c.size || ''
   }));
 
   const btn = document.getElementById('pay-btn');
@@ -717,13 +817,34 @@ async function initiatePayment() {
 
     window.location.href = data.authorizationUrl;
   } catch (err) {
-    showToast(err.message || 'Error processing transaction flow details');
+    showToast(err.message || 'Error processing payment flow initialization parameters.');
     btn.disabled = false;
     btn.textContent = 'Pay with Paystack';
   }
 }
 
-// Fire element cycles
+// 📱 Safe Native Event Attachment Engine
+document.addEventListener("DOMContentLoaded", () => {
+  const fulfillmentSelect = document.getElementById('co-fulfillment-method');
+  const areaSelect = document.getElementById('co-delivery-area');
+
+  if (fulfillmentSelect) {
+    ['change', 'input'].forEach(evt => {
+      fulfillmentSelect.addEventListener(evt, toggleDeliveryFields);
+    });
+  }
+
+  if (areaSelect) {
+    ['change', 'input'].forEach(evt => {
+      areaSelect.addEventListener(evt, updateDeliveryFee);
+    });
+  }
+});
+
+// Cross-tab synchronization triggers
+window.addEventListener('storage', (e) => { if (e.key === 'tg_cart') updateCart(); });
+window.addEventListener('pageshow', () => { updateCart(); });
+
 fetchProducts();
 updateCart();
 </script>

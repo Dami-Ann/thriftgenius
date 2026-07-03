@@ -1,11 +1,17 @@
  let products = [];
-
 const PAGE_SIZE = 8;
-let cart = JSON.parse(localStorage.getItem('tg_cart')) || [];
+let cart = JSON.parse(localStorage.getItem('tg_cart') || '[]');
 let liked = new Set();
 let activeCat = "all";
-let deliveryFee = 0;
 let visibleCount = PAGE_SIZE;
+let deliveryFee = 0;
+
+let currentSlideIndex = 0;
+let modalImages = [];
+let touchStartX = 0;
+let touchEndX = 0;
+let selectedModalSizeValue = "";
+let currentModalProduct = null;
 
 async function fetchProducts() {
   const grid = document.getElementById("product-grid");
@@ -53,6 +59,13 @@ function renderProducts() {
   document.getElementById("item-count").textContent =
     filtered.length + " item" + (filtered.length !== 1 ? "s" : "");
 
+  if (!filtered.length) {
+    grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#aaa"><i class="bi bi-bag" style="font-size:40px;display:block;margin-bottom:12px;opacity:0.3"></i><p>No items in this category yet.</p></div>`;
+    document.getElementById("load-more-btn").disabled = true;
+    document.getElementById("load-more-btn").textContent = "All items loaded";
+    return;
+  }
+
   grid.innerHTML = toShow.map(p => `
     <div class="product-card">
       <div class="product-img" onclick="openProductModal('${p.id}')">
@@ -75,13 +88,8 @@ function renderProducts() {
 
   const btn = document.getElementById("load-more-btn");
   const remaining = filtered.length - visibleCount;
-  if (remaining <= 0) {
-    btn.textContent = "All items loaded";
-    btn.disabled = true;
-  } else {
-    btn.textContent = "Load More (" + remaining + " remaining)";
-    btn.disabled = false;
-  }
+  if (remaining <= 0) { btn.textContent = "All items loaded"; btn.disabled = true; }
+  else { btn.textContent = "Load More (" + remaining + " remaining)"; btn.disabled = false; }
 }
 
 // Main category buttons
@@ -89,11 +97,8 @@ document.querySelectorAll(".main-cat-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-
     document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
-
     const cat = btn.dataset.cat;
-
     if (["clothing", "footwear", "accessories", "bottoms"].includes(cat)) {
       const sub = document.getElementById("sub-" + cat);
       if (sub) {
@@ -102,7 +107,6 @@ document.querySelectorAll(".main-cat-btn").forEach(btn => {
         sub.querySelectorAll(".sub-cat-btn")[0].classList.add("active-sub");
       }
     }
-
     activeCat = cat;
     visibleCount = PAGE_SIZE;
     renderProducts();
@@ -120,7 +124,6 @@ document.querySelectorAll(".sub-cat-btn").forEach(btn => {
   });
 });
 
-// Load more
 document.getElementById("load-more-btn").addEventListener("click", () => {
   visibleCount += PAGE_SIZE;
   renderProducts();
@@ -131,27 +134,28 @@ function toggleLike(id) {
   renderProducts();
 }
 
-function addToCart(id) {
+function addToCart(id, size) {
+  size = size || '';
   const p = products.find(x => x.id === id);
   if (!p || p.sold) return;
-  const ex = cart.find(x => x.id === id);
+  const ex = cart.find(x => x.id === id && (x.size || '') === size);
   if (ex) ex.qty++;
-  else cart.push({ ...p, qty: 1 });
-  
+  else cart.push({ ...p, qty: 1, size });
   localStorage.setItem('tg_cart', JSON.stringify(cart));
   updateCart();
-  showToast(p.name + " added to cart");
+  showToast(p.name + (size ? ` (${size})` : '') + " added to cart");
 }
 
-function removeFromCart(id) {
-  cart = cart.filter(x => x.id !== id);
+function removeFromCart(id, size) {
+  size = size || '';
+  cart = cart.filter(x => !(x.id === id && (x.size || '') === size));
   localStorage.setItem('tg_cart', JSON.stringify(cart));
   updateCart();
 }
 
 function updateCart() {
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const qty   = cart.reduce((s, c) => s + c.qty, 0);
+  const qty = cart.reduce((s, c) => s + c.qty, 0);
   document.getElementById("cart-count").textContent = qty;
   document.getElementById("mobile-cart-count").textContent = qty;
   document.getElementById("cart-qty").textContent = qty;
@@ -166,11 +170,11 @@ function updateCart() {
     <div class="cart-item">
       <img src="${c.img}" alt="${c.name}" onerror="this.src='https://placehold.co/60x75/eeeeee/999?text=TG'">
       <div class="cart-item-details">
-        <h4>${c.name}</h4>
+        <h4>${c.name}${c.size ? ' — ' + c.size : ''}</h4>
         <div class="cat">${c.cat} &times; ${c.qty}</div>
         <div class="price">&#8358;${(c.price * c.qty).toLocaleString()}</div>
       </div>
-      <button class="remove-item" onclick="removeFromCart('${c.id}')"><i class="bi bi-x"></i></button>
+      <button class="remove-item" onclick="removeFromCart('${c.id}', '${c.size || ''}')"><i class="bi bi-x"></i></button>
     </div>
   `).join("");
 }
@@ -203,112 +207,49 @@ function showToast(msg) {
   setTimeout(() => el.classList.remove("show"), 2500);
 }
 
-// ==========================================
-// 🛠️ FIXED CHECKOUT MECHANICS
-// ==========================================
-
- function openCheckout() {
-  if (!cart.length) {
-    showToast('Your cart is empty');
-    return;
-  }
-  if (typeof closeCartFn === "function") {
-    closeCartFn();
-  } else {
-    const sidebar = document.getElementById("cart-sidebar");
-    const overlay = document.getElementById("overlay");
-    if (sidebar) sidebar.classList.remove("open");
-    if (overlay) overlay.classList.remove("open");
-    document.body.style.overflow = "";
-  }
-
+// CHECKOUT
+function openCheckout() {
+  if (!cart.length) { showToast('Your cart is empty'); return; }
+  closeCartFn();
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const qty = cart.reduce((s, c) => s + c.qty, 0);
-
-  // Safely check elements before updating text to prevent JS freezing on mobile
-  const itemsCountEl = document.getElementById('co-items-count');
-  if (itemsCountEl) {
-    itemsCountEl.textContent = qty + ' item' + (qty !== 1 ? 's' : '');
-  }
-
-  // 🔄 Instantly balance field visibility based on whatever option is currently selected
-  toggleDeliveryFields();
-
-  const overlayEl = document.getElementById('checkout-overlay');
-  const modalEl = document.getElementById('checkout-modal');
-  if (overlayEl) overlayEl.classList.add('open');
-  if (modalEl) modalEl.classList.add('open');
+  deliveryFee = 0;
+  document.getElementById('co-items-count').textContent = qty + ' item' + (qty !== 1 ? 's' : '');
+  document.getElementById('co-delivery-fee').textContent = '₦0';
+  document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
+  document.getElementById('co-delivery-area').value = '0';
+  document.getElementById('checkout-overlay').classList.add('open');
+  document.getElementById('checkout-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
 function updateDeliveryFee() {
-  const method = document.getElementById('co-fulfillment-method').value;
-  const feeElement = document.getElementById('co-delivery-fee');
-  
-  if (method === 'pickup') {
-    deliveryFee = 0;
-    if (feeElement) feeElement.textContent = "₦0 (Pay Later)";
-  } else {
-    const areaSelect = document.getElementById('co-delivery-area');
-    deliveryFee = parseInt(areaSelect.value) || 0;
-    if (feeElement) feeElement.textContent = "₦" + deliveryFee.toLocaleString();
-  }
-
-  let itemsSubtotal = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0); 
-  let finalTotal = itemsSubtotal + deliveryFee;
-
-  document.getElementById('co-total').textContent = "₦" + finalTotal.toLocaleString();
+  const select = document.getElementById('co-delivery-area');
+  deliveryFee = Number(select.value) || 0;
+  document.getElementById('co-delivery-fee').textContent = '₦' + deliveryFee.toLocaleString();
+  const itemsTotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  document.getElementById('co-total').textContent = '₦' + (itemsTotal + deliveryFee).toLocaleString();
 }
 
-  function toggleDeliveryFields() {
-  const method = document.getElementById('co-fulfillment-method').value;
-  const deliveryWrapper = document.getElementById('delivery-fields-wrapper');
-  
-  if (!deliveryWrapper) return;
-
-  if (method === 'pickup') {
-    // This tells the browser to hide the fields immediately, ignoring any CSS files
-    deliveryWrapper.style.setProperty('display', 'none', 'important');
-    const areaSelect = document.getElementById('co-delivery-area');
-    if (areaSelect) areaSelect.value = "0"; 
-  } else {
-    deliveryWrapper.style.setProperty('display', 'block', 'important'); 
-  }
-  updateDeliveryFee(); 
-}
 function closeCheckout() {
   document.getElementById('checkout-overlay').classList.remove('open');
   document.getElementById('checkout-modal').classList.remove('open');
   document.body.style.overflow = '';
 }
-
 document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
 
 async function initiatePayment() {
   const name = document.getElementById('co-name').value.trim();
   const email = document.getElementById('co-email').value.trim();
   const phone = document.getElementById('co-phone').value.trim();
-  const fulfillmentMethod = document.getElementById('co-fulfillment-method').value;
+  const address = document.getElementById('co-address').value.trim();
+  const deliveryDay = document.getElementById('co-delivery-day').value;
+  const areaSelect = document.getElementById('co-delivery-area');
+  const deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
 
   if (!name || !email || !phone || !address || !deliveryDay) {
-    showToast('Please fill in all fields');
+    showToast('Please fill in all required fields');
     return;
-  }
-
-  let address = "Pay Later / Pickup Option Chosen";
-  let deliveryDay = "N/A";
-  let deliveryArea = "Pay Later";
-
-  if (fulfillmentMethod === 'delivery') {
-    address = document.getElementById('co-address').value.trim();
-    const daySelect = document.getElementById('co-delivery-day').value;
-    const areaSelect = document.getElementById('co-delivery-area');
-    
-    if (!address || !daySelect || areaSelect.value === "0" || deliveryFee === 0) {
-      showToast('Please fill in all delivery details including area.');
-      return;
-    }
-    
-    deliveryDay = daySelect;
-    deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
   }
 
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
@@ -336,64 +277,47 @@ async function initiatePayment() {
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
-
     window.location.href = data.authorizationUrl;
 
   } catch (err) {
-    showToast('Error: ' + err.message);
+    showToast(err.message || 'Error processing payment');
     btn.disabled = false;
     btn.textContent = 'Pay with Paystack';
   }
 }
 
-function scrollToCategory(cat) {
-  activeCat = cat;
-  visibleCount = PAGE_SIZE;
-
-  document.querySelectorAll(".main-cat-btn").forEach(b => b.classList.remove("active"));
-  document.querySelectorAll(".main-cat-btn").forEach(b => {
-    if (b.dataset.cat === cat) b.classList.add("active");
-  });
-
-  document.querySelectorAll(".sub-cats").forEach(s => s.style.display = "none");
-  const sub = document.getElementById("sub-" + cat);
-  if (sub) {
-    sub.style.display = "flex";
-    sub.querySelectorAll(".sub-cat-btn").forEach(b => b.classList.remove("active-sub"));
-    sub.querySelectorAll(".sub-cat-btn")[0].classList.add("active-sub");
-  }
-
-  renderProducts();
-  document.getElementById("products").scrollIntoView({ behavior: "smooth" });
-}
-
-let modalProduct = null;
-let modalSlides = [];
-let modalSlideIndex = 0;
-let modalSelectedSize = null;
-
+// PRODUCT MODAL / SLIDER
 function openProductModal(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
-  modalProduct = p;
-  modalSlideIndex = 0;
-  modalSelectedSize = null;
+  currentModalProduct = p;
+  currentSlideIndex = 0;
+  selectedModalSizeValue = "";
 
-  modalSlides = [];
-  (p.images || []).forEach(src => modalSlides.push({ type: 'image', src }));
-  if (p.video) modalSlides.push({ type: 'video', src: p.video });
-  if (!modalSlides.length) modalSlides.push({ type: 'image', src: p.img });
+  modalImages = p.images && p.images.length ? p.images : [p.img];
 
   document.getElementById('pm-cat').textContent = p.cat;
   document.getElementById('pm-name').textContent = p.name;
   document.getElementById('pm-price').textContent = '₦' + p.price.toLocaleString();
   document.getElementById('pm-description').textContent = p.description || '';
 
+  const slider = document.getElementById('product-modal-slider');
+  slider.innerHTML = modalImages.map(src =>
+    `<div><img src="${src}" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=No+Image'"></div>`
+  ).join('');
+
+  if (p.video) {
+    slider.innerHTML += `<div><video src="${p.video}" controls muted style="width:100%;height:100%;object-fit:cover"></video></div>`;
+    modalImages = [...modalImages, p.video];
+  }
+
+  updateModalDots();
+
   const sizesWrap = document.getElementById('pm-sizes-wrap');
   if (p.sizes && p.sizes.length) {
     sizesWrap.style.display = 'block';
     document.getElementById('pm-sizes').innerHTML = p.sizes.map(s =>
-      `<button class="pm-size-btn" onclick="selectModalSize('${s}', this)">${s}</button>`
+      `<button class="pm-size-btn" onclick="selectModalSize(this, '${s}')">${s}</button>`
     ).join('');
   } else {
     sizesWrap.style.display = 'none';
@@ -403,39 +327,34 @@ function openProductModal(id) {
   if (p.sold) { addBtn.textContent = 'Sold Out'; addBtn.disabled = true; }
   else { addBtn.textContent = 'Add to Cart'; addBtn.disabled = false; }
 
-  renderModalSlider();
   document.getElementById('product-modal-overlay').classList.add('open');
   document.getElementById('product-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
+  updateSliderPosition();
 }
 
-function renderModalSlider() {
+function updateSliderPosition() {
   const slider = document.getElementById('product-modal-slider');
-  if (slider) {
-    slider.style.transform = `translateX(-${modalSlideIndex * 100}%)`;
-    slider.innerHTML = modalSlides.map(s =>
-      s.type === 'video'
-        ? `<div><video src="${s.src}" controls muted></video></div>`
-        : `<div><img src="${s.src}" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=No+Image'"></div>`
-    ).join('');
-  }
-
-  const dots = document.getElementById('product-modal-dots');
-  if (dots) {
-    dots.innerHTML = modalSlides.map((_, i) =>
-      `<div class="pm-dot ${i === modalSlideIndex ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
-    ).join('');
-  }
+  slider.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+  updateModalDots();
 }
 
-function goToSlide(i) { modalSlideIndex = i; renderModalSlider(); }
-function nextSlide() { modalSlideIndex = (modalSlideIndex + 1) % modalSlides.length; renderModalSlider(); }
-function prevSlide() { modalSlideIndex = (modalSlideIndex - 1 + modalSlides.length) % modalSlides.length; renderModalSlider(); }
+function updateModalDots() {
+  const dots = document.getElementById('product-modal-dots');
+  if (!dots) return;
+  dots.innerHTML = modalImages.map((_, i) =>
+    `<div class="pm-dot ${i === currentSlideIndex ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
+  ).join('');
+}
 
-function selectModalSize(size, btn) {
-  modalSelectedSize = size;
+function goToSlide(i) { currentSlideIndex = i; updateSliderPosition(); }
+function nextSlide() { currentSlideIndex = (currentSlideIndex + 1) % modalImages.length; updateSliderPosition(); }
+function prevSlide() { currentSlideIndex = (currentSlideIndex - 1 + modalImages.length) % modalImages.length; updateSliderPosition(); }
+
+function selectModalSize(btn, size) {
   document.querySelectorAll('.pm-size-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+  selectedModalSizeValue = size;
 }
 
 function closeProductModal() {
@@ -445,61 +364,26 @@ function closeProductModal() {
 }
 
 function addToCartFromModal() {
-  if (!modalProduct || modalProduct.sold) return;
-  if (modalProduct.sizes && modalProduct.sizes.length && !modalSelectedSize) {
+  if (!currentModalProduct || currentModalProduct.sold) return;
+  if (currentModalProduct.sizes && currentModalProduct.sizes.length && !selectedModalSizeValue) {
     showToast('Please select a size');
     return;
   }
-  const size = modalSelectedSize || '';
-  const ex = cart.find(x => x.id === modalProduct.id && x.size === size);
-  if (ex) {
-    showToast('This item variation is already in your cart!');
-  } else {
-    cart.push({ ...modalProduct, qty: 1, size });
-    showToast(modalProduct.name + (size ? ` (${size})` : '') + ' added to cart');
-  }
-  localStorage.setItem('tg_cart', JSON.stringify(cart));
-  updateCart();
+  addToCart(currentModalProduct.id, selectedModalSizeValue);
+  selectedModalSizeValue = "";
   closeProductModal();
 }
 
-// 📱 Active Mobile & Desktop Selection Observers
-const fulfillmentElement = document.getElementById('co-fulfillment-method');
-if (fulfillmentElement) {
-  ['change', 'input'].forEach(eventType => {
-    fulfillmentElement.addEventListener(eventType, toggleDeliveryFields);
-  });
+// Touch swipe for mobile slider
+const sliderEl = document.getElementById('product-modal-slider');
+if (sliderEl) {
+  sliderEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  sliderEl.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].clientX;
+    if (touchStartX - touchEndX > 50) nextSlide();
+    else if (touchEndX - touchStartX > 50) prevSlide();
+  }, { passive: true });
 }
 
-// Initial Data Fetching Triggers
 fetchProducts();
 updateCart();
-// This tells the browser to actively watch your dropdown fields for changes
-
-
-const areaSelectElement = document.getElementById('co-delivery-area');
-if (areaSelectElement) {
-  ['change', 'input'].forEach(eventType => {
-    areaSelectElement.addEventListener(eventType, updateDeliveryFee);
-  });
-}
-// Ensure fields toggle correctly immediately when the DOM loads
-document.addEventListener("DOMContentLoaded", () => {
-  const fulfillmentElement = document.getElementById('co-fulfillment-method');
-  if (fulfillmentElement) {
-    // Watch for user choice selections
-    ['change', 'input'].forEach(eventType => {
-      fulfillmentElement.addEventListener(eventType, toggleDeliveryFields);
-    });
-    
-    // Run an initial check to sync the wrapper layout state immediately
-    toggleDeliveryFields();
-  }
-
-  const areaSelectElement = document.getElementById('co-delivery-area');
-  if (areaSelectElement) {
-    ['change', 'input'].forEach(eventType => {
-      areaSelectElement.addEventListener(eventType, updateDeliveryFee);
-    });
-  }
-});

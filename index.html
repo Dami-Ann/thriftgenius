@@ -269,121 +269,95 @@
 </div>
 
 <!-- CHECKOUT MODAL -->
- <div class="checkout-overlay" id="checkout-overlay"></div>
- <div class="checkout-modal" id="checkout-modal">
+  <div class="checkout-overlay" id="checkout-overlay"></div>
+<div class="checkout-modal" id="checkout-modal">
   <div class="checkout-header">
     <h3>Checkout</h3>
     <button class="checkout-close" onclick="closeCheckout()"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="checkout-body">
+    <div class="form-group"><label>Full Name</label><input type="text" id="co-name" placeholder="e.g. Adaeze Johnson"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="co-email" placeholder="your@email.com"></div>
+    <div class="form-group"><label>Phone Number</label><input type="tel" id="co-phone" placeholder="e.g. 08012345678"></div>
+    <div class="form-group"><label>Delivery Address</label><textarea id="co-address" placeholder="Full address including area and city"></textarea></div>
     <div class="form-group">
-      <label>Full Name</label>
-      <input type="text" id="co-name" placeholder="e.g. Adaeze Johnson">
+      <label>Delivery Day</label>
+      <select id="co-delivery-day">
+        <option value="">Select delivery day</option>
+        <option value="thursday">Thursday</option>
+        <option value="saturday">Saturday</option>
+      </select>
     </div>
     <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="co-email" placeholder="your@email.com">
+      <label>Delivery Area (optional)</label>
+      <select id="co-delivery-area" onchange="updateDeliveryFee()">
+        <option value="0">No delivery (pickup) / Select area</option>
+        <option value="4000">Ikeja - ₦4,000</option>
+        <option value="3500">Egbeda - ₦3,500</option>
+        <option value="4000">Ikotun - ₦4,000</option>
+        <option value="5000">Igando - ₦5,000</option>
+        <option value="3500">Abule Egba - ₦3,500</option>
+        <option value="3500">Agege - ₦3,500</option>
+        <option value="3500">Fagba - ₦3,500</option>
+        <option value="4000">Ojodu - ₦4,000</option>
+        <option value="4000">Omole 1/2 - ₦4,000</option>
+        <option value="4000">Ogba - ₦4,000</option>
+        <option value="4000">Magodo 1/2 - ₦4,000</option>
+        <option value="4000">Maryland - ₦4,000</option>
+        <option value="4000">Mile 12 - ₦4,000</option>
+        <option value="4000">Ketu - ₦4,000</option>
+        <option value="4000">Ojota - ₦4,000</option>
+        <option value="4000">Ogudu - ₦4,000</option>
+        <option value="4500">Oworo - ₦4,500</option>
+        <option value="4500">Surulere - ₦4,500</option>
+        <option value="4500">Mushin - ₦4,500</option>
+        <option value="4000">Isolo - ₦4,000</option>
+        <option value="4000">Ajao Estate - ₦4,000</option>
+        <option value="4000">Oshodi - ₦4,000</option>
+        <option value="4500">Ijegun - ₦4,500</option>
+        <option value="4500">Ago Palace - ₦4,500</option>
+        <option value="4500">Amuwo - ₦4,500</option>
+        <option value="5500">Festac - ₦5,500</option>
+        <option value="6000">Satellite - ₦6,000</option>
+        <option value="5000">Apapa - ₦5,000</option>
+        <option value="4500">Onipanu - ₦4,500</option>
+        <option value="4500">Shomolu - ₦4,500</option>
+        <option value="4500">Bariga - ₦4,500</option>
+        <option value="4500">Yaba - ₦4,500</option>
+        <option value="4500">Akoka - ₦4,500</option>
+        <option value="4500">Ebute Meta - ₦4,500</option>
+        <option value="4500">Gbagada - ₦4,500</option>
+        <option value="4500">Orile Iganmu - ₦4,500</option>
+        <option value="4000">Ejigbo - ₦4,000</option>
+        <option value="3000">Ipaja - ₦3,000</option>
+        <option value="3000">Ayobo - ₦3,000</option>
+        <option value="4500">Ikoyi - ₦4,500</option>
+        <option value="4500">VI - ₦4,500</option>
+        <option value="4500">Lagos Island - ₦4,500</option>
+        <option value="4500">Oniru - ₦4,500</option>
+        <option value="5000">Lekki Phase 1 - ₦5,000</option>
+        <option value="6000">Ikate - ₦6,000</option>
+        <option value="6000">Ilasan - ₦6,000</option>
+        <option value="5000">Jakande - ₦5,000</option>
+        <option value="6000">Osapa - ₦6,000</option>
+        <option value="6000">Orchid - ₦6,000</option>
+        <option value="6000">Ikota - ₦6,000</option>
+        <option value="6000">Agungi - ₦6,000</option>
+        <option value="6000">Idado Lekki - ₦6,000</option>
+        <option value="6000">VGC - ₦6,000</option>
+        <option value="6000">Ajah - ₦6,000</option>
+        <option value="6500">Shongotedo - ₦6,500</option>
+        <option value="6000">Abraham Adesanya - ₦6,000</option>
+      </select>
     </div>
-    <div class="form-group">
-      <label>Phone Number</label>
-      <input type="tel" id="co-phone" placeholder="e.g. 08012345678">
-    </div>
-
-    <div class="form-group">
-  <label style="color: #2c3e50; font-weight: 700;">Delivery Options</label>
-  <select id="co-fulfillment-method" onchange="toggleDeliveryFields()" style="border: 2px solid #000; font-weight: 600; width:100%; height:44px; display:block;">
-    <option value="delivery">Home & Office Dispatch Delivery</option>
-    <option value="pickup">Pay for Item Only (Pay Delivery Fee Later)</option>
-  </select>
-</div>
-    <div id="delivery-fields-wrapper">
-      <div class="form-group">
-        <label>Delivery Address</label>
-        <textarea id="co-address" placeholder="Full address including area and city"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Delivery Day</label>
-        <select id="co-delivery-day">
-          <option value="">Select delivery day</option>
-          <option value="thursday">Thursday</option>
-          <option value="saturday">Saturday</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Delivery Area</label>
-        <select id="co-delivery-area">
-           <option value="0">No delivery (pickup) / Select area</option>
-          <option value="4000">Ikeja - ₦4,000</option>
-          <option value="3500">Egbeda - ₦3,500</option>
-          <option value="4000">Ikotun - ₦4,000</option>
-          <option value="5000">Igando - ₦5,000</option>
-          <option value="3500">Abule Egba - ₦3,500</option>
-          <option value="3500">Agege - ₦3,500</option>
-          <option value="3500">Fagba - ₦3,500</option>
-          <option value="4000">Ojodu - ₦4,000</option>
-          <option value="4000">Omole 1/2 - ₦4,000</option>
-          <option value="4000">Ogba - ₦4,000</option>
-          <option value="4000">Magodo 1/2 - ₦4,000</option>
-          <option value="4000">Maryland - ₦4,000</option>
-          <option value="4000">Mile 12 - ₦4,000</option>
-          <option value="4000">Ketu - ₦4,000</option>
-          <option value="4000">Ojota - ₦4,000</option>
-          <option value="4000">Ogudu - ₦4,000</option>
-          <option value="4500">Oworo - ₦4,500</option>
-          <option value="4500">Surulere - ₦4,500</option>
-          <option value="4500">Mushin - ₦4,500</option>
-          <option value="4000">Isolo - ₦4,000</option>
-          <option value="4000">Ajao Estate - ₦4,000</option>
-          <option value="4000">Oshodi - ₦4,000</option>
-          <option value="4500">Ijegun - ₦4,500</option>
-          <option value="4500">Ago Palace - ₦4,500</option>
-          <option value="4500">Amuwo - ₦4,500</option>
-          <option value="5500">Festac - ₦5,500</option>
-          <option value="6000">Satellite - ₦6,000</option>
-          <option value="5000">Apapa - ₦5,000</option>
-          <option value="4500">Onipanu - ₦4,500</option>
-          <option value="4500">Shomolu - ₦4,500</option>
-          <option value="4500">Bariga - ₦4,500</option>
-          <option value="4500">Yaba - ₦4,500</option>
-          <option value="4500">Akoka - ₦4,500</option>
-          <option value="4500">Ebute Meta - ₦4,500</option>
-          <option value="4500">Gbagada - ₦4,500</option>
-          <option value="4500">Orile Iganmu - ₦4,500</option>
-          <option value="4000">Ejigbo - ₦4,000</option>
-          <option value="3000">Ipaja - ₦3,000</option>
-          <option value="3000">Ayobo - ₦3,000</option>
-          <option value="4500">Ikoyi - ₦4,500</option>
-          <option value="4500">VI - ₦4,500</option>
-          <option value="4500">Lagos Island - ₦4,500</option>
-          <option value="4500">Oniru - ₦4,500</option>
-          <option value="5000">Lekki Phase 1 - ₦5,000</option>
-          <option value="6000">Ikate - ₦6,000</option>
-          <option value="6000">Ilasan - ₦6,000</option>
-          <option value="5000">Jakande - ₦5,000</option>
-          <option value="6000">Osapa - ₦6,000</option>
-          <option value="6000">Orchid - ₦6,000</option>
-          <option value="6000">Ikota - ₦6,000</option>
-          <option value="6000">Agungi - ₦6,000</option>
-          <option value="6000">Idado Lekki - ₦6,000</option>
-          <option value="6000">VGC - ₦6,000</option>
-          <option value="6000">Ajah - ₦6,000</option>
-          <option value="6500">Shongotedo - ₦6,500</option>
-          <option value="6000">Abraham Adesanya - ₦6,000</option>
-          <option value="7000">Interstate park delivery 0-2kg - ₦7,000</option>
-          <option value="9500">Interstate home delivery 0-2kg - ₦9,500</option>
-        </select>
-      </div>
-    </div>
-
     <div class="checkout-summary">
-      <div class="summary-row"><span>Items</span><span id="co-items-count">0 items</span></div>
-      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0 (Pay Later)</span></div>
+      <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
+      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
       <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
     </div>
     <button class="pay-btn" id="pay-btn" onclick="initiatePayment()">Pay with Paystack</button>
   </div>
 </div>
-
      <div class="toast" id="toast"></div>
 
 

@@ -10,54 +10,35 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-size: 14px; }
-
 .announcement { background: #1a6b35; color: #fff; text-align: center; padding: 9px; font-size: 12px; }
-
-.navbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 40px; height: 58px; background: #fff;
-  border-bottom: 1px solid #e8e8e8; position: sticky; top: 0; z-index: 100;
-}
+.navbar { display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 58px; background: #fff; border-bottom: 1px solid #e8e8e8; position: sticky; top: 0; z-index: 100; }
 .logo { font-size: 20px; font-weight: 700; color: #111; text-decoration: none; }
 .logo span { color: #c0392b; }
 .nav-links { display: flex; list-style: none; gap: 36px; align-items: center; }
 .nav-links a { text-decoration: none; color: #333; font-size: 13px; font-weight: 500; transition: color 0.15s; }
 .nav-links a:hover { color: #1a6b35; }
-.nav-cart {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 13px; font-weight: 600; color: #111;
-  background: none; border: 1.5px solid #111;
-  padding: 6px 16px; border-radius: 4px;
-  transition: all 0.15s; text-decoration: none; cursor: pointer;
-}
+.nav-cart { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #111; background: none; border: 1.5px solid #111; padding: 6px 16px; border-radius: 4px; transition: all 0.15s; text-decoration: none; cursor: pointer; }
 .nav-cart:hover { background: #111; color: #fff; }
-
 .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
 .hamburger span { display: block; width: 22px; height: 2px; background: #111; border-radius: 2px; transition: all 0.25s; }
 .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .hamburger.open span:nth-child(2) { opacity: 0; }
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
 .mobile-menu { display: none; background: #fff; border-bottom: 1px solid #e8e8e8; padding: 8px 0; position: sticky; top: 58px; z-index: 99; }
 .mobile-menu.open { display: block; }
 .mobile-menu a { display: block; padding: 13px 24px; text-decoration: none; color: #111; font-size: 14px; font-weight: 500; border-bottom: 1px solid #f5f5f5; }
-
-/* CATEGORY HERO */
 .cat-hero { position: relative; height: 380px; overflow: hidden; background: #111; }
 .cat-hero img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
 .cat-hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
-.cat-hero-content .back-link { position: absolute; top: 24px; left: 24px; color: white; text-decoration: none; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; opacity: 0.8; transition: opacity 0.15s; }
-.cat-hero-content .back-link:hover { opacity: 1; }
+.cat-hero-content .back-link { position: absolute; top: 24px; left: 24px; color: white; text-decoration: none; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; opacity: 0.8; }
 .cat-hero-content h1 { font-size: 48px; font-weight: 700; letter-spacing: -1px; margin-bottom: 8px; }
 .cat-hero-content p { font-size: 14px; opacity: 0.75; }
-
-/* PRODUCTS */
 .products-section { padding: 48px 40px; max-width: 1200px; margin: 0 auto; }
 .item-count { font-size: 12px; color: #888; margin-bottom: 20px; }
 .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .product-card { position: relative; cursor: pointer; }
 .product-card:hover .product-img img { transform: scale(1.03); }
-.product-img { position: relative; aspect-ratio: 3/4; background: #f5f5f5; overflow: hidden; border-radius: 6px; margin-bottom: 10px; }
+.product-img { position: relative; aspect-ratio: 3/4; background: #f5f5f5; overflow: hidden; border-radius: 6px; margin-bottom: 10px; cursor: pointer; }
 .product-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s ease; }
 .sold-out-badge { position: absolute; top: 8px; left: 8px; background: #111; color: #fff; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 2px; }
 .new-badge { position: absolute; top: 8px; left: 8px; background: #c0392b; color: #fff; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 2px; }
@@ -70,16 +51,10 @@ body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-siz
 .add-btn { width: 100%; padding: 9px; background: #1a6b35; color: #fff; border: none; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
 .add-btn:hover { background: #0f4220; }
 .add-btn:disabled { background: #e0e0e0; color: #aaa; cursor: not-allowed; }
-
 .load-more-wrap { text-align: center; margin-top: 36px; }
 .load-more-btn { display: inline-block; padding: 12px 40px; border: 1.5px solid #111; background: #fff; color: #111; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
 .load-more-btn:hover { background: #111; color: #fff; }
 .load-more-btn:disabled { border-color: #ddd; color: #bbb; cursor: not-allowed; }
-
-.empty-state { text-align: center; padding: 60px 20px; color: #aaa; grid-column: span 4; }
-.empty-state i { font-size: 40px; display: block; margin-bottom: 12px; opacity: 0.3; }
-
-/* CART */
 .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; }
 .overlay.open { display: block; }
 .cart-sidebar { position: fixed; top: 0; right: -420px; width: 400px; max-width: 100vw; height: 100vh; background: #fff; z-index: 201; display: flex; flex-direction: column; transition: right 0.28s ease; border-left: 1px solid #eee; }
@@ -100,10 +75,8 @@ body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-siz
 .remove-item:hover { color: #c0392b; }
 .cart-foot { padding: 18px 24px; border-top: 1px solid #eee; }
 .cart-total-row { display: flex; justify-content: space-between; font-weight: 700; font-size: 15px; margin-bottom: 14px; }
-.checkout-btn { width: 100%; padding: 13px; background: #1a6b35; color: #fff; border: none; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+.checkout-btn { width: 100%; padding: 13px; background: #1a6b35; color: #fff; border: none; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; }
 .checkout-btn:hover { background: #0f4220; }
-
-/* CHECKOUT MODAL */
 .checkout-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; }
 .checkout-overlay.open { display: block; }
 .checkout-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -60%); width: 90%; max-width: 480px; background: white; border-radius: 8px; z-index: 301; opacity: 0; pointer-events: none; transition: all 0.25s ease; max-height: 90vh; overflow-y: auto; }
@@ -120,15 +93,43 @@ body { font-family: 'Inter', sans-serif; background: #fff; color: #111; font-siz
 .checkout-summary { background: #f9f9f9; border-radius: 6px; padding: 14px 16px; margin: 20px 0; }
 .summary-row { display: flex; justify-content: space-between; font-size: 13px; color: #555; margin-bottom: 8px; }
 .summary-row.total { font-weight: 700; font-size: 15px; color: #111; padding-top: 10px; border-top: 1px solid #eee; margin-top: 8px; }
-.pay-btn { width: 100%; padding: 13px; background: #1a6b35; color: white; border: none; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+.pay-btn { width: 100%; padding: 13px; background: #1a6b35; color: white; border: none; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; }
 .pay-btn:hover { background: #0f4220; }
 .pay-btn:disabled { background: #ccc; cursor: not-allowed; }
-
 .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(60px); background: #111; color: #fff; padding: 10px 22px; border-radius: 4px; font-size: 13px; font-weight: 500; z-index: 999; transition: transform 0.25s ease; white-space: nowrap; }
 .toast.show { transform: translateX(-50%) translateY(0); }
-
 footer { background: #111; color: #888; text-align: center; padding: 20px; font-size: 12px; }
-
+.whatsapp-float { position: fixed; bottom: 28px; right: 24px; background: #25d366; color: white; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; z-index: 998; box-shadow: 0 4px 16px rgba(0,0,0,0.2); transition: transform 0.2s; text-decoration: none; }
+.whatsapp-float:hover { transform: scale(1.1); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.product-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 400; }
+.product-modal-overlay.open { display: block; }
+.product-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 720px; max-height: 90vh; background: #fff; border-radius: 8px; z-index: 401; overflow-y: auto; }
+.product-modal.open { display: block; }
+@media (min-width: 681px) {
+  .product-modal.open { display: flex; }
+  .product-modal-media { width: 50%; flex-shrink: 0; }
+  .product-modal-info { width: 50%; padding: 28px; }
+}
+.product-modal-media { position: relative; aspect-ratio: 3/4; background: #f5f5f5; overflow: hidden; }
+.product-modal-close { position: absolute; top: 12px; right: 12px; z-index: 2; background: rgba(255,255,255,0.9); border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; }
+.product-modal-slider { display: flex; height: 100%; transition: transform 0.3s ease; touch-action: pan-y; overflow: hidden; }
+.product-modal-slider > div { min-width: 100%; height: 100%; flex-shrink: 0; }
+.product-modal-slider img, .product-modal-slider video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.product-modal-dots { position: absolute; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+.pm-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
+.pm-dot.active { background: #fff; }
+.slider-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.85); border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; z-index: 2; }
+.slider-nav.prev { left: 10px; }
+.slider-nav.next { right: 10px; }
+.product-modal-info { padding: 20px; }
+.product-modal-info h2 { font-size: 18px; font-weight: 700; margin: 8px 0 6px; }
+.pm-description { font-size: 13px; color: #666; line-height: 1.6; margin: 10px 0; }
+.pm-sizes-wrap { margin: 14px 0; }
+.pm-sizes-wrap label { display: block; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.pm-sizes { display: flex; gap: 8px; flex-wrap: wrap; }
+.pm-size-btn { padding: 6px 14px; border: 1.5px solid #ddd; border-radius: 4px; background: #fff; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+.pm-size-btn.selected { background: #1a6b35; color: #fff; border-color: #1a6b35; }
 @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 680px) {
   .navbar { padding: 0 20px; }
@@ -138,26 +139,12 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   .cat-hero-content h1 { font-size: 32px; }
   .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .products-section { padding: 32px 16px; }
-  .empty-state { grid-column: span 2; }
-  #preview-grid-layout { grid-template-columns: 1fr !important; gap: 12px !important; }
-.checkout-modal { max-height: 95vh !important; }
 }
-.whatsapp-float {
-  position: fixed; bottom: 28px; right: 24px; background: #25d366; color: white;
-  width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center;
-  justify-content: center; font-size: 26px; z-index: 999; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  transition: transform 0.2s; text-decoration: none;
-}
-.whatsapp-float:hover { transform: scale(1.1); }
-@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<a href="https://wa.me/2349025584325" target="_blank" class="whatsapp-float">
-  <i class="bi bi-whatsapp"></i>
-</a>
-
+<a href="https://wa.me/2349025584325" target="_blank" class="whatsapp-float"><i class="bi bi-whatsapp"></i></a>
 <div class="announcement">New drop every Sunday — Follow us on Instagram for alerts</div>
 
 <nav class="navbar">
@@ -166,11 +153,7 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
     <li><a href="index.html">Home</a></li>
     <li><a href="index.html#about">About</a></li>
     <li><a href="index.html#contact">Contact</a></li>
-    <li>
-      <a href="#" class="nav-cart" id="open-cart">
-        <i class="bi bi-bag"></i> Cart (<span id="cart-count">0</span>)
-      </a>
-    </li>
+    <li><a href="#" class="nav-cart" id="open-cart"><i class="bi bi-bag"></i> Cart (<span id="cart-count">0</span>)</a></li>
   </ul>
   <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
 </nav>
@@ -183,11 +166,11 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 </div>
 
 <div class="cat-hero">
-  <img src="asset/images/cover-thrift-finds.jpg" alt="Thrift Finds" onerror="this.src='https://placehold.co/1200x380/111111/ffffff?text=Thrift+Finds'">
+  <img src="asset/images/thriftfinds.png" alt="Thrift Finds" onerror="this.src='https://placehold.co/1200x380/111111/ffffff?text=Thrift Finds'">
   <div class="cat-hero-content">
     <a href="index.html" class="back-link"><i class="bi bi-arrow-left"></i> Back</a>
     <h1>Thrift Finds</h1>
-    <p>Curated thrift finds — new pieces every Sunday</p>
+    <p>Curated thrift Thrift FindsLOWER — new pieces every Sunday</p>
   </div>
 </div>
 
@@ -214,116 +197,35 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   </div>
 </div>
 
- <div class="checkout-overlay" id="checkout-overlay"></div>
- <div class="checkout-modal" id="checkout-modal">
+<div class="checkout-overlay" id="checkout-overlay"></div>
+<div class="checkout-modal" id="checkout-modal">
   <div class="checkout-header">
     <h3>Checkout</h3>
     <button class="checkout-close" onclick="closeCheckout()"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="checkout-body">
+    <div class="form-group"><label>Full Name</label><input type="text" id="co-name" placeholder="e.g. Adaeze Johnson"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="co-email" placeholder="your@email.com"></div>
+    <div class="form-group"><label>Phone Number</label><input type="tel" id="co-phone" placeholder="e.g. 08012345678"></div>
+    <div class="form-group"><label>Delivery Address</label><textarea id="co-address" placeholder="Full address including area and city"></textarea></div>
     <div class="form-group">
-      <label>Full Name</label>
-      <input type="text" id="co-name" placeholder="e.g. Adaeze Johnson">
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="co-email" placeholder="your@email.com">
-    </div>
-    <div class="form-group">
-      <label>Phone Number</label>
-      <input type="tel" id="co-phone" placeholder="e.g. 08012345678">
-    </div>
-
-    <div class="form-group">
-      <label style="color: #2c3e50; font-weight: 700;">Delivery Options</label>
-      <select id="co-fulfillment-method" style="border: 2px solid #000; font-weight: 600; width:100%; height:44px; display:block;">
-        <option value="delivery">Home & Office Dispatch Delivery</option>
-        <option value="pickup">Pay for Item Only (Pay Delivery Fee Later)</option>
+      <label>Delivery Day</label>
+      <select id="co-delivery-day">
+        <option value="">Select delivery day</option>
+        <option value="thursday">Thursday</option>
+        <option value="saturday">Saturday</option>
       </select>
     </div>
-
-    <div id="delivery-fields-wrapper" style="display: block;">
-      <div class="form-group">
-        <label>Delivery Address</label>
-        <textarea id="co-address" placeholder="Full address including area and city"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Delivery Day</label>
-        <select id="co-delivery-day">
-          <option value="">Select delivery day</option>
-          <option value="thursday">Thursday</option>
-          <option value="saturday">Saturday</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Delivery Area</label>
-        <select id="co-delivery-area">
-          <option value="0">Select your area</option>
-          <option value="4000">Ikeja - ₦4,000</option>
-          <option value="3500">Egbeda - ₦3,500</option>
-          <option value="4000">Ikotun - ₦4,000</option>
-          <option value="5000">Igando - ₦5,000</option>
-          <option value="3500">Abule Egba - ₦3,500</option>
-          <option value="3500">Agege - ₦3,500</option>
-          <option value="3500">Fagba - ₦3,500</option>
-          <option value="4000">Ojodu - ₦4,000</option>
-          <option value="4000">Omole 1/2 - ₦4,000</option>
-          <option value="4000">Ogba - ₦4,000</option>
-          <option value="4000">Magodo 1/2 - ₦4,000</option>
-          <option value="4000">Maryland - ₦4,000</option>
-          <option value="4000">Mile 12 - ₦4,000</option>
-          <option value="4000">Ketu - ₦4,000</option>
-          <option value="4000">Ojota - ₦4,000</option>
-          <option value="4000">Ogudu - ₦4,000</option>
-          <option value="4500">Oworo - ₦4,500</option>
-          <option value="4500">Surulere - ₦4,500</option>
-          <option value="4500">Mushin - ₦4,500</option>
-          <option value="4000">Isolo - ₦4,000</option>
-          <option value="4000">Ajao Estate - ₦4,000</option>
-          <option value="4000">Oshodi - ₦4,000</option>
-          <option value="4500">Ijegun - ₦4,500</option>
-          <option value="4500">Ago Palace - ₦4,500</option>
-          <option value="4500">Amuwo - ₦4,500</option>
-          <option value="5500">Festac - ₦5,500</option>
-          <option value="6000">Satellite - ₦6,000</option>
-          <option value="5000">Apapa - ₦5,000</option>
-          <option value="4500">Onipanu - ₦4,500</option>
-          <option value="4500">Shomolu - ₦4,500</option>
-          <option value="4500">Bariga - ₦4,500</option>
-          <option value="4500">Yaba - ₦4,500</option>
-          <option value="4500">Akoka - ₦4,500</option>
-          <option value="4500">Ebute Meta - ₦4,500</option>
-          <option value="4500">Gbagada - ₦4,500</option>
-          <option value="4500">Orile Iganmu - ₦4,500</option>
-          <option value="4000">Ejigbo - ₦4,000</option>
-          <option value="3000">Ipaja - ₦3,000</option>
-          <option value="3000">Ayobo - ₦3,000</option>
-          <option value="4500">Ikoyi - ₦4,500</option>
-          <option value="4500">VI - ₦4,500</option>
-          <option value="4500">Lagos Island - ₦4,500</option>
-          <option value="4500">Oniru - ₦4,500</option>
-          <option value="5000">Lekki Phase 1 - ₦5,000</option>
-          <option value="6000">Ikate - ₦6,000</option>
-          <option value="6000">Ilasan - ₦6,000</option>
-          <option value="5000">Jakande - ₦5,000</option>
-          <option value="6000">Osapa - ₦6,000</option>
-          <option value="6000">Orchid - ₦6,000</option>
-          <option value="6000">Ikota - ₦6,000</option>
-          <option value="6000">Agungi - ₦6,000</option>
-          <option value="6000">Idado Lekki - ₦6,000</option>
-          <option value="6000">VGC - ₦6,000</option>
-          <option value="6000">Ajah - ₦6,000</option>
-          <option value="6500">Shongotedo - ₦6,500</option>
-          <option value="6000">Abraham Adesanya - ₦6,000</option>
-          <option value="7000">Interstate park delivery 0-2kg - ₦7,000</option>
-          <option value="9500">Interstate home delivery 0-2kg - ₦9,500</option>
-        </select>
-      </div>
+    <div class="form-group">
+      <label>Delivery Area (optional)</label>
+      <select id="co-delivery-area" onchange="updateDeliveryFee()">
+        <option value="0">No delivery (pickup) / Select area</option>
+        <option value="4000">Ikeja - ₦4,000</option><option value="3500">Egbeda - ₦3,500</option><option value="4000">Ikotun - ₦4,000</option><option value="5000">Igando - ₦5,000</option><option value="3500">Abule Egba - ₦3,500</option><option value="3500">Agege - ₦3,500</option><option value="3500">Fagba - ₦3,500</option><option value="4000">Ojodu - ₦4,000</option><option value="4000">Omole 1/2 - ₦4,000</option><option value="4000">Ogba - ₦4,000</option><option value="4000">Magodo 1/2 - ₦4,000</option><option value="4000">Maryland - ₦4,000</option><option value="4000">Mile 12 - ₦4,000</option><option value="4000">Ketu - ₦4,000</option><option value="4000">Ojota - ₦4,000</option><option value="4000">Ogudu - ₦4,000</option><option value="4500">Oworo - ₦4,500</option><option value="4500">Surulere - ₦4,500</option><option value="4500">Mushin - ₦4,500</option><option value="4000">Isolo - ₦4,000</option><option value="4000">Ajao Estate - ₦4,000</option><option value="4000">Oshodi - ₦4,000</option><option value="4500">Ijegun - ₦4,500</option><option value="4500">Ago Palace - ₦4,500</option><option value="4500">Amuwo - ₦4,500</option><option value="5500">Festac - ₦5,500</option><option value="6000">Satellite - ₦6,000</option><option value="5000">Apapa - ₦5,000</option><option value="4500">Onipanu - ₦4,500</option><option value="4500">Shomolu - ₦4,500</option><option value="4500">Bariga - ₦4,500</option><option value="4500">Yaba - ₦4,500</option><option value="4500">Akoka - ₦4,500</option><option value="4500">Ebute Meta - ₦4,500</option><option value="4500">Gbagada - ₦4,500</option><option value="4500">Orile Iganmu - ₦4,500</option><option value="4000">Ejigbo - ₦4,000</option><option value="3000">Ipaja - ₦3,000</option><option value="3000">Ayobo - ₦3,000</option><option value="4500">Ikoyi - ₦4,500</option><option value="4500">VI - ₦4,500</option><option value="4500">Lagos Island - ₦4,500</option><option value="4500">Oniru - ₦4,500</option><option value="5000">Lekki Phase 1 - ₦5,000</option><option value="6000">Ikate - ₦6,000</option><option value="6000">Ilasan - ₦6,000</option><option value="5000">Jakande - ₦5,000</option><option value="6000">Osapa - ₦6,000</option><option value="6000">Orchid - ₦6,000</option><option value="6000">Ikota - ₦6,000</option><option value="6000">Agungi - ₦6,000</option><option value="6000">Idado Lekki - ₦6,000</option><option value="6000">VGC - ₦6,000</option><option value="6000">Ajah - ₦6,000</option><option value="6500">Shongotedo - ₦6,500</option><option value="6000">Abraham Adesanya - ₦6,000</option>
+      </select>
     </div>
-
     <div class="checkout-summary">
-      <div class="summary-row"><span>Items</span><span id="co-items-count">0 items</span></div>
-      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0 (Pay Later)</span></div>
+      <div class="summary-row"><span>Items</span><span id="co-items-count">0</span></div>
+      <div class="summary-row"><span>Delivery Fee</span><span id="co-delivery-fee">₦0</span></div>
       <div class="summary-row total"><span>Total</span><span id="co-total">₦0</span></div>
     </div>
     <button class="pay-btn" id="pay-btn" onclick="initiatePayment()">Pay with Paystack</button>
@@ -331,103 +233,71 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="checkout-overlay" id="preview-overlay"></div>
-<div class="checkout-modal" id="preview-modal" style="max-width: 650px;">
-  <div class="checkout-header">
-    <h3 id="pv-title">Product Details</h3>
-    <button class="checkout-close" onclick="closePreview()"><i class="bi bi-x-lg"></i></button>
+
+<div class="product-modal-overlay" id="product-modal-overlay" onclick="closeProductModal()"></div>
+<div class="product-modal" id="product-modal">
+  <div class="product-modal-media">
+    <button class="product-modal-close" onclick="closeProductModal()"><i class="bi bi-x-lg"></i></button>
+    <div class="product-modal-slider" id="product-modal-slider"></div>
+    <div class="product-modal-dots" id="product-modal-dots"></div>
+    <button class="slider-nav prev" onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
+    <button class="slider-nav next" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
   </div>
-  <div class="checkout-body" style="padding: 20px;">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" id="preview-grid-layout">
-      <div>
-        <img id="pv-main-img" src="" alt="" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; background: #f5f5f5;">
-      </div>
-      <div style="display: flex; flex-direction: column; justify-content: space-between;">
-        <div>
-          <span id="pv-cat" style="font-size: 11px; color: #aaa; text-transform: capitalize; display: block; margin-bottom: 4px;"></span>
-          <h2 id="pv-name" style="font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #111;"></h2>
-          <div id="pv-price" style="font-size: 16px; font-weight: 700; color: #111; margin-bottom: 16px;"></div>
-          
-          <div style="margin-bottom: 16px;">
-            <label style="display: block; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; margin-bottom: 6px;">Description</label>
-            <p id="pv-desc" style="font-size: 13px; color: #555; line-height: 1.5;"></p>
-          </div>
-
-          <div id="pv-sizes-container" style="margin-bottom: 16px; display: none;">
-            <label style="display: block; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; margin-bottom: 6px;">Size</label>
-            <span id="pv-sizes" style="display: inline-block; padding: 4px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; font-weight: 500; background: #f9f9f9;"></span>
-          </div>
-        </div>
-
-        <div id="pv-action-box">
-          </div>
-      </div>
+  <div class="product-modal-info">
+    <div class="cat-label" id="pm-cat"></div>
+    <h2 id="pm-name"></h2>
+    <div class="product-price" id="pm-price"></div>
+    <p class="pm-description" id="pm-description"></p>
+    <div class="pm-sizes-wrap" id="pm-sizes-wrap" style="display:none">
+      <label>Select Size</label>
+      <div class="pm-sizes" id="pm-sizes"></div>
     </div>
+    <button class="add-btn" id="pm-add-btn" onclick="addToCartFromModal()">Add to Cart</button>
   </div>
 </div>
 
 <script>
 const API = 'https://thriftgenius-backend.onrender.com/api';
 const PAGE_SIZE = 8;
-const CATEGORY = 'thrift-finds'; 
+const CATEGORY = 'thrift-finds';
 
 let products = [];
 let cart = JSON.parse(localStorage.getItem('tg_cart') || '[]');
 let liked = new Set();
 let visibleCount = PAGE_SIZE;
 let deliveryFee = 0;
+let currentSlideIndex = 0;
+let modalImages = [];
+let touchStartX = 0;
+let touchEndX = 0;
+let selectedModalSizeValue = '';
+let currentModalProduct = null;
 
 async function fetchProducts() {
-  const grid = document.getElementById("product-grid");
-  grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">
-    <div style="width:32px;height:32px;border:3px solid #eee;border-top-color:#1a6b35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
-    Loading products...
-  </div>`;
-
+  const grid = document.getElementById('product-grid');
+  grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888"><div style="width:32px;height:32px;border:3px solid #eee;border-top-color:#1a6b35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>Loading products...</div>`;
   try {
-    const res = await fetch(`${API}/products`);
+    const res = await fetch(API + '/products');
     const data = await res.json();
     products = data
       .filter(p => p.category === CATEGORY || p.category.startsWith(CATEGORY + '-'))
-      .map(p => ({
-        id: p._id,
-        name: p.name,
-        cat: p.category,
-        price: p.price,
-        sold: p.sold,
-        badge: p.badge,
-        img: p.images[0] || '',
-        images: p.images || [],
-        video: p.video || '',
-        description: p.description || '',
-        sizes: p.sizes || []
-      }));
+      .map(p => ({ id: p._id, name: p.name, cat: p.category, price: p.price, sold: p.sold, badge: p.badge, img: p.images[0] || '', images: p.images || [], video: p.video || '', description: p.description || '', sizes: p.sizes || [] }));
     renderProducts();
   } catch (err) {
-    grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">
-      <p>Could not load products. Please refresh the page.</p>
-      <button onclick="fetchProducts()" style="margin-top:12px;padding:10px 24px;background:#1a6b35;color:white;border:none;border-radius:4px;cursor:pointer;font-size:13px">Try Again</button>
-    </div>`;
-    console.log('Could not load products:', err);
+    grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888"><p>Could not load products. Please refresh.</p><button onclick="fetchProducts()" style="margin-top:12px;padding:10px 24px;background:#1a6b35;color:white;border:none;border-radius:4px;cursor:pointer;font-size:13px">Try Again</button></div>`;
   }
 }
 
- function renderProducts() {
+function renderProducts() {
   const toShow = products.slice(0, visibleCount);
-  const grid = document.getElementById("product-grid");
-  document.getElementById("item-count").textContent = products.length + " item" + (products.length !== 1 ? "s" : "");
-
-  if (!products.length) {
-    grid.innerHTML = `<div class="empty-state"><i class="bi bi-bag"></i><p>No items yet — check back Sunday!</p></div>`;
-    document.getElementById("load-more-btn").style.display = "none";
-    return;
-  }
-
+  const grid = document.getElementById('product-grid');
+  document.getElementById('item-count').textContent = products.length + ' item' + (products.length !== 1 ? 's' : '');
+  if (!products.length) { grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#aaa"><p>No items yet — check back Sunday!</p></div>`; document.getElementById('load-more-btn').style.display = 'none'; return; }
   grid.innerHTML = toShow.map(p => `
-    <div class="product-card" onclick="openPreview('${p.id}')">
-      <div class="product-img">
+    <div class="product-card">
+       <div class="product-img" onclick="openProductModal('${p.id}')" ontouchend="event.preventDefault(); openProductModal('${p.id}')">
         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x400/eeeeee/999999?text=No+Image'">
-        ${p.sold ? '<span class="sold-out-badge">Sold Out</span>' : p.badge === "new" ? '<span class="new-badge">New</span>' : ''}
+        ${p.sold ? '<span class="sold-out-badge">Sold Out</span>' : p.badge === 'new' ? '<span class="new-badge">New</span>' : ''}
         <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${p.id}')">
           <i class="bi ${liked.has(p.id) ? 'bi-heart-fill' : 'bi-heart'}"></i>
         </button>
@@ -436,395 +306,173 @@ async function fetchProducts() {
         <div class="cat-label">${p.cat}</div>
         <h3>${p.name}</h3>
         <div class="product-price ${p.sold ? 'sold' : ''}">₦${p.price.toLocaleString()}</div>
-        <button class="add-btn" ${p.sold ? "disabled" : ""} onclick="event.stopPropagation(); addToCart('${p.id}')">
-          ${p.sold ? "Sold Out" : "Add to Cart"}
+        <button class="add-btn" ${p.sold ? 'disabled' : ''} onclick="addToCart('${p.id}')">
+          ${p.sold ? 'Sold Out' : 'Add to Cart'}
         </button>
       </div>
     </div>
-  `).join("");
-
-  const btn = document.getElementById("load-more-btn");
+  `).join('');
+  const btn = document.getElementById('load-more-btn');
   const remaining = products.length - visibleCount;
-  if (remaining <= 0) { btn.textContent = "All items loaded"; btn.disabled = true; }
-  else { btn.textContent = "Load More (" + remaining + " remaining)"; btn.disabled = false; }
+  if (remaining <= 0) { btn.textContent = 'All items loaded'; btn.disabled = true; }
+  else { btn.textContent = 'Load More (' + remaining + ' remaining)'; btn.disabled = false; }
 }
-document.getElementById("load-more-btn").addEventListener("click", () => { visibleCount += PAGE_SIZE; renderProducts(); });
 
+document.getElementById('load-more-btn').addEventListener('click', () => { visibleCount += PAGE_SIZE; renderProducts(); });
 function toggleLike(id) { liked.has(id) ? liked.delete(id) : liked.add(id); renderProducts(); }
 
-function addToCart(id) {
+function addToCart(id, size) {
+  size = size || '';
   const p = products.find(x => x.id === id);
   if (!p || p.sold) return;
-  
-  // Thrift Check: If item is already in cart, don't let them add it twice
-  const ex = cart.find(x => x.id === id);
-  if (ex) {
-    showToast(p.name + " is already in your cart!");
-    return;
-  }
-  
-  cart.push({ ...p, qty: 1 });
+  const ex = cart.find(x => x.id === id && (x.size || '') === size);
+  if (ex) ex.qty++; else cart.push({ ...p, qty: 1, size });
   localStorage.setItem('tg_cart', JSON.stringify(cart));
   updateCart();
-  showToast(p.name + " added to cart");
+  showToast(p.name + (size ? ' (' + size + ')' : '') + ' added to cart');
 }
 
-function removeFromCart(id) {
-  cart = cart.filter(x => x.id !== id);
+function removeFromCart(id, size) {
+  size = size || '';
+  cart = cart.filter(x => !(x.id === id && (x.size || '') === size));
   localStorage.setItem('tg_cart', JSON.stringify(cart));
   updateCart();
 }
 
- function updateCart() {
-  // 🔒 FORCE a fresh pull from localStorage so pages never use stale/cached data
-  cart = JSON.parse(localStorage.getItem('tg_cart') || '[]');
-
-  const total = cart.reduce((s, c) => s + c.price * (c.qty || 1), 0);
-  const qty = cart.length; // Strictly count unique array items
-  
-  const countEl = document.getElementById("cart-count");
-  const mobCountEl = document.getElementById("mobile-cart-count");
-  const qtyEl = document.getElementById("cart-qty");
-  const totalEl = document.getElementById("cart-total");
-
-  if (countEl) countEl.textContent = qty;
-  if (mobCountEl) mobCountEl.textContent = qty;
-  if (qtyEl) qtyEl.textContent = qty;
-  if (totalEl) totalEl.textContent = "₦" + total.toLocaleString();
-
-  const body = document.getElementById("cart-body");
-  if (!body) return;
-  
-  if (!cart.length) {
-    body.innerHTML = `<div class="empty-cart"><i class="bi bi-bag"></i><p>Your cart is empty.</p></div>`;
-    return;
-  }
-  
-  body.innerHTML = cart.map((c, idx) => `
+function updateCart() {
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const qty = cart.reduce((s, c) => s + c.qty, 0);
+  document.getElementById('cart-count').textContent = qty;
+  document.getElementById('mobile-cart-count').textContent = qty;
+  document.getElementById('cart-qty').textContent = qty;
+  document.getElementById('cart-total').textContent = '₦' + total.toLocaleString();
+  const body = document.getElementById('cart-body');
+  if (!cart.length) { body.innerHTML = `<div class="empty-cart"><i class="bi bi-bag"></i><p>Your cart is empty.</p></div>`; return; }
+  body.innerHTML = cart.map(c => `
     <div class="cart-item">
       <img src="${c.img}" alt="${c.name}" onerror="this.src='https://placehold.co/60x75/eeeeee/999?text=TG'">
       <div class="cart-item-details">
-        <h4>${c.name}</h4>
-        <div class="cat">${c.cat}</div>
-        <div class="price">₦${c.price.toLocaleString()}</div>
+        <h4>${c.name}${c.size ? ' — ' + c.size : ''}</h4>
+        <div class="cat">${c.cat} × ${c.qty}</div>
+        <div class="price">₦${(c.price * c.qty).toLocaleString()}</div>
       </div>
-      <button class="remove-item" onclick="removeFromCart(${idx})"><i class="bi bi-trash"></i></button>
+      <button class="remove-item" onclick="removeFromCart('${c.id}','${c.size || ''}')"><i class="bi bi-x"></i></button>
     </div>
-  `).join("");
+  `).join('');
 }
-function openCart() { document.getElementById("cart-sidebar").classList.add("open"); document.getElementById("overlay").classList.add("open"); document.body.style.overflow = "hidden"; }
-function closeCartFn() { document.getElementById("cart-sidebar").classList.remove("open"); document.getElementById("overlay").classList.remove("open"); document.body.style.overflow = ""; }
-document.getElementById("open-cart").addEventListener("click", e => { e.preventDefault(); openCart(); });
-document.getElementById("mobile-cart-btn").addEventListener("click", e => { e.preventDefault(); openCart(); closeMenu(); });
-document.getElementById("close-cart").addEventListener("click", closeCartFn);
-document.getElementById("overlay").addEventListener("click", closeCartFn);
 
-const ham = document.getElementById("hamburger");
-const mob = document.getElementById("mobile-menu");
-ham.addEventListener("click", () => { ham.classList.toggle("open"); mob.classList.toggle("open"); });
-function closeMenu() { ham.classList.remove("open"); mob.classList.remove("open"); }
+function openCart() { document.getElementById('cart-sidebar').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeCartFn() { document.getElementById('cart-sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('open-cart').addEventListener('click', e => { e.preventDefault(); openCart(); });
+document.getElementById('mobile-cart-btn').addEventListener('click', e => { e.preventDefault(); openCart(); closeMenu(); });
+document.getElementById('close-cart').addEventListener('click', closeCartFn);
+document.getElementById('overlay').addEventListener('click', closeCartFn);
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobile-menu');
+ham.addEventListener('click', () => { ham.classList.toggle('open'); mob.classList.toggle('open'); });
+function closeMenu() { ham.classList.remove('open'); mob.classList.remove('open'); }
+function showToast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500); }
 
-function showToast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 2500); }
-
- function openCheckout() {
-  if (!cart.length) {
-    showToast('Your cart is empty');
-    return;
-  }
+function openCheckout() {
+  if (!cart.length) { showToast('Your cart is empty'); return; }
   closeCartFn();
-  
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const qty = cart.reduce((s, c) => s + c.qty, 0);
   deliveryFee = 0;
-  
-  // 🔒 Reset fulfillment selectors back to default standard delivery views on open
-  const fulfillmentSelect = document.getElementById('co-fulfillment-method');
-  if (fulfillmentSelect) fulfillmentSelect.value = 'delivery';
-  
-  const wrapper = document.getElementById('delivery-fields-wrapper');
-  if (wrapper) wrapper.style.display = 'block';
-
   document.getElementById('co-items-count').textContent = qty + ' item' + (qty !== 1 ? 's' : '');
   document.getElementById('co-delivery-fee').textContent = '₦0';
   document.getElementById('co-total').textContent = '₦' + total.toLocaleString();
-  
-  // Reset select input pointers explicitly to prevent sticky DOM states
-  const areaSelect = document.getElementById('co-delivery-area');
-  if (areaSelect) areaSelect.value = "0";
-  
+  document.getElementById('co-delivery-area').value = '0';
   document.getElementById('checkout-overlay').classList.add('open');
   document.getElementById('checkout-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function updateDeliveryFee() {
-  const method = document.getElementById('co-fulfillment-method').value;
-  
-  if (method === 'pickup') {
-    deliveryFee = 0;
-  } else {
-    const areaSelect = document.getElementById('co-delivery-area');
-    deliveryFee = parseInt(areaSelect.value) || 0;
-  }
-
-  let itemsSubtotal = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0); 
-  let finalTotal = itemsSubtotal + deliveryFee;
-
-  document.getElementById('co-delivery-fee').textContent = "₦" + deliveryFee.toLocaleString();
-  document.getElementById('co-total').textContent = "₦" + finalTotal.toLocaleString();
+  const select = document.getElementById('co-delivery-area');
+  deliveryFee = Number(select.value) || 0;
+  document.getElementById('co-delivery-fee').textContent = '₦' + deliveryFee.toLocaleString();
+  document.getElementById('co-total').textContent = '₦' + (cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee).toLocaleString();
 }
-
-function toggleDeliveryFields() {
-  const method = document.getElementById('co-fulfillment-method').value;
-  const deliveryWrapper = document.getElementById('delivery-fields-wrapper');
-  
-  if (method === 'pickup') {
-    deliveryWrapper.style.display = 'none';
-    const areaSelect = document.getElementById('co-delivery-area');
-    if (areaSelect) areaSelect.value = "0"; // Reset the area selector values smoothly
-    updateDeliveryFee(); // Instantly drop layout calculations down to ₦0
-  } else {
-    deliveryWrapper.style.display = 'block'; // Bring back address blocks fluidly
-    updateDeliveryFee(); // Recalculate sums based on current dropdown selections
-  }
-}
-
-function closeCheckout() { 
-  document.getElementById('checkout-overlay').classList.remove('open'); 
-  document.getElementById('checkout-modal').classList.remove('open'); 
-  document.body.style.overflow = ''; 
-}
-
+function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); document.getElementById('checkout-modal').classList.remove('open'); document.body.style.overflow = ''; }
 document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
 
 async function initiatePayment() {
   const name = document.getElementById('co-name').value.trim();
   const email = document.getElementById('co-email').value.trim();
   const phone = document.getElementById('co-phone').value.trim();
-  const fulfillmentMethod = document.getElementById('co-fulfillment-method').value;
-
-  if (!name || !email || !phone) {
-    showToast('Please fill in your contact details (Name, Email, Phone).');
-    return;
-  }
-
-  let address = "Pay Later / Pickup Option Chosen";
-  let deliveryDay = "N/A";
-  let deliveryArea = "Pay Later";
-
-  // 🔒 Validation Pass: Enforce checks only if user stays on delivery pathway
-  if (fulfillmentMethod === 'delivery') {
-    address = document.getElementById('co-address').value.trim();
-    const daySelect = document.getElementById('co-delivery-day').value;
-    const areaSelect = document.getElementById('co-delivery-area');
-    
-    if (!address || !daySelect || areaSelect.value === "0" || deliveryFee === 0) {
-      showToast('Please fill in all delivery details including area.');
-      return;
-    }
-    
-    deliveryDay = daySelect;
-    deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
-  }
-
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
-  const items = cart.map(c => ({
-    product: c.id || c._id,
-    name: c.name,
-    price: c.price,
-    size: c.size || ''
-  }));
-
-  const btn = document.getElementById('pay-btn');
-  btn.disabled = true;
-  btn.textContent = 'Processing...';
-
-  try {
-    const res = await fetch(`${API}/orders`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        customer: { name, email, phone, address, deliveryDay, deliveryArea, deliveryFee },
-        items,
-        totalAmount: total
-      })
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message);
-
-    window.location.href = data.authorizationUrl;
-  } catch (err) {
-    showToast(err.message || 'Error processing payment flow initialization parameters.');
-    btn.disabled = false;
-    btn.textContent = 'Pay with Paystack';
-  }
-}
-
-// 🔒 Runtime verification engine links
- // 📱 Mobile-optimized event engine for the delivery dropdown
-const fulfillmentElement = document.getElementById('co-fulfillment-method');
-if (fulfillmentElement) {
-  // Listen to 'change' for desktop and 'input' for fast mobile wheels
-  ['change', 'input'].forEach(eventType => {
-    fulfillmentElement.addEventListener(eventType, () => {
-      toggleDeliveryFields();
-    });
-  });
-}
-function toggleDeliveryFields() {
-  const method = document.getElementById('co-fulfillment-method').value;
-  const deliveryWrapper = document.getElementById('delivery-fields-wrapper');
-  
-  if (method === 'pickup') {
-    if (deliveryWrapper) deliveryWrapper.style.display = 'none';
-    const areaSelect = document.getElementById('co-delivery-area');
-    if (areaSelect) areaSelect.value = "0"; 
-    deliveryFee = 0;
-  } else {
-    if (deliveryWrapper) deliveryWrapper.style.display = 'block';
-    const areaSelect = document.getElementById('co-delivery-area');
-    deliveryFee = parseInt(areaSelect?.value) || 0;
-  }
-  updateDeliveryFee(); 
-}
-
-function updateDeliveryFee() {
-  const method = document.getElementById('co-fulfillment-method').value;
-  if (method === 'pickup') {
-    deliveryFee = 0;
-  } else {
-    const areaSelect = document.getElementById('co-delivery-area');
-    deliveryFee = parseInt(areaSelect?.value) || 0;
-  }
-  
-  const itemsTotal = cart.reduce((s, c) => s + c.price * (c.qty || 1), 0);
-  
-  // 📱 Fix font crunching "NO" bug on mobile viewports
-  const feeElement = document.getElementById('co-delivery-fee');
-  if (feeElement) {
-    if (deliveryFee === 0) {
-      feeElement.textContent = "₦0 (Pay Later)";
-    } else {
-      feeElement.textContent = "₦" + deliveryFee.toLocaleString();
-    }
-  }
-  
-  const totalElement = document.getElementById('co-total');
-  if (totalElement) {
-    totalElement.textContent = "₦" + (itemsTotal + deliveryFee).toLocaleString();
-  }
-}
-
-function closeCheckout() { 
-  document.getElementById('checkout-overlay').classList.remove('open'); 
-  document.getElementById('checkout-modal').classList.remove('open'); 
-  document.body.style.overflow = ''; 
-}
-
-// Attach overlay click background close handler safely
-document.getElementById('checkout-overlay')?.addEventListener('click', closeCheckout);
-
-async function initiatePayment() {
-  const name = document.getElementById('co-name').value.trim();
-  const email = document.getElementById('co-email').value.trim();
-  const phone = document.getElementById('co-phone').value.trim();
-  const fulfillmentMethod = document.getElementById('co-fulfillment-method').value;
-
-  if (!name || !email || !phone) {
-    showToast('Please fill in your contact details (Name, Email, Phone).');
-    return;
-  }
-
-  let address = "Pay Later / Pickup Option Chosen";
-  let deliveryDay = "N/A";
-  let deliveryArea = "Pay Later";
-
-  if (fulfillmentMethod === 'delivery') {
-    address = document.getElementById('co-address').value.trim();
-    const daySelect = document.getElementById('co-delivery-day').value;
-    const areaSelect = document.getElementById('co-delivery-area');
-    
-    if (!address || !daySelect || areaSelect.value === "0" || deliveryFee === 0) {
-      showToast('Please fill in all delivery details including area.');
-      return;
-    }
-    
-    deliveryDay = daySelect;
-    deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
-  }
-
-  const total = cart.reduce((s, c) => s + c.price * (c.qty || 1), 0) + deliveryFee;
-  const items = cart.map(c => ({
-    product: c.id || c._id,
-    name: c.name,
-    price: c.price,
-    size: c.size || ''
-  }));
-
-  const btn = document.getElementById('pay-btn');
-  btn.disabled = true;
-  btn.textContent = 'Processing...';
-
-  try {
-    const res = await fetch(`${API}/orders`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        customer: { name, email, phone, address, deliveryDay, deliveryArea, deliveryFee },
-        items,
-        totalAmount: total
-      })
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message);
-
-    window.location.href = data.authorizationUrl;
-  } catch (err) {
-    showToast(err.message || 'Error processing payment flow initialization parameters.');
-    btn.disabled = false;
-    btn.textContent = 'Pay with Paystack';
-  }
-}
-
-// 📱 Safe Native Event Attachment Engine
-document.addEventListener("DOMContentLoaded", () => {
-  const fulfillmentSelect = document.getElementById('co-fulfillment-method');
+  const address = document.getElementById('co-address').value.trim();
+  const deliveryDay = document.getElementById('co-delivery-day').value;
   const areaSelect = document.getElementById('co-delivery-area');
-
-  if (fulfillmentSelect) {
-    ['change', 'input'].forEach(evt => {
-      fulfillmentSelect.addEventListener(evt, toggleDeliveryFields);
-    });
+  const deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
+  if (!name || !email || !phone || !address || !deliveryDay) { showToast('Please fill in all required fields'); return; }
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
+  const items = cart.map(c => ({ product: c.id, name: c.name, price: c.price, size: c.size || '' }));
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true; btn.textContent = 'Processing...';
+  try {
+    const res = await fetch(API + '/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ customer: { name, email, phone, address, deliveryDay, deliveryArea, deliveryFee }, items, totalAmount: total }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+    window.location.href = data.authorizationUrl;
+  } catch (err) {
+    showToast(err.message || 'Error processing payment');
+    btn.disabled = false; btn.textContent = 'Pay with Paystack';
   }
+}
 
-  if (areaSelect) {
-    ['change', 'input'].forEach(evt => {
-      areaSelect.addEventListener(evt, updateDeliveryFee);
-    });
-  }
-});
-
-// Cross-tab synchronization triggers
-window.addEventListener('storage', (e) => { if (e.key === 'tg_cart') updateCart(); });
-window.addEventListener('pageshow', () => { updateCart(); });
-
- 
+function openProductModal(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  currentModalProduct = p;
+  currentSlideIndex = 0;
+  selectedModalSizeValue = '';
+  modalImages = p.images && p.images.length ? [...p.images] : [p.img];
+  document.getElementById('pm-cat').textContent = p.cat;
+  document.getElementById('pm-name').textContent = p.name;
+  document.getElementById('pm-price').textContent = '₦' + p.price.toLocaleString();
+  document.getElementById('pm-description').textContent = p.description || '';
+  const slider = document.getElementById('product-modal-slider');
+  slider.innerHTML = modalImages.map(src => `<div><img src="${src}" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=No+Image'"></div>`).join('');
+  if (p.video) { slider.innerHTML += `<div><video src="${p.video}" controls muted style="width:100%;height:100%;object-fit:cover"></video></div>`; modalImages.push(p.video); }
+  updateModalDots();
+  const sizesWrap = document.getElementById('pm-sizes-wrap');
+  if (p.sizes && p.sizes.length) { sizesWrap.style.display = 'block'; document.getElementById('pm-sizes').innerHTML = p.sizes.map(s => `<button class="pm-size-btn" onclick="selectModalSize(this,'${s}')">${s}</button>`).join(''); }
+  else { sizesWrap.style.display = 'none'; }
+  const addBtn = document.getElementById('pm-add-btn');
+  if (p.sold) { addBtn.textContent = 'Sold Out'; addBtn.disabled = true; } else { addBtn.textContent = 'Add to Cart'; addBtn.disabled = false; }
+  document.getElementById('product-modal-overlay').classList.add('open');
+  document.getElementById('product-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  updateSliderPosition();
+}
+function updateSliderPosition() {
+  document.getElementById('product-modal-slider').style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+  updateModalDots();
+}
+function updateModalDots() {
+  const dots = document.getElementById('product-modal-dots');
+  if (!dots) return;
+  dots.innerHTML = modalImages.map((_, i) => `<div class="pm-dot ${i === currentSlideIndex ? 'active' : ''}" onclick="goToSlide(${i})"></div>`).join('');
+}
+function goToSlide(i) { currentSlideIndex = i; updateSliderPosition(); }
+function nextSlide() { currentSlideIndex = (currentSlideIndex + 1) % modalImages.length; updateSliderPosition(); }
+function prevSlide() { currentSlideIndex = (currentSlideIndex - 1 + modalImages.length) % modalImages.length; updateSliderPosition(); }
+function selectModalSize(btn, size) { document.querySelectorAll('.pm-size-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); selectedModalSizeValue = size; }
+function closeProductModal() { document.getElementById('product-modal-overlay').classList.remove('open'); document.getElementById('product-modal').classList.remove('open'); document.body.style.overflow = ''; }
+function addToCartFromModal() {
+  if (!currentModalProduct || currentModalProduct.sold) return;
+  if (currentModalProduct.sizes && currentModalProduct.sizes.length && !selectedModalSizeValue) { showToast('Please select a size'); return; }
+  addToCart(currentModalProduct.id, selectedModalSizeValue);
+  selectedModalSizeValue = '';
+  closeProductModal();
+}
+const sliderEl = document.getElementById('product-modal-slider');
+if (sliderEl) {
+  sliderEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  sliderEl.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].clientX; if (touchStartX - touchEndX > 50) nextSlide(); else if (touchEndX - touchStartX > 50) prevSlide(); }, { passive: true });
+}
 fetchProducts();
 updateCart();
-// Listen for cart changes made on other pages/tabs instantly
-window.addEventListener('storage', (e) => {
-  if (e.key === 'tg_cart') {
-    updateCart();
-  }
-});
-
-// Also force a refresh whenever the user clicks 'Back' and returns to this page session
-window.addEventListener('pageshow', () => {
-  updateCart();
-});
-setInterval(fetchProducts, 60000);
 </script>
 </body>
 </html>

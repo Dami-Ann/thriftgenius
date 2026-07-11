@@ -295,7 +295,7 @@ function renderProducts() {
   if (!products.length) { grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#aaa"><p>No items yet — check back Sunday!</p></div>`; document.getElementById('load-more-btn').style.display = 'none'; return; }
   grid.innerHTML = toShow.map(p => `
     <div class="product-card">
-       <div class="product-img" onclick="openProductModal('${p.id}')" ontouchend="event.preventDefault(); openProductModal('${p.id}')">
+      <div class="product-img" onclick="openProductModal('${p.id}')">
         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x400/eeeeee/999999?text=No+Image'">
         ${p.sold ? '<span class="sold-out-badge">Sold Out</span>' : p.badge === 'new' ? '<span class="new-badge">New</span>' : ''}
         <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${p.id}')">

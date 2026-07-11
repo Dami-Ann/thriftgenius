@@ -850,6 +850,7 @@ window.addEventListener('pageshow', () => { updateCart(); });
 
 fetchProducts();
 updateCart();
+setInterval(fetchProducts, 60000);
 </script>
 </body>
 </html>

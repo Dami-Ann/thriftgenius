@@ -387,3 +387,4 @@ if (sliderEl) {
 
 fetchProducts();
 updateCart();
+setInterval(fetchProducts, 60000);

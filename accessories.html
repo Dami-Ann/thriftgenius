@@ -889,6 +889,7 @@ window.addEventListener('storage', (e) => { if (e.key === 'tg_cart') updateCart(
 window.addEventListener('pageshow', () => { updateCart(); });
 fetchProducts();
 updateCart()
+setInterval(fetchProducts, 60000);
 </script>
 </body>
 </html>

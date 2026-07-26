@@ -170,7 +170,7 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   <div class="cat-hero-content">
     <a href="index.html" class="back-link"><i class="bi bi-arrow-left"></i> Back</a>
     <h1>Bags</h1>
-    <p>Curated thrift BagsLOWER — new pieces every Sunday</p>
+    <p>Curated thrift Bags — new pieces every Sunday</p>
   </div>
 </div>
 
@@ -288,14 +288,15 @@ async function fetchProducts() {
   }
 }
 
-function renderProducts() {
+function 
+ducts() {
   const toShow = products.slice(0, visibleCount);
   const grid = document.getElementById('product-grid');
   document.getElementById('item-count').textContent = products.length + ' item' + (products.length !== 1 ? 's' : '');
   if (!products.length) { grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#aaa"><p>No items yet — check back Sunday!</p></div>`; document.getElementById('load-more-btn').style.display = 'none'; return; }
   grid.innerHTML = toShow.map(p => `
     <div class="product-card">
-       <div class="product-img" onclick="openProductModal('${p.id}')" ontouchend="event.preventDefault(); openProductModal('${p.id}')">
+        <div class="product-img" onclick="openProductModal('${p.id}')">
         <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x400/eeeeee/999999?text=No+Image'">
         ${p.sold ? '<span class="sold-out-badge">Sold Out</span>' : p.badge === 'new' ? '<span class="new-badge">New</span>' : ''}
         <button class="wish-btn ${liked.has(p.id) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${p.id}')">
@@ -431,9 +432,10 @@ function openProductModal(id) {
   document.getElementById('pm-name').textContent = p.name;
   document.getElementById('pm-price').textContent = '₦' + p.price.toLocaleString();
   document.getElementById('pm-description').textContent = p.description || '';
-  const slider = document.getElementById('product-modal-slider');
-  slider.innerHTML = modalImages.map(src => `<div><img src="${src}" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=No+Image'"></div>`).join('');
-  if (p.video) { slider.innerHTML += `<div><video src="${p.video}" controls muted style="width:100%;height:100%;object-fit:cover"></video></div>`; modalImages.push(p.video); }
+   const slider = document.getElementById('product-modal-slider');
+  slider.style.transform = 'translateX(0)';
+  slider.innerHTML = modalImages.map(src => `<div style="min-width:100%;height:100%;flex-shrink:0;overflow:hidden;"><img src="${src}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=No+Image'"></div>`).join('');
+  if (p.video) { slider.innerHTML += `<div style="min-width:100%;height:100%;flex-shrink:0;"><video src="${p.video}" controls muted style="width:100%;height:100%;object-fit:cover"></video></div>`; modalImages.push(p.video); }
   updateModalDots();
   const sizesWrap = document.getElementById('pm-sizes-wrap');
   if (p.sizes && p.sizes.length) { sizesWrap.style.display = 'block'; document.getElementById('pm-sizes').innerHTML = p.sizes.map(s => `<button class="pm-size-btn" onclick="selectModalSize(this,'${s}')">${s}</button>`).join(''); }
@@ -473,6 +475,23 @@ if (sliderEl) {
 }
 fetchProducts();
 updateCart();
+let tapStartY = 0;
+let tapStartX = 0;
+document.addEventListener('touchstart', e => {
+  tapStartY = e.touches[0].clientY;
+  tapStartX = e.touches[0].clientX;
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+  const dy = Math.abs(e.changedTouches[0].clientY - tapStartY);
+  const dx = Math.abs(e.changedTouches[0].clientX - tapStartX);
+  if (dy > 10 || dx > 10) return;
+  const productImg = e.target.closest('.product-img');
+  if (productImg) {
+    const onclickAttr = productImg.getAttribute('onclick');
+    if (onclickAttr) eval(onclickAttr);
+  }
+}, { passive: true });
 </script>
 </body>
 </html>

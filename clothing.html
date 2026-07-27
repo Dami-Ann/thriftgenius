@@ -140,6 +140,22 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .products-section { padding: 32px 16px; }
 }
+#product-modal-slider {
+  display: flex !important;
+  transition: transform 0.3s ease-in-out;
+  width: 100%;
+}
+
+.pm-slide-item {
+  min-width: 100%;
+  flex-shrink: 0;
+}
+
+.pm-slide-item img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
 </style>
 </head>
 <body>
@@ -420,30 +436,91 @@ async function initiatePayment() {
   }
 }
 
-function openProductModal(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  currentModalProduct = p;
+ function openProductModal(id) {
+  const p = products.find(x => x.id === id || x._id === id);
+  if (!p) {
+    console.error("Product not found for ID:", id);
+    return;
+  }
+
+  currentProductInModal = p;
+  selectedSizeFromModal = '';
   currentSlideIndex = 0;
-  selectedModalSizeValue = '';
-  modalImages = p.images && p.images.length ? [...p.images] : [p.img];
-  document.getElementById('pm-cat').textContent = p.cat;
-  document.getElementById('pm-name').textContent = p.name;
-  document.getElementById('pm-price').textContent = '₦' + p.price.toLocaleString();
-  document.getElementById('pm-description').textContent = p.description || '';
+  
+  // 1. Gather ALL possible images into an array cleanly
+  if (p.images && Array.isArray(p.images) && p.images.length > 0) {
+    modalImages = p.images.filter(img => typeof img === 'string' && img.trim() !== '');
+  } else if (p.gallery && Array.isArray(p.gallery) && p.gallery.length > 0) {
+    modalImages = p.gallery.filter(img => typeof img === 'string' && img.trim() !== '');
+  } else {
+    const singleImg = p.img || p.image || 'https://placehold.co/400x500/eeeeee/999999?text=No+Image';
+    modalImages = [singleImg];
+  }
+
+  // Fallback if filtering resulted in empty array
+  if (!modalImages.length) {
+    modalImages = ['https://placehold.co/400x500/eeeeee/999999?text=No+Image'];
+  }
+
+  // 2. Set details
+  if (document.getElementById('pm-cat')) document.getElementById('pm-cat').textContent = p.cat || '';
+  if (document.getElementById('pm-name')) document.getElementById('pm-name').textContent = p.name || '';
+  if (document.getElementById('pm-price')) document.getElementById('pm-price').textContent = "₦" + (p.price || 0).toLocaleString();
+  if (document.getElementById('pm-description')) document.getElementById('pm-description').textContent = p.description || '';
+
+  // 3. Render Slider Images
   const slider = document.getElementById('product-modal-slider');
-  slider.innerHTML = modalImages.map(src => `<div><img src="${src}" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=No+Image'"></div>`).join('');
-  if (p.video) { slider.innerHTML += `<div><video src="${p.video}" controls muted style="width:100%;height:100%;object-fit:cover"></video></div>`; modalImages.push(p.video); }
-  updateModalDots();
-  const sizesWrap = document.getElementById('pm-sizes-wrap');
-  if (p.sizes && p.sizes.length) { sizesWrap.style.display = 'block'; document.getElementById('pm-sizes').innerHTML = p.sizes.map(s => `<button class="pm-size-btn" onclick="selectModalSize(this,'${s}')">${s}</button>`).join(''); }
-  else { sizesWrap.style.display = 'none'; }
+  if (slider) {
+    slider.innerHTML = modalImages.map(imgSrc => `
+      <div class="pm-slide-item" style="min-width: 100%; flex-shrink: 0;">
+        <img src="${imgSrc}" alt="${p.name}" onerror="this.src='https://placehold.co/400x500/eeeeee/999999?text=Error'">
+      </div>
+    `).join('');
+  }
+
+  // 4. Render Dots (only if more than 1 image exists)
+  const dotsContainer = document.getElementById('product-modal-dots');
+  if (dotsContainer) {
+    if (modalImages.length > 1) {
+      dotsContainer.style.display = 'flex';
+      dotsContainer.innerHTML = modalImages.map((_, idx) => `<span class="pm-dot ${idx === 0 ? 'active' : ''}" onclick="goToSlide(${idx})"></span>`).join('');
+    } else {
+      dotsContainer.style.display = 'none';
+    }
+  }
+
+  // 5. Hide/Show Nav Arrows depending on image count
+  const prevBtn = document.querySelector('.slider-nav.prev') || document.querySelector('.slider-arrow.prev');
+  const nextBtn = document.querySelector('.slider-nav.next') || document.querySelector('.slider-arrow.next');
+  if (prevBtn) prevBtn.style.display = modalImages.length > 1 ? 'block' : 'none';
+  if (nextBtn) nextBtn.style.display = modalImages.length > 1 ? 'block' : 'none';
+
+  // 6. Sizes & Add Button
+  const sizeWrap = document.getElementById('pm-sizes-wrap');
+  const sizesContainer = document.getElementById('pm-sizes');
+  if (sizeWrap && sizesContainer) {
+    if (p.sizes && p.sizes.length > 0) {
+      sizeWrap.style.display = 'block';
+      sizesContainer.innerHTML = p.sizes.map(sz => `<button class="pm-size-btn" onclick="selectModalSize(this, '${sz}')">${sz}</button>`).join('');
+    } else {
+      sizeWrap.style.display = 'none';
+    }
+  }
+
   const addBtn = document.getElementById('pm-add-btn');
-  if (p.sold) { addBtn.textContent = 'Sold Out'; addBtn.disabled = true; } else { addBtn.textContent = 'Add to Cart'; addBtn.disabled = false; }
-  document.getElementById('product-modal-overlay').classList.add('open');
-  document.getElementById('product-modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  if (addBtn) {
+    addBtn.disabled = !!p.sold;
+    addBtn.textContent = p.sold ? 'Sold Out' : 'Add to Cart';
+  }
+
   updateSliderPosition();
+
+  // Show Modal
+  const overlay = document.getElementById('product-modal-overlay');
+  const modal = document.getElementById('product-modal');
+  if (overlay) overlay.classList.add('open');
+  if (modal) modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 function updateSliderPosition() {
   document.getElementById('product-modal-slider').style.transform = `translateX(-${currentSlideIndex * 100}%)`;

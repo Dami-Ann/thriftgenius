@@ -404,7 +404,7 @@ async function initiatePayment() {
   const deliveryDay = document.getElementById('co-delivery-day').value;
   const areaSelect = document.getElementById('co-delivery-area');
   const deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
-  if (!name || !email || !phone || !address || !deliveryDay) { showToast('Please fill in all required fields'); return; }
+  if (!name || !email || !phone || !address) { showToast('Please fill in all required fields'); return; }
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
   const items = cart.map(c => ({ product: c.id, name: c.name, price: c.price, size: c.size || '' }));
   const btn = document.getElementById('pay-btn');

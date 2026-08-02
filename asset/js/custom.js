@@ -247,7 +247,7 @@ async function initiatePayment() {
   const areaSelect = document.getElementById('co-delivery-area');
   const deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
 
-  if (!name || !email || !phone || !address || !deliveryDay) {
+  if (!name || !email || !phone || !address) {
     showToast('Please fill in all required fields');
     return;
   }

@@ -569,9 +569,10 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 .announcement { overflow: hidden; white-space: nowrap; padding: 9px 0; }
 .marquee { display: inline-block; animation: marquee 20s linear infinite; }
 .marquee span { display: inline-block; }
-@keyframes marquee 
+@keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
 /* stop here */
 /* new one */
 .announcement { overflow: hidden; white-space: nowrap; padding: 9px 0; background: #1a6b35; }

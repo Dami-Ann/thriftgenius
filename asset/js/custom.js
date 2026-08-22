@@ -13,39 +13,121 @@ let touchEndX = 0;
 let selectedModalSizeValue = "";
 let currentModalProduct = null;
 
-async function fetchProducts() {
+ async function fetchProducts() {
   const grid = document.getElementById("product-grid");
+
   grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">
     <div style="width:32px;height:32px;border:3px solid #eee;border-top-color:#1a6b35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
     Loading products...
   </div>`;
 
   try {
-    const res = await fetch('https://thriftgenius-backend.onrender.com/api/products');
-    const data = await res.json();
-    products = data.map(p => ({
+    // 1. Get existing products from Render
+    const renderResponse = await fetch(
+      "https://thriftgenius-backend.onrender.com/api/products"
+    );
+
+    if (!renderResponse.ok) {
+      throw new Error("Could not load existing products");
+    }
+
+    const renderData = await renderResponse.json();
+
+     const renderProductsData = renderData.map(p => ({
       id: p._id,
       name: p.name,
       cat: p.category,
       price: p.price,
       sold: p.sold,
       badge: p.badge,
-      img: p.images[0] || '',
+      img: p.images?.[0] || "",
       images: p.images || [],
-      video: p.video || '',
-      description: p.description || '',
+      video: p.video || "",
+      description: p.description || "",
       sizes: p.sizes || []
     }));
+
+
+    // 2. Get new products from Supabase
+    const { data: supabaseData, error: supabaseError } =
+      await supabaseClient
+        .from("products")
+        .select(`
+          id,
+          name,
+          price,
+          stock,
+          description,
+          sizes,
+          subcategory,
+          is_active,
+          categories (
+            name,
+            slug
+          ),
+          product_images (
+            image_url,
+            display_order
+          )
+        `)
+        .eq("is_active", true)
+        .order("id", { ascending: false });
+
+    if (supabaseError) {
+      throw supabaseError;
+    }
+
+
+    // 3. Convert Supabase products to the format
+    //    your existing renderProducts() understands
+    const newProducts = (supabaseData || []).map(p => {
+
+      const images = (p.product_images || [])
+        .sort((a, b) => a.display_order - b.display_order)
+        .map(img => img.image_url);
+
+      return {
+         id: String(p.id),
+        name: p.name,
+         cat: p.subcategory || p.categories?.slug || p.categories?.name || "",
+        price: p.price,
+        sold: Number(p.stock) <= 0,
+        badge: "",
+        img: images[0] || "",
+        images: images,
+        video: "",
+        description: p.description || "",
+        sizes: p.sizes
+          ? p.sizes.split(",").map(s => s.trim())
+          : []
+      };
+    });
+
+
+    // 4. Combine old + new products
+     products = [
+  ...newProducts,
+  ...renderProductsData
+];
+    console.log("Render products:", renderProducts.length);
+    console.log("Supabase products:", newProducts.length);
+    console.log("Total products:", products.length);
+
+    // 5. Use your existing product renderer
     renderProducts();
+
   } catch (err) {
+
+    console.error("Could not load products:", err);
+
     grid.innerHTML = `<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">
       <p>Could not load products. Please refresh the page.</p>
-      <button onclick="fetchProducts()" style="margin-top:12px;padding:10px 24px;background:#1a6b35;color:white;border:none;border-radius:4px;cursor:pointer;font-size:13px">Try Again</button>
+      <button onclick="fetchProducts()" style="margin-top:12px;padding:10px 24px;background:#1a6b35;color:white;border:none;border-radius:4px;cursor:pointer;font-size:13px">
+        Try Again
+      </button>
     </div>`;
-    console.log('Could not load products:', err);
   }
 }
-
 function getFiltered() {
   if (activeCat === "all") return products;
   return products.filter(p => p.cat === activeCat || p.cat.startsWith(activeCat + '-'));

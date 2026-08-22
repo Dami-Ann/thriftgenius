@@ -382,6 +382,24 @@
     <button class="add-btn" id="pm-add-btn" onclick="addToCartFromModal()">Add to Cart</button>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://qftdpwrqatatkzqmmelk.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_AUlZdWs2qBpiItmUV1oScg_qdgCuiGH";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  console.log("Homepage Supabase connected:", supabaseClient);
+</script>
+
+
 <script src="asset/js/custom.js"></script>
 
 </body>

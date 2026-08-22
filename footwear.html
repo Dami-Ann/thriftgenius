@@ -319,6 +319,18 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://qftdpwrqatatkzqmmelk.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_AUlZdWs2qBpiItmUV1oScg_qdgCuiGH";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+</script>
 <script>
 const API = 'https://thriftgenius-backend.onrender.com/api';
 const PAGE_SIZE = 8;
@@ -336,31 +348,183 @@ let touchEndX = 0;
 let selectedModalSizeValue = '';
 let currentModalProduct = null;
 
-async function fetchProducts() {
+ async function fetchProducts() {
   const grid = document.getElementById('product-grid');
-  grid.innerHTML = '<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888"><div style="width:32px;height:32px;border:3px solid #eee;border-top-color:#1a6b35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>Loading products...</div>';
+
+  grid.innerHTML =
+    '<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">' +
+    '<div style="width:32px;height:32px;border:3px solid #eee;border-top-color:#1a6b35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>' +
+    'Loading products...</div>';
+
   try {
-    const res = await fetch(API + '/products');
-    const data = await res.json();
-    products = data
-      .filter(function(p) { return p.category === CATEGORY || p.category.startsWith(CATEGORY + '-'); })
+
+    // ==========================================
+    // 1. LOAD EXISTING PRODUCTS FROM RENDER
+    // ==========================================
+
+    let oldRenderProducts = [];
+
+    try {
+      const renderRes = await fetch(API + '/products');
+      const renderData = await renderRes.json();
+
+      oldRenderProducts = renderData
+        .filter(function(p) {
+          return (
+            p.category === CATEGORY ||
+            p.category.startsWith(CATEGORY + '-')
+          );
+        })
+        .map(function(p) {
+          return {
+            id: String(p._id),
+            name: p.name,
+            cat: p.category,
+            price: Number(p.price),
+            sold: p.sold,
+            badge: p.badge || '',
+            img: p.images && p.images.length ? p.images[0] : '',
+            images: p.images || [],
+            video: p.video || '',
+            description: p.description || '',
+            sizes: p.sizes || []
+          };
+        });
+
+      console.log('Render footwear products:', oldRenderProducts.length);
+
+    } catch (renderError) {
+      console.warn(
+        'Could not load old Render products:',
+        renderError
+      );
+    }
+
+
+    // ==========================================
+    // 2. LOAD NEW PRODUCTS FROM SUPABASE
+    // ==========================================
+
+    let supabaseProducts = [];
+
+    const { data: sbData, error: sbError } =
+      await supabaseClient
+        .from('products')
+        .select(`
+          id,
+          name,
+          price,
+          description,
+          stock,
+          sizes,
+          is_active,
+          subcategory,
+          categories (
+            slug,
+            name
+          ),
+          product_images (
+            image_url,
+            display_order
+          )
+        `)
+        .eq('is_active', true);
+
+    if (sbError) {
+      throw sbError;
+    }
+
+    supabaseProducts = (sbData || [])
+      .filter(function(p) {
+        const category = p.categories?.slug || '';
+
+        return (
+          category === CATEGORY ||
+          category.startsWith(CATEGORY + '-')
+        );
+      })
       .map(function(p) {
+
+        const images = (p.product_images || [])
+          .sort(function(a, b) {
+            return a.display_order - b.display_order;
+          })
+          .map(function(img) {
+            return img.image_url;
+          });
+
         return {
-          id: p._id, name: p.name, cat: p.category,
-          price: p.price, sold: p.sold, badge: p.badge,
-          img: p.images[0] || '',
-          images: p.images || [],
-          video: p.video || '',
+          id: String(p.id),
+          name: p.name,
+          cat: p.subcategory || p.categories?.slug || '',
+          price: Number(p.price),
+          sold: Number(p.stock) <= 0,
+          badge: '',
+          img: images[0] || '',
+          images: images,
+          video: '',
           description: p.description || '',
-          sizes: p.sizes || []
+          sizes: Array.isArray(p.sizes)
+            ? p.sizes
+            : p.sizes
+              ? String(p.sizes)
+                  .split(',')
+                  .map(function(s) {
+                    return s.trim();
+                  })
+                  .filter(Boolean)
+              : []
         };
       });
+
+    console.log(
+      'Supabase footwear products:',
+      supabaseProducts.length
+    );
+
+    console.log(
+      'Supabase footwear product names:',
+      supabaseProducts.map(function(p) {
+        return p.name;
+      })
+    );
+
+
+    // ==========================================
+    // 3. COMBINE BOTH SOURCES
+    // ==========================================
+
+    products = [
+      ...oldRenderProducts,
+      ...supabaseProducts
+    ];
+
+    console.log(
+      'TOTAL FOOTWEAR PRODUCTS:',
+      products.length
+    );
+
+
+    // ==========================================
+    // 4. DISPLAY PRODUCTS
+    // ==========================================
+
     renderProducts();
+
   } catch (err) {
-    grid.innerHTML = '<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888"><p>Could not load products. Please refresh.</p><button onclick="fetchProducts()" style="margin-top:12px;padding:10px 24px;background:#1a6b35;color:white;border:none;border-radius:4px;cursor:pointer;font-size:13px">Try Again</button></div>';
+
+    console.error(
+      'Could not load footwear products:',
+      err
+    );
+
+    grid.innerHTML =
+      '<div style="grid-column:span 4;text-align:center;padding:60px 20px;color:#888">' +
+      '<p>Could not load products. Please refresh.</p>' +
+      '<button onclick="fetchProducts()" style="margin-top:12px;padding:10px 24px;background:#1a6b35;color:white;border:none;border-radius:4px;cursor:pointer;font-size:13px">' +
+      'Try Again</button></div>';
   }
 }
-
 function renderProducts() {
   const toShow = products.slice(0, visibleCount);
   const grid = document.getElementById('product-grid');

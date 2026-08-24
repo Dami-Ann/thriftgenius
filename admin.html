@@ -686,6 +686,7 @@
         chip.addEventListener("click", () => chip.classList.toggle("selected"));
       });
 
+
       function getSelectedSizes() {
         return [...document.querySelectorAll(".size-chip.selected")].map(
           (c) => c.dataset.size,
@@ -735,6 +736,8 @@
     .value.trim();
 
   const images = document.getElementById("p-images").files;
+  console.log("FILES SELECTED:", images.length);
+console.log("FILE NAMES:", [...images].map(file => file.name));
   const sizes = getSelectedSizes();
 
   if (!name || !price || !selectedCategory) {
@@ -834,6 +837,8 @@
     // 3. Upload images to Supabase Storage
     for (let i = 0; i < images.length; i++) {
       const originalFile = images[i];
+
+      console.log("UPLOADING IMAGE:", i + 1, originalFile.name);
 
       let fileBlob;
 
@@ -1105,19 +1110,26 @@ console.log(
             </td>
 
             <td>
-              <button
-                class="action-btn toggle"
-                onclick="toggleSold('${p._productId}', ${sold}, '${p._source}')"
-              >
-                ${sold ? "Mark Available" : "Mark Sold"}
-              </button>
+               <button
+  class="action-btn toggle"
+  onclick="toggleSold('${p._productId}', ${sold}, '${p._source}')"
+>
+  ${sold ? "Mark Available" : "Mark Sold"}
+</button>
 
-              <button
-                class="action-btn delete"
-                onclick="deleteProduct('${p._productId}', '${p._source}')"
-              >
-                Delete
-              </button>
+<button
+  class="action-btn"
+  onclick="editProduct('${p._productId}', '${p._source}')"
+>
+  Edit
+</button>
+
+<button
+  class="action-btn delete"
+  onclick="deleteProduct('${p._productId}', '${p._source}')"
+>
+  Delete
+</button>
             </td>
           </tr>
         `;
@@ -1215,52 +1227,191 @@ console.log(
       }
 
       // Toggle sold status
-      async function toggleSold(id, currentStatus) {
-        try {
-          const res = await fetch(`${API}/products/${id}`, {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ sold: !currentStatus }),
-          });
+       async function toggleSold(id, currentStatus, source) {
+  try {
+    // =========================
+    // UPDATE SUPABASE PRODUCT
+    // =========================
+    if (source === "supabase") {
+      const newStock = currentStatus ? 1 : 0;
 
-          if (res.status === 401 || res.status === 403) {
-            showToast("Session expired. Please log in again.");
-            logout();
-            return;
-          }
+      const { error } = await supabaseClient
+        .from("products")
+        .update({
+          stock: newStock,
+        })
+        .eq("id", id);
 
-          showToast("Product updated!");
-          loadProducts();
-        } catch (err) {
-          showToast("Error updating product");
-        }
+      if (error) {
+        throw new Error(error.message);
       }
+
+      showToast("Product updated!");
+      loadProducts();
+      return;
+    }
+
+    // =========================
+    // UPDATE OLD RENDER PRODUCT
+    // =========================
+    if (source === "render") {
+      const res = await fetch(`${API}/products/${id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sold: !currentStatus,
+        }),
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        showToast("Session expired. Please log in again.");
+        logout();
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error("Update failed");
+      }
+
+      showToast("Product updated!");
+      loadProducts();
+      return;
+    }
+
+    throw new Error("Unknown product source");
+  } catch (err) {
+    console.error("Toggle sold error:", err);
+    showToast("Error updating product: " + err.message);
+  }
+}
 
       // Delete product
-      async function deleteProduct(id) {
-        if (!confirm("Are you sure you want to delete this product?")) return;
-        try {
-          const res = await fetch(`${API}/products/${id}`, {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-          });
+       async function deleteProduct(id, source) {
+  const confirmed = confirm(
+    "Are you sure you want to delete this product?"
+  );
 
-          if (res.status === 401 || res.status === 403) {
-            showToast("Session expired.");
-            logout();
-            return;
+  if (!confirmed) return;
+
+  try {
+    // =========================
+    // DELETE SUPABASE PRODUCT
+    // =========================
+    if (source === "supabase") {
+      // First get the product's image paths so we can remove them
+      const { data: imageRecords, error: imageFetchError } =
+        await supabaseClient
+          .from("product_images")
+          .select("image_url")
+          .eq("product_id", id);
+
+      if (imageFetchError) {
+        throw new Error(
+          "Could not find product images: " +
+            imageFetchError.message
+        );
+      }
+
+      // Delete image records from product_images
+      const { error: imageDeleteError } =
+        await supabaseClient
+          .from("product_images")
+          .delete()
+          .eq("product_id", id);
+
+      if (imageDeleteError) {
+        throw new Error(
+          "Could not delete image records: " +
+            imageDeleteError.message
+        );
+      }
+
+      // Delete the product itself
+      const { error: productDeleteError } =
+        await supabaseClient
+          .from("products")
+          .delete()
+          .eq("id", id);
+
+      if (productDeleteError) {
+        throw new Error(
+          "Could not delete product: " +
+            productDeleteError.message
+        );
+      }
+
+      // Remove the actual files from Supabase Storage
+      if (imageRecords && imageRecords.length) {
+        const paths = imageRecords
+          .map((record) => {
+            const marker =
+              "/storage/v1/object/public/product-images/";
+
+            const index = record.image_url.indexOf(marker);
+
+            if (index === -1) return null;
+
+            return record.image_url.substring(
+              index + marker.length
+            );
+          })
+          .filter(Boolean);
+
+        if (paths.length) {
+          const { error: storageError } =
+            await supabaseClient.storage
+              .from("product-images")
+              .remove(paths);
+
+          if (storageError) {
+            console.warn(
+              "Product deleted, but some storage images could not be removed:",
+              storageError.message
+            );
           }
-
-          if (!res.ok) throw new Error("Delete failed");
-          showToast("Product deleted");
-          setTimeout(() => loadProducts(), 500);
-        } catch (err) {
-          showToast("Error deleting product");
         }
       }
+
+      showToast("Product deleted");
+      setTimeout(() => loadProducts(), 500);
+      return;
+    }
+
+    // =========================
+    // DELETE OLD RENDER PRODUCT
+    // =========================
+    if (source === "render") {
+      const res = await fetch(`${API}/products/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        showToast("Session expired.");
+        logout();
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error("Delete failed");
+      }
+
+      showToast("Product deleted");
+      setTimeout(() => loadProducts(), 500);
+      return;
+    }
+
+    throw new Error("Unknown product source");
+  } catch (err) {
+    console.error("Delete product error:", err);
+    showToast("Error deleting product: " + err.message);
+  }
+}
 
       function showToast(msg) {
         const el = document.getElementById("toast");

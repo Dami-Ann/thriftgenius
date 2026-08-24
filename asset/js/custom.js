@@ -336,12 +336,12 @@ async function initiatePayment() {
 
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0) + deliveryFee;
   const items = cart.map(c => ({
-    product: c.id,
-    name: c.name,
-    price: c.price,
-    size: c.size || ''
-  }));
-
+  product: c.id,
+  source: c._source === 'supabase' ? 'supabase' : 'render',
+  name: c.name,
+  price: c.price,
+  size: c.size || ''
+}));
   const btn = document.getElementById('pay-btn');
   btn.disabled = true;
   btn.textContent = 'Processing...';

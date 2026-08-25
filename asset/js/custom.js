@@ -35,6 +35,7 @@ let currentModalProduct = null;
 
      const renderProductsData = renderData.map(p => ({
       id: p._id,
+       _source: 'render',
       name: p.name,
       cat: p.category,
       price: p.price,
@@ -88,6 +89,7 @@ let currentModalProduct = null;
 
       return {
          id: String(p.id),
+          _source: 'supabase',
         name: p.name,
          cat: p.subcategory || p.categories?.slug || p.categories?.name || "",
         price: p.price,
@@ -109,7 +111,7 @@ let currentModalProduct = null;
   ...newProducts,
   ...renderProductsData
 ];
-    console.log("Render products:", renderProducts.length);
+     console.log("Render products:", renderProductsData.length);
     console.log("Supabase products:", newProducts.length);
     console.log("Total products:", products.length);
 
@@ -135,6 +137,14 @@ function getFiltered() {
 
 function renderProducts() {
   const filtered = getFiltered();
+
+  // temp
+  console.log("PRODUCT IDS:", filtered.slice(0, 10).map(p => ({
+  name: p.name,
+  id: p.id,
+  source: p._source
+})));
+
   const toShow = filtered.slice(0, visibleCount);
   const grid = document.getElementById("product-grid");
 
@@ -342,6 +352,10 @@ async function initiatePayment() {
   price: c.price,
   size: c.size || ''
 }));
+console.log("FINAL ORDER ITEMS:", items);
+// tempo
+console.log("CHECKOUT ITEMS:", items);
+
   const btn = document.getElementById('pay-btn');
   btn.disabled = true;
   btn.textContent = 'Processing...';

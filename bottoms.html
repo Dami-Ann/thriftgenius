@@ -651,27 +651,81 @@ function updateDeliveryFee() {
 function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); document.getElementById('checkout-modal').classList.remove('open'); document.body.style.overflow = ''; }
 document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
 
-async function initiatePayment() {
+ async function initiatePayment() {
   var name = document.getElementById('co-name').value.trim();
   var email = document.getElementById('co-email').value.trim();
   var phone = document.getElementById('co-phone').value.trim();
   var address = document.getElementById('co-address').value.trim();
   var deliveryDay = document.getElementById('co-delivery-day').value;
+
   var areaSelect = document.getElementById('co-delivery-area');
   var deliveryArea = areaSelect.options[areaSelect.selectedIndex].text;
-  if (!name || !email || !phone || !address || !deliveryDay) { showToast('Please fill in all required fields'); return; }
-  var total = cart.reduce(function(s,c){return s+c.price*c.qty;},0) + deliveryFee;
-  var items = cart.map(function(c){return {product:c.id,name:c.name,price:c.price,size:c.size||''};});
+
+  // Check whether customer selected "No delivery"
+  var noDelivery = areaSelect.value === '0';
+
+  // Basic customer details are always required
+  if (!name || !email || !phone || !address) {
+    showToast('Please fill in all required fields');
+    return;
+  }
+
+  // Delivery day is only required when delivery is selected
+  if (!noDelivery && !deliveryDay) {
+    showToast('Please select a delivery day');
+    return;
+  }
+
+  var total = cart.reduce(function(s, c) {
+    return s + c.price * c.qty;
+  }, 0) + deliveryFee;
+
+  var items = cart.map(function(c) {
+    return {
+      product: c.id,
+      name: c.name,
+      price: c.price,
+      size: c.size || ''
+    };
+  });
+
   var btn = document.getElementById('pay-btn');
-  btn.disabled = true; btn.textContent = 'Processing...';
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
   try {
-    var res = await fetch(API + '/orders', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customer:{name,email,phone,address,deliveryDay,deliveryArea,deliveryFee},items,totalAmount:total})});
+    var res = await fetch(API + '/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        customer: {
+          name,
+          email,
+          phone,
+          address,
+          deliveryDay,
+          deliveryArea,
+          deliveryFee
+        },
+        items,
+        totalAmount: total
+      })
+    });
+
     var data = await res.json();
-    if (!res.ok) throw new Error(data.message);
+
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+
     window.location.href = data.authorizationUrl;
-  } catch(err) {
+
+  } catch (err) {
     showToast(err.message || 'Error processing payment');
-    btn.disabled = false; btn.textContent = 'Pay with Paystack';
+    btn.disabled = false;
+    btn.textContent = 'Pay with Paystack';
   }
 }
 

@@ -526,7 +526,7 @@
               </div>
             </div>
             <div class="full">
-              <label class="admin-label">Images (max 4)</label>
+               <label class="admin-label">Images (max 8)</label>
               <input
                 type="file"
                 class="admin-input"
@@ -945,10 +945,10 @@ console.log("FILE NAMES:", [...images].map(file => file.name));
     return;
   }
 
-  if (images.length > 4) {
-    showToast("Maximum 4 images allowed");
-    return;
-  }
+  if (images.length > 8) {
+  showToast("Maximum 8 images allowed");
+  return;
+}
 
   const btn = document.getElementById("submit-btn");
   btn.disabled = true;

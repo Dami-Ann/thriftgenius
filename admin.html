@@ -585,6 +585,201 @@
             <tbody id="products-tbody"></tbody>
           </table>
         </div>
+        <!-- EDIT PRODUCT MODAL -->
+<div
+  id="edit-product-modal"
+  style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  "
+>
+  <div
+    style="
+      background: #fff;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 12px;
+      padding: 25px;
+      position: relative;
+    "
+  >
+
+    <button
+      type="button"
+      onclick="closeEditModal()"
+      style="
+        position: absolute;
+        top: 12px;
+        right: 15px;
+        border: none;
+        background: none;
+        font-size: 25px;
+        cursor: pointer;
+      "
+    >
+      &times;
+    </button>
+
+    <h2 style="margin-bottom: 20px;">Edit Product</h2>
+
+    <!-- Hidden product information -->
+    <input type="hidden" id="edit-product-id">
+    <input type="hidden" id="edit-product-source">
+
+    <div style="margin-bottom: 15px;">
+      <label class="admin-label">Product Name</label>
+      <input
+        type="text"
+        class="admin-input"
+        id="edit-name"
+      >
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label class="admin-label">Price (₦)</label>
+      <input
+        type="number"
+        class="admin-input"
+        id="edit-price"
+      >
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label class="admin-label">Category</label>
+
+      <select
+        class="admin-select"
+        id="edit-category"
+      >
+        <option value="">Select category</option>
+
+        <optgroup label="Clothing">
+          <option value="clothing-dress">Dress</option>
+          <option value="clothing-top">Top</option>
+          <option value="clothing-jerseys">Jerseys</option>
+          <option value="clothing-jacket">Jacket</option>
+        </optgroup>
+
+        <optgroup label="Bottoms">
+          <option value="bottoms-jorts">Jorts</option>
+          <option value="bottoms-lowrise">Lowrise jeans</option>
+          <option value="bottoms-skirts">Skirts</option>
+          <option value="bottoms-leather">Leather pants</option>
+          <option value="bottoms-pants">Pants</option>
+        </optgroup>
+
+        <optgroup label="Footwear">
+          <option value="footwear-sneakers">Sneakers</option>
+          <option value="footwear-boots">Boots</option>
+          <option value="footwear-flats">Flats</option>
+          <option value="footwear-heels">Heels</option>
+        </optgroup>
+
+        <optgroup label="Bags">
+          <option value="bags">Bags</option>
+        </optgroup>
+
+        <optgroup label="Accessories">
+          <option value="accessories-belts">Belts</option>
+          <option value="accessories-jewelry">Jewelry</option>
+          <option value="accessories-caps">Caps</option>
+          <option value="accessories-sunglasses">Sunglasses</option>
+          <option value="accessories-scarfes">Scarves</option>
+        </optgroup>
+
+        <optgroup label="Thrift Finds">
+          <option value="thrift-finds">
+            Thrift Finds / One of One
+          </option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label class="admin-label">Description</label>
+
+      <textarea
+        class="admin-textarea"
+        id="edit-description"
+        rows="5"
+      ></textarea>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label class="admin-label">Sizes</label>
+
+      <div
+        class="sizes-wrap"
+        id="edit-sizes-wrap"
+      >
+        <button type="button" class="size-chip" data-edit-size="XS">XS</button>
+        <button type="button" class="size-chip" data-edit-size="S">S</button>
+        <button type="button" class="size-chip" data-edit-size="M">M</button>
+        <button type="button" class="size-chip" data-edit-size="L">L</button>
+        <button type="button" class="size-chip" data-edit-size="XL">XL</button>
+        <button type="button" class="size-chip" data-edit-size="XXL">XXL</button>
+
+        <button type="button" class="size-chip" data-edit-size="36">36</button>
+        <button type="button" class="size-chip" data-edit-size="37">37</button>
+        <button type="button" class="size-chip" data-edit-size="38">38</button>
+        <button type="button" class="size-chip" data-edit-size="39">39</button>
+        <button type="button" class="size-chip" data-edit-size="40">40</button>
+        <button type="button" class="size-chip" data-edit-size="41">41</button>
+        <button type="button" class="size-chip" data-edit-size="42">42</button>
+        <button type="button" class="size-chip" data-edit-size="43">43</button>
+        <button type="button" class="size-chip" data-edit-size="44">44</button>
+        <button type="button" class="size-chip" data-edit-size="45">45</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label class="admin-label">Stock</label>
+
+      <input
+        type="number"
+        class="admin-input"
+        id="edit-stock"
+        min="0"
+      >
+    </div>
+
+    <div
+      style="
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 25px;
+      "
+    >
+      <button
+        type="button"
+        class="action-btn"
+        onclick="closeEditModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="submit-btn"
+        id="save-edit-btn"
+        onclick="saveEditedProduct()"
+      >
+        Save Changes
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- END EDIT PRODUCT MODAL -->
       </div>
     </div>
 
@@ -1233,15 +1428,15 @@ console.log(
     // UPDATE SUPABASE PRODUCT
     // =========================
     if (source === "supabase") {
-      const newStock = currentStatus ? 1 : 0;
+       const newStock = currentStatus ? 1 : 0;
 
-      const { error } = await supabaseClient
-        .from("products")
-        .update({
-          stock: newStock,
-        })
-        .eq("id", id);
-
+const { error } = await supabaseClient
+  .from("products")
+  .update({
+    stock: newStock,
+    is_active: newStock > 0,
+  })
+  .eq("id", id);
       if (error) {
         throw new Error(error.message);
       }
@@ -1419,6 +1614,338 @@ console.log(
         el.classList.add("show");
         setTimeout(() => el.classList.remove("show"), 2500);
       }
+
+      // ================================
+// EDIT PRODUCT
+// ================================
+
+async function editProduct(id, source) {
+  try {
+
+    // For now, safely handle Supabase products only.
+    // We will handle the old Render products separately.
+    if (source !== "supabase") {
+      showToast(
+        "This is an older product. Supabase editing is not enabled for it yet."
+      );
+      return;
+    }
+
+    // Get the product
+    const { data: product, error: productError } =
+      await supabaseClient
+        .from("products")
+        .select(`
+          id,
+          name,
+          category_id,
+          subcategory,
+          price,
+          description,
+          stock,
+          sizes,
+          is_active
+        `)
+        .eq("id", id)
+        .single();
+
+    if (productError) {
+      throw new Error(
+        "Could not load product: " + productError.message
+      );
+    }
+
+    if (!product) {
+      throw new Error("Product not found.");
+    }
+
+    // Put product information into the edit form
+    document.getElementById("edit-product-id").value = product.id;
+    document.getElementById("edit-product-source").value = source;
+
+    document.getElementById("edit-name").value =
+      product.name || "";
+
+    document.getElementById("edit-price").value =
+      product.price ?? "";
+
+    document.getElementById("edit-category").value =
+      product.subcategory || "";
+
+    document.getElementById("edit-description").value =
+      product.description || "";
+
+    document.getElementById("edit-stock").value =
+      product.stock ?? 0;
+
+
+    // Reset all size buttons first
+    document
+      .querySelectorAll("[data-edit-size]")
+      .forEach((button) => {
+        button.classList.remove("selected");
+      });
+
+    // Select the product's existing sizes
+    if (product.sizes) {
+
+      const existingSizes = product.sizes
+        .split(",")
+        .map((size) => size.trim())
+        .filter(Boolean);
+
+      document
+        .querySelectorAll("[data-edit-size]")
+        .forEach((button) => {
+
+          const size = button.dataset.editSize;
+
+          if (existingSizes.includes(size)) {
+            button.classList.add("selected");
+          }
+
+        });
+    }
+
+    // Show modal
+    const modal =
+      document.getElementById("edit-product-modal");
+
+    modal.style.display = "flex";
+
+  } catch (err) {
+
+    console.error("Edit product error:", err);
+
+    showToast(
+      "Could not open product: " + err.message
+    );
+  }
+}
+
+
+// ================================
+// EDIT SIZE BUTTONS
+// ================================
+
+document.addEventListener("click", function (event) {
+
+  const button =
+    event.target.closest("[data-edit-size]");
+
+  if (!button) return;
+
+  button.classList.toggle("selected");
+
+});
+
+
+// ================================
+// SAVE EDITED PRODUCT
+// ================================
+
+async function saveEditedProduct() {
+
+  const id =
+    document.getElementById("edit-product-id").value;
+
+  const source =
+    document.getElementById("edit-product-source").value;
+
+  if (!id) {
+    showToast("No product selected.");
+    return;
+  }
+
+  if (source !== "supabase") {
+    showToast("This product cannot be edited yet.");
+    return;
+  }
+
+  const name =
+    document.getElementById("edit-name").value.trim();
+
+  const price =
+    document.getElementById("edit-price").value;
+
+  const subcategory =
+    document.getElementById("edit-category").value;
+
+  const description =
+    document.getElementById("edit-description").value.trim();
+
+  const stock =
+    document.getElementById("edit-stock").value;
+
+
+  if (!name || !price || !subcategory) {
+    showToast(
+      "Please fill in name, price and category."
+    );
+    return;
+  }
+
+
+  // Get selected sizes
+  const selectedSizes = [];
+
+  document
+    .querySelectorAll("[data-edit-size].selected")
+    .forEach((button) => {
+      selectedSizes.push(button.dataset.editSize);
+    });
+
+
+  const saveButton =
+    document.getElementById("save-edit-btn");
+
+  saveButton.disabled = true;
+  saveButton.textContent = "Saving...";
+
+
+  try {
+
+    // Determine main category
+    let mainCategory;
+
+    if (subcategory.startsWith("clothing-")) {
+
+      mainCategory = "clothing";
+
+    } else if (subcategory.startsWith("bottoms-")) {
+
+      mainCategory = "bottoms";
+
+    } else if (subcategory.startsWith("footwear-")) {
+
+      mainCategory = "footwear";
+
+    } else if (
+      subcategory === "bags" ||
+      subcategory.startsWith("bags-")
+    ) {
+
+      mainCategory = "bags";
+
+    } else if (
+      subcategory.startsWith("accessories-")
+    ) {
+
+      mainCategory = "accessories";
+
+    } else if (
+      subcategory === "thrift-finds" ||
+      subcategory.startsWith("thrift-finds-")
+    ) {
+
+      mainCategory = "thrift-finds";
+
+    } else {
+
+      throw new Error(
+        "Unknown category selected."
+      );
+
+    }
+
+
+    // Find category ID
+    const {
+      data: categoryData,
+      error: categoryError
+    } = await supabaseClient
+      .from("categories")
+      .select("id")
+      .eq("slug", mainCategory)
+      .single();
+
+
+    if (categoryError) {
+      throw new Error(
+        "Could not find category: " +
+        categoryError.message
+      );
+    }
+
+
+    // Update product
+    const {
+      error: updateError
+    } = await supabaseClient
+      .from("products")
+      .update({
+
+        name: name,
+
+        category_id: categoryData.id,
+
+        subcategory: subcategory,
+
+        price: Number(price),
+
+        description: description,
+
+        stock: Number(stock),
+
+        sizes: selectedSizes.join(", "),
+
+        is_active: Number(stock) > 0
+
+      })
+      .eq("id", id);
+
+
+    if (updateError) {
+      throw new Error(
+        "Could not update product: " +
+        updateError.message
+      );
+    }
+
+
+    showToast("Product updated successfully!");
+
+    closeEditModal();
+
+    // Reload dashboard
+    await loadProducts();
+
+  } catch (err) {
+
+    console.error(
+      "Save edited product error:",
+      err
+    );
+
+    showToast(
+      "Could not save changes: " +
+      err.message
+    );
+
+  } finally {
+
+    saveButton.disabled = false;
+    saveButton.textContent = "Save Changes";
+
+  }
+
+}
+
+
+// ================================
+// CLOSE EDIT MODAL
+// ================================
+
+function closeEditModal() {
+
+  const modal =
+    document.getElementById("edit-product-modal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+
+}
     </script>
   </body>
 </html>

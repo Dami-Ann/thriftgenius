@@ -71,7 +71,7 @@ let currentModalProduct = null;
             display_order
           )
         `)
-        .eq("is_active", true)
+        
         .order("id", { ascending: false });
 
     if (supabaseError) {
@@ -93,7 +93,7 @@ let currentModalProduct = null;
         name: p.name,
          cat: p.subcategory || p.categories?.slug || p.categories?.name || "",
         price: p.price,
-        sold: Number(p.stock) <= 0,
+         sold: Number(p.stock) <= 0 || p.is_active === false,
         badge: "",
         img: images[0] || "",
         images: images,
@@ -115,6 +115,10 @@ let currentModalProduct = null;
     console.log("Supabase products:", newProducts.length);
     console.log("Total products:", products.length);
 
+     console.log(
+  "SUPABASE SOLD PRODUCTS:",
+  newProducts.filter(p => p.sold)
+);
     // 5. Use your existing product renderer
     renderProducts();
 

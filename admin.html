@@ -1434,7 +1434,6 @@ const { error } = await supabaseClient
   .from("products")
   .update({
     stock: newStock,
-    is_active: newStock > 0,
   })
   .eq("id", id);
       if (error) {

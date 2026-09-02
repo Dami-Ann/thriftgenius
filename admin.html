@@ -228,22 +228,26 @@
         gap: 8px;
         flex-wrap: wrap;
       }
-      .size-chip {
-        padding: 6px 14px;
-        border: 1.5px solid #ddd;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.15s;
-        background: white;
-        font-family: "Inter", sans-serif;
-      }
-      .size-chip.selected {
-        background: #1a6b35;
-        color: white;
-        border-color: #1a6b35;
-      }
+       .size-chip {
+  padding: 6px 14px;
+  border: 1.5px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: white;
+  font-family: "Inter", sans-serif;
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
+}
+
+.size-chip.selected {
+  background: #1a6b35;
+  color: white;
+  border-color: #1a6b35;
+}
 
       .submit-btn {
         background: #1a6b35;
@@ -507,24 +511,26 @@
             <div class="full">
               <label class="admin-label">Sizes (click to select)</label>
               <div class="sizes-wrap" id="sizes-wrap">
-                <button class="size-chip" data-size="XS">XS</button>
-                <button class="size-chip" data-size="S">S</button>
-                <button class="size-chip" data-size="M">M</button>
-                <button class="size-chip" data-size="L">L</button>
-                <button class="size-chip" data-size="XL">XL</button>
-                <button class="size-chip" data-size="XXL">XXL</button>
-                <button class="size-chip" data-size="36">36</button>
-                <button class="size-chip" data-size="37">37</button>
-                <button class="size-chip" data-size="38">38</button>
-                <button class="size-chip" data-size="39">39</button>
-                <button class="size-chip" data-size="40">40</button>
-                <button class="size-chip" data-size="41">41</button>
-                <button class="size-chip" data-size="42">42</button>
-                <button class="size-chip" data-size="43">43</button>
-                <button class="size-chip" data-size="44">44</button>
-                <button class="size-chip" data-size="45">45</button>
+
+  <button type="button" class="size-chip" data-size="XS">XS</button>
+  <button type="button" class="size-chip" data-size="S">S</button>
+  <button type="button" class="size-chip" data-size="M">M</button>
+  <button type="button" class="size-chip" data-size="L">L</button>
+  <button type="button" class="size-chip" data-size="XL">XL</button>
+  <button type="button" class="size-chip" data-size="XXL">XXL</button>
+
+  <button type="button" class="size-chip" data-size="36">36</button>
+  <button type="button" class="size-chip" data-size="37">37</button>
+  <button type="button" class="size-chip" data-size="38">38</button>
+  <button type="button" class="size-chip" data-size="39">39</button>
+  <button type="button" class="size-chip" data-size="40">40</button>
+  <button type="button" class="size-chip" data-size="41">41</button>
+  <button type="button" class="size-chip" data-size="42">42</button>
+  <button type="button" class="size-chip" data-size="43">43</button>
+  <button type="button" class="size-chip" data-size="44">44</button>
+  <button type="button" class="size-chip" data-size="45">45</button>
               </div>
-            </div>
+</div>
             <div class="full">
                <label class="admin-label">Images (max 8)</label>
               <input
@@ -1679,33 +1685,48 @@ async function editProduct(id, source) {
 
 
     // Reset all size buttons first
-    document
-      .querySelectorAll("[data-edit-size]")
-      .forEach((button) => {
-        button.classList.remove("selected");
-      });
+     // ================================
+// ================================
 
-    // Select the product's existing sizes
-    if (product.sizes) {
 
-      const existingSizes = product.sizes
-        .split(",")
-        .map((size) => size.trim())
-        .filter(Boolean);
+// LOAD EXISTING SIZES
+// ================================
 
-      document
-        .querySelectorAll("[data-edit-size]")
-        .forEach((button) => {
+document
+  .querySelectorAll("#edit-sizes-wrap [data-edit-size]")
+  .forEach((button) => {
+    button.classList.remove("selected");
+  });
 
-          const size = button.dataset.editSize;
+let existingSizes = [];
 
-          if (existingSizes.includes(size)) {
-            button.classList.add("selected");
-          }
+if (product.sizes) {
+  if (Array.isArray(product.sizes)) {
+    existingSizes = product.sizes.map(size =>
+      String(size).trim()
+    );
+  } else {
+    existingSizes = String(product.sizes)
+      .split(",")
+      .map(size => size.trim())
+      .filter(Boolean);
+  }
+}
 
-        });
+console.log("PRODUCT SIZES FROM SUPABASE:", product.sizes);
+console.log("EXISTING SIZES:", existingSizes);
+
+document
+  .querySelectorAll("#edit-sizes-wrap [data-edit-size]")
+  .forEach((button) => {
+    const buttonSize =
+      String(button.dataset.editSize).trim();
+
+    if (existingSizes.includes(buttonSize)) {
+      button.classList.add("selected");
     }
-
+  });
+  
     // Show modal
     const modal =
       document.getElementById("edit-product-modal");
@@ -1727,17 +1748,20 @@ async function editProduct(id, source) {
 // EDIT SIZE BUTTONS
 // ================================
 
-document.addEventListener("click", function (event) {
+  
 
-  const button =
-    event.target.closest("[data-edit-size]");
-
-  if (!button) return;
-
+ 
+function toggleEditSize(button) {
   button.classList.toggle("selected");
 
-});
+  const selectedSizes = [
+    ...document.querySelectorAll(
+      "#edit-sizes-wrap .size-chip.selected"
+    )
+  ].map(button => button.dataset.editSize);
 
+  console.log("Selected sizes:", selectedSizes);
+}
 
 // ================================
 // SAVE EDITED PRODUCT
@@ -1786,14 +1810,13 @@ async function saveEditedProduct() {
 
 
   // Get selected sizes
-  const selectedSizes = [];
+   const selectedSizes = [
+  ...document.querySelectorAll(
+    "#edit-sizes-wrap [data-edit-size].selected"
+  )
+].map(button => button.dataset.editSize);
 
-  document
-    .querySelectorAll("[data-edit-size].selected")
-    .forEach((button) => {
-      selectedSizes.push(button.dataset.editSize);
-    });
-
+console.log("SAVING SIZES:", selectedSizes);
 
   const saveButton =
     document.getElementById("save-edit-btn");

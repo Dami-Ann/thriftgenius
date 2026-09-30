@@ -739,4 +739,30 @@ footer { background: #111; color: #888; text-align: center; padding: 20px; font-
 }
 .whatsapp-float:hover { transform: scale(1.1); }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Brand Disclaimer */
+.brand-disclaimer {
+  max-width: 850px;
+  margin: 20px auto 0;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #777;
+  text-align: center;
+}
+
+.brand-disclaimer h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+.brand-disclaimer p {
+  margin: 8px 0;
+}
+
+.brand-disclaimer strong {
+  font-weight: 600;
+}
  
